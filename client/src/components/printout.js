@@ -10,7 +10,7 @@ import { getStreets } from '../utils/memberutils';
 
 class PrintOut extends Component {
     state = {
-      title: "Bury Park Masjid Membership Roll",
+      title: "MCE - Membership Roll",
       date: new Date().getFullYear()
     };
 
