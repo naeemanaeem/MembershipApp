@@ -1,0 +1,53 @@
+{
+  "name": "masjid-app",
+  "version": "1.0.0",
+  "description": "Muslims Centre Of Excelence",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "client": "cd client && yarn start",
+    "server": "nodemon server.js",
+    "dev": "concurrently --kill-others-on-fail \"npm run client\" \"npm run server\"",
+    "client:build": "cd client && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hoquem/masjid-app.git"
+  },
+  "author": "Mahmudul Hoque",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/hoquem/masjid-app/issues"
+  },
+  "homepage": "https://github.com/hoquem/masjid-app#readme",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "bootstrap": "^4.5.3",
+    "concurrently": "^5.3.0",
+    "connect-mongo": "^3.2.0",
+    "cookie-parser": "^1.4.5",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "express-session": "^1.17.1",
+    "google-auth-library": "^6.1.4",
+    "joi": "^17.3.0",
+    "jspdf": "^2.2.0",
+    "lodash": "^4.17.20",
+    "method-override": "^3.0.0",
+    "mongoose": "^5.11.8",
+    "morgan": "^1.10.0",
+    "morgan-body": "^2.6.4",
+    "node": "^16.1.0",
+    "nodemon": "^2.0.7",
+    "passport": "^0.4.1",
+    "passport-google-oauth20": "^2.0.0",
+    "passport-oauth2": "^1.5.0",
+    "react-bootstrap": "^1.4.0",
+    "react-dom": "^17.0.1",
+    "react-router": "^5.2.0",
+    "react-router-bootstrap": "^0.25.0",
+    "react-router-dom": "^5.2.0",
+    "yarn": "^1.22.10"
+  }
+}
