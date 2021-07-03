@@ -12,14 +12,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/hoquem/masjid-app.git"
+    "url": "git+https://github.com/naeemanaeem/masjid"
   },
   "author": "Mahmudul Hoque",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/hoquem/masjid-app/issues"
+    "url": "https://github.com/naeemanaeem/masjid/issues"
   },
-  "homepage": "https://github.com/hoquem/masjid-app#readme",
+  "homepage": "https://github.com/naeemanaeem/masjid#readme",
   "dependencies": {
     "body-parser": "^1.19.0",
     "bootstrap": "^4.5.3",
