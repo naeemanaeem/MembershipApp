@@ -29,7 +29,7 @@ class MemberEdit extends Component {
         <Modal.Body>
           <InputGroup className="mb-3">
             <InputGroup.Prepend>
-              <InputGroup.Text id="Firstname">Firstname(s)</InputGroup.Text>
+              <InputGroup.Text id="Firstname">First Name(s)</InputGroup.Text>
             </InputGroup.Prepend>
             <FormControl
               placeholder="First name"
@@ -42,7 +42,7 @@ class MemberEdit extends Component {
           </InputGroup>
           <InputGroup className="mb-3">
             <InputGroup.Prepend>
-              <InputGroup.Text id="Lastname">Lastname</InputGroup.Text>
+              <InputGroup.Text id="Lastname">Last Name</InputGroup.Text>
             </InputGroup.Prepend>
             <FormControl
               placeholder="Last name"
@@ -81,6 +81,33 @@ class MemberEdit extends Component {
             defaultValue={this.props.member.Street}
           />
         </InputGroup>
+        <InputGroup className="mb-3">
+          <InputGroup.Prepend>
+            <InputGroup.Text id="City">City</InputGroup.Text>
+          </InputGroup.Prepend>
+          <FormControl
+            placeholder="City name"
+            aria-label="City"
+            aria-describedby="city"
+            //onChange={e => this.setState({ memberStreet: e.target.value.toLocaleUpperCase() })}
+            onChange={e => this.props.member.City = e.target.value.toLocaleUpperCase() }
+            defaultValue={this.props.member.City}
+          />
+        </InputGroup>
+        <InputGroup className="mb-3">
+          <InputGroup.Prepend>
+            <InputGroup.Text id="Town">Town</InputGroup.Text>
+          </InputGroup.Prepend>
+          <FormControl
+            placeholder="Town name"
+            aria-label="Town"
+            aria-describedby="town"
+            //onChange={e => this.setState({ memberStreet: e.target.value.toLocaleUpperCase() })}
+            onChange={e => this.props.member.City = e.target.value.toLocaleUpperCase() }
+            defaultValue={this.props.member.City}
+          />
+        </InputGroup>
+
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={this.handleCancel}>Cancel</Button>

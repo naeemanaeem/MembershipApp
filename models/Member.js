@@ -25,7 +25,27 @@ const MemberSchema = new mongoose.Schema({
         required: false,
         trim: true
     },
+    City: {
+        type: String,
+        required: false,
+        trim: true
+    },
     Postcode: {
+        type: String,
+        required: false,
+        trim: true
+    },
+    Phone: {
+        type: String,
+        required: false,
+        trim: true
+    },
+    Email: {
+        type: String,
+        required: false,
+        trim: true
+    },
+    Spouse: {
         type: String,
         required: false,
         trim: true
