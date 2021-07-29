@@ -18,15 +18,15 @@ class Navigation extends Component {
         const loginStr = email ? "logout" : "login";
 
         return (
-            <Navbar bg="light" expand="lg" sticky="top">
+            <Navbar bg="light" expand="lg" sticky="top" className="mt-3 ml-3 mr-3">
                 <Navbar.Brand href="/">Masjid Membership</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">
                         <LinkContainer to="/"><Nav.Link>home</Nav.Link></LinkContainer>  
-                        <LinkContainer to="/members"><Nav.Link href="/members">members</Nav.Link></LinkContainer>  
                         <LinkContainer to="/printout"><Nav.Link href="/printout">printout</Nav.Link></LinkContainer>  
                         <LinkContainer to="/export"><Nav.Link href="/export">export</Nav.Link></LinkContainer>  
+                        <LinkContainer to="/members"><Nav.Link href="/members">members</Nav.Link></LinkContainer>  
                         <LinkContainer to="/login"><Nav.Link href="/login">{loginStr}</Nav.Link></LinkContainer>  
                     </Nav>
                     <SearchTextContext.Consumer>

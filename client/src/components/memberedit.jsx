@@ -3,6 +3,9 @@ import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import InputGroup from 'react-bootstrap/InputGroup';
 import FormControl from 'react-bootstrap/FormControl';
+import 'react-dropdown/style.css';
+import CountrySelector from './helper/countryselector.jsx'
+import StateSelector from './helper/stateselector.jsx'
 
 
 class MemberEdit extends Component {
@@ -35,12 +38,11 @@ class MemberEdit extends Component {
               placeholder="First name"
               aria-label="Firstname"
               aria-describedby="firstname"
-              //onChange={e => this.setState({ memberFirstname: e.target.value.toLocaleUpperCase() })}
               onChange={e => this.props.member.Firstname = e.target.value.toLocaleUpperCase() }
               defaultValue={this.props.member.Firstname}
+              className="mr-2"
             />
-          </InputGroup>
-          <InputGroup className="mb-3">
+
             <InputGroup.Prepend>
               <InputGroup.Text id="Lastname">Lastname</InputGroup.Text>
             </InputGroup.Prepend>
@@ -48,7 +50,6 @@ class MemberEdit extends Component {
               placeholder="Last name"
               aria-label="Lastname"
               aria-describedby="lastname"
-              //onChange={e => this.setState({ memberLastname: e.target.value.toLocaleUpperCase() })}
               onChange={e => this.props.member.Lastname = e.target.value.toLocaleUpperCase() }
               defaultValue={this.props.member.Lastname}
             />
@@ -63,11 +64,23 @@ class MemberEdit extends Component {
             placeholder="House number or name"
             aria-label="House #"
             aria-describedby="house"
-            //onChange={e => this.setState({ memberHouseNo: e.target.value.toLocaleUpperCase() })}
             onChange={e => this.props.member.HouseNo = e.target.value.toLocaleUpperCase() }
             defaultValue={this.props.member.HouseNo}
+            className="mr-2"
+          />
+          <InputGroup.Prepend>
+            <InputGroup.Text id="Village">Village</InputGroup.Text>
+          </InputGroup.Prepend>
+          <FormControl
+            placeholder="Village name"
+            aria-label="Village"
+            aria-describedby="village"
+            onChange={e => this.props.member.Village = e.target.value.toLocaleUpperCase() }
+            defaultValue={this.props.member.Village}
+            className="mr-2"
           />
         </InputGroup>
+        {/*begin edits*/}
         <InputGroup className="mb-3">
           <InputGroup.Prepend>
             <InputGroup.Text id="Street">Street</InputGroup.Text>
@@ -76,11 +89,136 @@ class MemberEdit extends Component {
             placeholder="Street name"
             aria-label="Street"
             aria-describedby="street"
-            //onChange={e => this.setState({ memberStreet: e.target.value.toLocaleUpperCase() })}
             onChange={e => this.props.member.Street = e.target.value.toLocaleUpperCase() }
             defaultValue={this.props.member.Street}
+            className="w-25"
           />
         </InputGroup>
+
+        <InputGroup className="mb-3">
+        <InputGroup.Prepend>
+            <InputGroup.Text id="City">City</InputGroup.Text>
+          </InputGroup.Prepend>
+          <FormControl
+            placeholder="City Name"
+            aria-label="City"
+            aria-describedby="city"
+            onChange={e => this.props.member.City = e.target.value.toLocaleUpperCase() }
+            defaultValue={this.props.member.City}
+            className="w-25 mr-2"
+          />
+          <InputGroup.Prepend>
+            <InputGroup.Text id="State">State</InputGroup.Text>
+          </InputGroup.Prepend>
+          <FormControl
+            placeholder="State Name"
+            aria-label="State"
+            aria-describedby="state"
+            as="select"
+            onChange={e => this.props.member.State = e.target.value.toLocaleUpperCase() }
+            defaultValue="CA"
+          >
+            <StateSelector />
+          </FormControl>
+        </InputGroup>
+
+        <InputGroup className="mb-3">
+          <InputGroup.Prepend>
+            <InputGroup.Text id="Country">Country</InputGroup.Text>
+          </InputGroup.Prepend>
+          <FormControl
+            placeholder="Select Country"
+            aria-label="Country"
+            aria-describedby="country"
+            as="select"
+            onChange={e => this.props.member.Country = e.target.value.toLocaleUpperCase() }
+            className="mr-2 w-50"
+            defaultValue="US"
+          >
+            <CountrySelector/>
+          </FormControl>
+          
+          <InputGroup.Prepend>
+            <InputGroup.Text id="Zipcode">Zipcode</InputGroup.Text>
+          </InputGroup.Prepend>
+          <FormControl
+            placeholder="Zipcode"
+            aria-label="Zipcode"
+            aria-describedby="zipcode"
+            onChange={e => this.props.member.Postcode = e.target.value.toLocaleUpperCase() }
+            defaultValue="95391"
+          />
+        </InputGroup>
+
+        <br/>
+        <InputGroup className="mb-3">
+          <InputGroup.Prepend>
+            <InputGroup.Text id="Gender">Gender</InputGroup.Text>
+          </InputGroup.Prepend>
+          <FormControl
+            placeholder="Gender"
+            aria-label="Gender"
+            aria-describedby="gender"
+            as="select"
+            onChange={e => this.props.member.Gender = e.target.value.toLocaleUpperCase() }
+            defaultValue={this.props.member.Gender}
+            className="mr-2"
+          >
+            <option>n/a</option>
+            <option value="FEMALE">Female</option>
+            <option value="MALE">Male</option>
+          </FormControl>
+          
+          <InputGroup.Prepend>
+            <InputGroup.Text id="Voter">Voter</InputGroup.Text>
+          </InputGroup.Prepend>
+          <FormControl
+            placeholder="Voter"
+            aria-label="Voter"
+            aria-describedby="voter" 
+            as="select" 
+            onChange={e => this.props.member.Voter = e.target.value.toLocaleUpperCase() }
+            defaultValue="NO"
+          >
+            <option>n/a</option>
+            <option value="No">No</option>
+            <option value="Yes">Yes</option>
+          </FormControl>
+        </InputGroup>
+
+        <InputGroup className="mb-3 w-50">  
+          <InputGroup.Prepend>
+            <InputGroup.Text id="Spouse">Spouse</InputGroup.Text>
+          </InputGroup.Prepend>
+          <FormControl
+            placeholder="Spouse Name"
+            aria-label="Spouse"
+            aria-describedby="spouse"
+            as="select"
+            onChange={e => this.props.member.Spouse = e.target.value.toLocaleUpperCase() }
+            defaultValue="NO"
+          >
+            <option value="No">No</option>
+            <option value="Yes">Yes</option>
+          </FormControl>
+        </InputGroup>
+        <br/>
+        <InputGroup className="mr-3 w-75">
+          <InputGroup.Prepend>
+            <InputGroup.Text id="PhoneNum">Phone Number</InputGroup.Text>
+          </InputGroup.Prepend>
+          <FormControl
+            placeholder="Phone Number"
+            aria-label="PhoneNum"
+            aria-describedby="phonenum"
+            onChange={e => this.props.member.PhoneNum = e.target.value.toLocaleUpperCase() }
+            defaultValue=""
+            //className="w-75"
+          />
+        </InputGroup>
+
+
+        {/*end edits*/}
       </Modal.Body>
       <Modal.Footer>
         <Button variant="secondary" onClick={this.handleCancel}>Cancel</Button>

@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import Table from 'react-bootstrap/Table'
 
 class Member extends Component {
     
@@ -13,12 +14,22 @@ class Member extends Component {
     }
 
     render () {
-        const address = this.props.member.HouseNo + " " + this.props.member.Street;
-        const name = this.props.member.Firstname + " " + this.props.member.Lastname;
+        const address = this.props.member.HouseNo + " " + this.props.member.Street + " " + this.props.member.City; //+ ", " + this.props.member.State + " " + this.props.member.Postcode;
+        const village = this.props.member.Village;
+        const name = this.props.member.Firstname + " " + this.props.member.Lastname;   
+        const voter = "Voter: " + this.props.member.Voter;
+        const membSince = this.props.member.createAt.substr(0, 10);
+        const phoneNum = "Number: " + this.props.member.PhoneNum;
+
         return (
+            // <React.Fragment>
             <tr className="border-bottom">
                 <td>{this.props.member.MemberId}</td>
                 <td>{name}</td>
+                <td>{phoneNum}</td>
+                <td>{voter}</td>
+                <td>{membSince}</td>
+                <td>{village}</td>
                 <td>{address}</td>
                 <td><ButtonGroup size="sm">
                         <Button variant="outline-warning" onClick={this.handleEditButtonClick}>e</Button>

@@ -17,7 +17,7 @@ class App extends Component {
 
     return (
       <Router>
-        <SearchTextProvider>
+        <SearchTextProvider> 
         <Navigation />
         <Switch>
           <Route exact path="/" component={Home} />
