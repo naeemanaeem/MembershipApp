@@ -1,2 +1,4 @@
 # masjid-app
-Muslims Centre of Excelence - MCE
+Muslims Centre of Excellence - MCE
+
+I have made an edit here //Wahhaj
