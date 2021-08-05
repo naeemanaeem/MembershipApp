@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import Button from 'react-bootstrap/Button';
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import Table from 'react-bootstrap/Table'
+import Table from 'react-bootstrap/Table';
+import Image from 'react-bootstrap/Image';
+import './css_stuff/member.css';
 
 class Member extends Component {
     
@@ -14,30 +16,29 @@ class Member extends Component {
     }
 
     render () {
-        const address = this.props.member.HouseNo + " " + this.props.member.Street + " " + this.props.member.City; //+ ", " + this.props.member.State + " " + this.props.member.Postcode;
-        const village = this.props.member.Village;
-        const name = this.props.member.Firstname + " " + this.props.member.Lastname;   
-        const voter = "Voter: " + this.props.member.Voter;
+        const name = this.props.member.Firstname + " " + this.props.member.Lastname;
+        const phoneNum = this.props.member.PhoneNum;
+        const address = this.props.member.HouseNo + " " + this.props.member.Street;
+        const village = this.props.member.Village;   
         const membSince = this.props.member.createAt.substr(0, 10);
-        const phoneNum = "Number: " + this.props.member.PhoneNum;
 
-        return (
-            // <React.Fragment>
+        let component;
+        component =
+             <React.Fragment>
             <tr className="border-bottom">
-                <td>{this.props.member.MemberId}</td>
-                <td>{name}</td>
-                <td>{phoneNum}</td>
-                <td>{voter}</td>
-                <td>{membSince}</td>
-                <td>{village}</td>
-                <td>{address}</td>
-                <td><ButtonGroup size="sm">
-                        <Button variant="outline-warning" onClick={this.handleEditButtonClick}>e</Button>
-                        <Button variant="outline-danger" onClick={this.handleRemoveButtonClick}>r</Button>
-                    </ButtonGroup>
+                <td class="center">{this.props.member.MemberId}</td>
+                <td class="center">{name}</td>
+                <td class="center">{phoneNum}</td>
+                <td class="center">{address}</td>
+                <td class="center">{village}</td>
+                <td class="center">{membSince}</td>
+                <td class="centerimg">
+                    <Button variant="outline-warning" onClick={this.handleEditButtonClick}>edit</Button>
+                    {/* <Image src="imgs/ViewInfoIcon.jpg" onClick={this.handleEditButtonClick} /> */}
                 </td>
             </tr>
-        );
+            </React.Fragment>
+        return component;
     }
 }
   

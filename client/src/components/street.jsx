@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import Button from 'react-bootstrap/Button';
+// import Button from 'react-bootstrap/Button';
 import Member from './member';
 import { SearchTextContext } from './searchtextprovider';
 
@@ -20,13 +20,13 @@ class Street extends Component {
     render () {
         return (
             <React.Fragment> 
-            <tr className="border-bottom border-success font-weight-bold">
+            {/* <tr className="border-bottom border-success font-weight-bold">
                 <td colSpan="3">{this.props.street.name + '  '}
                 </td>
                 <td>
                     <Button variant="outline-warning" onClick={this.handleAddButtonClick}>+</Button>
                 </td>
-            </tr>
+            </tr> */}
             {this.props.street.members.map((member) => {
 
                 let searchText = "";
@@ -48,8 +48,8 @@ class Street extends Component {
                 );
             })}
 
-            <tr><td></td><td></td><td></td></tr>
-            <tr><td colSpan="3"></td></tr>
+            {/* <tr><td></td><td></td><td></td></tr>
+            <tr><td colSpan="3"></td></tr> */}
 
             </React.Fragment> 
         );

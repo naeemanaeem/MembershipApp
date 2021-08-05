@@ -8,6 +8,8 @@ import Street from './street';
 import MemberEdit from './memberedit';
 import { SearchTextContext } from './searchtextprovider';
 import { getStreets } from '../utils/memberutils';
+import Form from 'react-bootstrap/Form'
+import FormControl from 'react-bootstrap/FormControl'
 
 class Members extends Component {
 
@@ -178,26 +180,78 @@ class Members extends Component {
             onSave={this.handleMemberEditSave}
           />
 
-          <Table borderless hover>
-          {/*
-          <SearchTextContext.Consumer>
-            {(context) => ( context.setStreets(streets))}
-          </SearchTextContext.Consumer>
-          */}
-          <tbody>
-            {streets.map((street) => {
-              return (
-                <Street 
-                  key={i++} 
-                  street={street} 
-                  addMember={this.addNewMember} 
-                  removeMember={this.removeMember} 
-                  updateMember={this.updateMember} 
-                />
-              );
-            })}
-          </tbody>
-        </Table>
+          <div >
+            <h1 className="ml-5 mt-3 mb-3">
+              Member 
+              <Button  onClick={this.handleAddNewMemberButtonClick}>Add Member</Button>
+              </h1>
+            {/* <Button className="mb-3" onClick={this.handleAddNewMemberButtonClick}>Add Member</Button> */}
+          </div>
+
+          <div id="inline">
+            <div class="FilterTable ml-4">
+              <h4 class="center mt-3">Filter</h4>
+                <Form className="fsearch">
+                  <FormControl
+                    type="search"
+                    placeholder="Search"
+                    className="mr-2"
+                    aria-label="Search"
+                  />
+                  {['checkbox'].map((type) => (
+                    <div key={`default-${type}`} className="checks mt-3">
+                      <Form.Check 
+                        type={type}
+                        id={`default-${type}`}
+                        label="Name"
+                      />
+                      <Form.Check 
+                        type={type}
+                        id={`default-${type}`}
+                        label="Phone Number"
+                      />
+                      <Form.Check 
+                        type={type}
+                        id={`default-${type}`}
+                        label="Street"
+                      />
+                    </div>
+                  ))}
+                </Form>
+            </div>
+
+            <div class="AdminTable">
+              <Table striped bordered hover >
+              
+              <thead class="center">
+                <tr>
+                  <th>#</th>
+                  <th>Name</th>
+                  <th>Phone Number</th>
+                    <th>Street</th>
+                    <th>Village</th>
+                    <th>Membership Status</th>
+                    <th>View Full Info</th>
+                </tr>
+              </thead>
+              <tbody>
+                    {streets.map((street) => {
+                      return (
+                        <Street 
+                          key={i++} 
+                          street={street} 
+                          addMember={this.addNewMember} 
+                          removeMember={this.removeMember} 
+                          updateMember={this.updateMember} 
+                        />
+                      );
+                    })}
+              </tbody>
+            </Table>
+          </div>
+        </div>
+
+        
         </React.Fragment>;
       } else {
         component = 

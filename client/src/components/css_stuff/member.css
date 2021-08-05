@@ -1,0 +1,45 @@
+.centerimg {
+    /* display: block; */
+    margin-left: auto;
+    margin-right: auto;
+    width: 0%;
+  }
+  
+.center {
+    text-align: center;
+}
+
+.addbutton {
+    margin-top: -10px;
+    padding: 50px
+}
+
+/* everythingOnOneLine {
+    white-space: nowrap;
+   } */
+   
+#inline{
+    width:100%;
+    height:auto;
+    display:flex;
+} 
+.AdminTable{
+    width:75%;
+    height:100px;
+    margin:10px;
+}
+.FilterTable{
+    width:15%;
+    height:400px;
+    margin:10px;
+    background-color:lightgrey;
+}
+
+.fsearch{
+    width: 90%;
+    margin:auto;
+}
+
+.checks{
+    margin:auto;
+}

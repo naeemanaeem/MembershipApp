@@ -116,7 +116,7 @@ class MemberEdit extends Component {
             aria-describedby="state"
             as="select"
             onChange={e => this.props.member.State = e.target.value.toLocaleUpperCase() }
-            defaultValue="CA"
+            defaultValue={this.props.member.State}
           >
             <StateSelector />
           </FormControl>
@@ -133,7 +133,7 @@ class MemberEdit extends Component {
             as="select"
             onChange={e => this.props.member.Country = e.target.value.toLocaleUpperCase() }
             className="mr-2 w-50"
-            defaultValue="US"
+            defaultValue={this.props.member.Country}
           >
             <CountrySelector/>
           </FormControl>
@@ -146,7 +146,7 @@ class MemberEdit extends Component {
             aria-label="Zipcode"
             aria-describedby="zipcode"
             onChange={e => this.props.member.Postcode = e.target.value.toLocaleUpperCase() }
-            defaultValue="95391"
+            defaultValue={this.props.member.Postcode}
           />
         </InputGroup>
 
@@ -178,7 +178,7 @@ class MemberEdit extends Component {
             aria-describedby="voter" 
             as="select" 
             onChange={e => this.props.member.Voter = e.target.value.toLocaleUpperCase() }
-            defaultValue="NO"
+            defaultValue={this.props.member.Voter}
           >
             <option>n/a</option>
             <option value="No">No</option>
@@ -196,7 +196,7 @@ class MemberEdit extends Component {
             aria-describedby="spouse"
             as="select"
             onChange={e => this.props.member.Spouse = e.target.value.toLocaleUpperCase() }
-            defaultValue="NO"
+            defaultValue={this.props.member.Spouse}
           >
             <option value="No">No</option>
             <option value="Yes">Yes</option>
@@ -212,8 +212,7 @@ class MemberEdit extends Component {
             aria-label="PhoneNum"
             aria-describedby="phonenum"
             onChange={e => this.props.member.PhoneNum = e.target.value.toLocaleUpperCase() }
-            defaultValue=""
-            //className="w-75"
+            defaultValue={this.props.member.PhoneNum}
           />
         </InputGroup>
 

@@ -24,6 +24,7 @@ class Navigation extends Component {
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="mr-auto">
                         <LinkContainer to="/"><Nav.Link>home</Nav.Link></LinkContainer>  
+                        <LinkContainer to="/myaccount"><Nav.Link href="/myaccount">my account</Nav.Link></LinkContainer>
                         <LinkContainer to="/printout"><Nav.Link href="/printout">printout</Nav.Link></LinkContainer>  
                         <LinkContainer to="/export"><Nav.Link href="/export">export</Nav.Link></LinkContainer>  
                         <LinkContainer to="/members"><Nav.Link href="/members">members</Nav.Link></LinkContainer>  
