@@ -1,249 +1,170 @@
 import React, { Component } from 'react';
-import Table from 'react-bootstrap/Table';
-import Button from 'react-bootstrap/Button';
-import Alert from 'react-bootstrap/Alert';
-import axios from 'axios';
+// import Table from 'react-bootstrap/Table';
+// import Button from 'react-bootstrap/Button';
+// import Alert from 'react-bootstrap/Alert';
+// import axios from 'axios';
 
 // import Street from './street';
 import MemberEdit from './memberedit';
-import { SearchTextContext } from './searchtextprovider';
-import { getStreets } from '../utils/memberutils';
-// import Tabs from 'react-bootstrap/Tabs'
-// import Tab from 'react-bootstrap/Tab'
-// import TabContainer from 'react-bootstrap/TabContainer'
-// import TabContent from 'react-bootstrap/TabContent'
-// import TabPane from 'react-bootstrap/TabPane'
+import Member from './member';
+import Members from './members';
+import TabContainer from 'react-bootstrap/TabContainer'
+import Tab from 'react-bootstrap/Tab'
+import TabContent from 'react-bootstrap/TabContent'
+import TabPane from 'react-bootstrap/TabPane'
+import Nav from 'react-bootstrap/Nav'
+import {Row, Col } from 'reactstrap';
+import Form from 'react-bootstrap/Form'
+// import { SearchTextContext } from './searchtextprovider';
+// import { getStreets } from '../utils/memberutils';
+
 import './css_stuff/myaccount.css'
-import VerticalTabs from './helper/vertTabs.jsx';
+// import VerticalTabs from './helper/vertTabs.jsx';
 
 class MyAccount extends Component {
 
-  state = {
-    modalShow: false,
-    tempmember:  {Firstname: "FIRSTNAME", Lastname: "LASTNAME", HouseNo: "1", Street: "STREET 1", Town: "LUTON"},
-    isAddNewMember: false,
-    members: [],
-    error: ""
-  };
-
-  openCity = (cityName) => {
-    // Declare all variables
-    var i, tabcontent, tablinks;
-  
-    // Get all elements with class="tabcontent" and hide them
-    tabcontent = document.getElementsByClassName("tabcontent");
-    for (i = 0; i < tabcontent.length; i++) {
-      tabcontent[i].style.display = "none";
-    }
-  
-    // Get all elements with class="tablinks" and remove the class "active"
-    tablinks = document.getElementsByClassName("tablinks");
-    for (i = 0; i < tablinks.length; i++) {
-      tablinks[i].className = tablinks[i].className.replace(" active", "");
-    }
-  
-    // Show the current tab, and add an "active" class to the link that opened the tab
-    // document.getElementById(cityName).style.display = "block";
-    // evt.currentTarget.className += " active";
-  }
-
-  async componentDidMount() {
-    try {
-      const res = await axios.get('/members');
-      this.setState({members: res.data, error: ""});
-    } catch (e) {
-      this.setState({error: e.message});
-      console.error(e);
-    }
-  }
-
-  setModalShow = (e) => {
-    this.setState({modalShow: e});
-  }
-
-  showMemberEditDialog = () => {
-    this.setModalShow(true);
-  }
-
-  hideMemberEditDialog = () => {
-    this.setModalShow(false);
-  }
-
-  handleMemberEditCancel = (m) => {
-    this.hideMemberEditDialog();
-  }
-
-  async saveNewMember(m) {
-    if (m.Firstname && m.Firstname.length > 0 &&
-        m.Lastname && m.Lastname.length > 0 &&
-        m.HouseNo && m.HouseNo.length > 0 &&
-        m.Street && m.Street.length > 0) {
-
-        const res = await axios.post('/members', m);  
-
-        const newmembers = [...this.state.members, res.data];
-        this.setState({members: newmembers});
-    }
-  }
-
-  async saveUpdatedMember(m) {
-    try {
-      await axios.put('members/' + m._id, m);
-      // TODO: update with the member details returned from server? 
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  async saveDelete(m) {
-    try {
-      const res = await axios.delete('members/' + m._id, m);
-
-      const index = this.state.members.findIndex(function(o) {
-        return o._id === res.data._id;
-      });
-
-      if (index !== -1) {
-        this.state.members.splice(index, 1);
-        this.setState({members: this.state.members});
-      } 
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  handleMemberEditSave = (m) => {
-    try {
-      if (this.state.isAddNewMember) {
-        console.log("Save new member - ", m);
-        this.saveNewMember(m);
-      } else {
-        // find the member to update
-        const member = this.state.members.find(m => m._id === this.state.tempmember._id);
-        if(member) {
-          member.Firstname = m.Firstname;
-          member.Lastname = m.Lastname;
-          member.HouseNo = m.HouseNo;
-          member.Street = m.Street;
-          member.Village = m.Village;
-          //added new fields below
-          member.City =  m.City; 
-          member.Postcode = m.Postcode; 
-          member.Country =  m.Country;
-          member.Gender = m.Gender;
-          member.Spouse = m.Spouse;
-          member.State = m.State;
-          member.CardNumber = m.CardNumber;
-          member.CVV = m.CVV;
-          member.NameOnCard = m.NameOnCard;
-          member.CardExp = m.CardExp;
-          member.Voter = m.Voter;
-          member.PhoneNum = m.PhoneNum;
-          console.log("Save update member - ", member);
-          this.saveUpdatedMember(member);
-          this.setState({members: this.state.members}); // fetch from server instead
-        }
-      }
-
-      this.hideMemberEditDialog();
-    } catch (error) {
-      console.error(error);
-    }
-  }
-
-  removeMember = (m) => {
-    const response = window.confirm(`Are you sure you want to delete ${m.Firstname} ${m.Lastname}`);
-    if(response) {
-      this.saveDelete(m);
-    }
-  }
-  
-  handleAddNewMemberButtonClick = (e) => {
-    const street = {name: ""};
-    this.addNewMember(street);
-  }
-
-  addNewMember = (street) => {
-    this.setState({ 
-        tempmember:  {Firstname: "", Lastname: "", HouseNo: "", Street: street.name,  Town: "LUTON"},
-        isAddNewMember: true
-      }, this.showMemberEditDialog);
-  }
-
-  updateMember = (m) => {
-    console.log("Update member - ", m);
-    this.setState({ 
-        tempmember: m,
-        isAddNewMember: false
-      }, this.showMemberEditDialog);
-  }
-
-
   render () {
-    if(this.state.error.length > 0) {
-      const variant = 'danger'
-      return (
-        <Alert variant={variant}>
-          {this.state.error}
-        </Alert>
-      );
-    }
+    let detailPage;
 
-      let i = this.state.members.length + 1000;
-      const streets = getStreets(this.state.members, 
-        this.context.state.searchText.toLocaleUpperCase()
-      );
-      const { tempmember } = this.state;
+    detailPage  = 
+      <React.Fragment>
+        {/* Personal Information Below */}
+        <h4 className="ml-3">Personal Information</h4>
+        <hr class="solid mr-2" />
+        <Row className="ml-4 mt-4">
+          <Col>
+            <Form.Group className="mb-4">
+              <Form.Label>First Name</Form.Label>
+              <Form.Control value="hamza" className="detailSelWid"/>    {/*NEED  TO ADD ACTUAL VALUE HERE*/}
+            </Form.Group>
 
-      let component;  
-      if( this.state.members.length > 0 ) {
-        component = 
-          <React.Fragment>
-          <MemberEdit
-            member={tempmember}
-            show={this.state.modalShow}
-            onCancel={this.handleMemberEditCancel}
-            onSave={this.handleMemberEditSave}
-          />
+            <Form.Group className="mb-4">
+              <Form.Label>Date of Birth</Form.Label>
+              <Form.Control value="Hamza" className="detailSelWid"/>    {/*NEED  TO ADD ACTUAL VALUE HERE*/}
+            </Form.Group>
+          </Col>
+          <Col>
+              <Form.Group className="mb-4">
+                <Form.Label>Last Name</Form.Label>
+                <Form.Control value="Hamza" className="detailSelWid"/>    {/*NEED  TO ADD ACTUAL VALUE HERE*/}
+              </Form.Group>
 
-          {/* <div class="tab">
-            <button class="tablinks" onclick={this.openCity('London')}>My Details</button>
-            <button class="tablinks" onclick={this.openCity('Paris')}>My Dependents</button>
-            <button class="tablinks" onclick={this.openCity('Tokyo')}>Account Settings</button>
-          </div>
+              <Form.Group className="mb-4">
+                <Form.Label>Gender</Form.Label>
+                <Form.Control value="Hamza" className="detailSelWid"/>    {/*NEED  TO ADD ACTUAL VALUE HERE*/}
+              </Form.Group>
+          </Col>
+          <Col>
+            <Form.Group className="mb-4">
+              <Form.Label>Spouse</Form.Label>
+              <Form.Control value="Hamza" className="detailSelWid"/>    {/*NEED  TO ADD ACTUAL VALUE HERE*/}
+            </Form.Group>
+          </Col>
+        </Row>
 
-          <div id="London" class="tabcontent">
-            <h3>London</h3>
-          </div>
+        {/* Address Information Below */}
+        <h4 className="ml-3">Address Information</h4>
+        <hr class="solid mr-2" />
+        <Row className="ml-4 mt-4">
+          <Col>
+            <Form.Group className="mb-4">
+              <Form.Label>Address</Form.Label>
+              <Form.Control value="Hamza" className="detailSelWid"/>    {/*NEED  TO ADD ACTUAL VALUE HERE*/}
+            </Form.Group>
 
-          <div id="Paris" class="tabcontent">
-            <h3>Paris</h3>
-          </div>
+            <Form.Group className="mb-4">
+              <Form.Label>State</Form.Label>
+              <Form.Control value="Hamza" className="detailSelWid"/>    {/*NEED  TO ADD ACTUAL VALUE HERE*/}
+            </Form.Group>
+          </Col>
+          <Col>
+              <Form.Group className="mb-4">
+                <Form.Label>City</Form.Label>
+                <Form.Control value="Hamza" className="detailSelWid"/>    {/*NEED  TO ADD ACTUAL VALUE HERE*/}
+              </Form.Group>
 
-          <div id="Tokyo" class="tabcontent">
-            <h3>Tokyo</h3>
-          </div> */}
-          <VerticalTabs />
-        </React.Fragment>;
-      } else {
-        component = 
-          <React.Fragment>
-          <MemberEdit
-            member={tempmember}
-            show={this.state.modalShow}
-            onCancel={this.handleMemberEditCancel}
-            onSave={this.handleMemberEditSave}
-          />
+              <Form.Group className="mb-4">
+                <Form.Label>Country</Form.Label>
+                <Form.Control value="Hamza" className="detailSelWid"/>    {/*NEED  TO ADD ACTUAL VALUE HERE*/}
+              </Form.Group>
+          </Col>
+          <Col>
+            <Form.Group className="mb-4">
+              <Form.Label>Village</Form.Label>
+              <Form.Control value="Hamza" className="detailSelWid"/>    {/*NEED  TO ADD ACTUAL VALUE HERE*/}
+            </Form.Group>
+          </Col>
+        </Row>
+
+        {/* Contact Info Below */}
+        <h4 className="ml-3">Contact Information</h4>
+        <hr class="solid mr-2" />
+        <Row className="rowSpace">
+           <Form.Group className="detailSpace mb-4">
+                <Form.Label>Email</Form.Label>
+                <Form.Control value="Hamza" className="detailSelWid"/>    {/*NEED  TO ADD ACTUAL VALUE HERE*/}
+               </Form.Group>
+
+              <Form.Group className="mb-4">
+                <Form.Label>Phone Number</Form.Label>
+                <Form.Control value="Hamza" className="detailSelWid"/>    {/*NEED  TO ADD ACTUAL VALUE HERE*/}
+               </Form.Group> 
+        </Row>
+
+        <h4 className="ml-3">Member Information</h4>
+        <hr class="solid mr-2" />
+        <Row className="rowSpace">
+           <Form.Group className="detailSpace mb-4">
+                <Form.Label>Member Type</Form.Label>
+                <Form.Control value="Hamza" className="detailSelWid"/>    {/*NEED  TO ADD ACTUAL VALUE HERE*/}
+               </Form.Group>
+
+              <Form.Group className="mb-4">
+                <Form.Label>Member Status</Form.Label>
+                <Form.Control value="Hamza" className="detailSelWid"/>    {/*NEED  TO ADD ACTUAL VALUE HERE*/}
+               </Form.Group> 
+        </Row>
+
+        {/* Member Info Below */}
+      </React.Fragment>;
+
+    return (
+      <React.Fragment>
         <div>
-          <Button onClick={this.handleAddNewMemberButtonClick}>Add Member</Button>
+        <h1 class="header">
+              My Account 
+              </h1>
         </div>
-        </React.Fragment>
-      }
-
-      return component;
-    }
-
-    static contextType = SearchTextContext;
+        <div>
+          <Tab.Container id="left-tabs-example" defaultActiveKey="details">
+          <Row>
+            <Col sm={3}>
+              <Nav variant="pills" className="flex-column">
+                <Nav.Item>
+                  <Nav.Link eventKey="details">My Details</Nav.Link>
+                </Nav.Item>
+                <Nav.Item>
+                  <Nav.Link eventKey="dependents">My Dependents</Nav.Link>
+                </Nav.Item>
+              </Nav>
+            </Col>
+            <Col sm={9}>
+              <Tab.Content className="outline">
+                <Tab.Pane eventKey="details">
+                  {detailPage}
+                </Tab.Pane>
+                <Tab.Pane eventKey="dependents">
+                  <p>HI</p>
+                </Tab.Pane>
+              </Tab.Content>
+            </Col>
+          </Row>
+        </Tab.Container>
+      </div>
+    </React.Fragment>
+    );
+  }
+    
 }
 
   

@@ -23,12 +23,12 @@ class Members extends Component {
 
   async componentDidMount() {
     try {
-      const res = await axios.get('/members');
+      const res = await axios.get('/members');{/*/members?_id=124124 syntax for id*/}
       this.setState({members: res.data, error: ""});
     } catch (e) {
       this.setState({error: e.message});
       console.error(e);
-    }
+    } 
   }
 
   setModalShow = (e) => {
@@ -198,25 +198,29 @@ class Members extends Component {
                     className="mr-2"
                     aria-label="Search"
                   />
-                  {['checkbox'].map((type) => (
-                    <div key={`default-${type}`} className="checks mt-3">
-                      <Form.Check 
-                        type={type}
-                        id={`default-${type}`}
-                        label="Name"
-                      />
-                      <Form.Check 
-                        type={type}
-                        id={`default-${type}`}
-                        label="Phone Number"
-                      />
-                      <Form.Check 
-                        type={type}
-                        id={`default-${type}`}
+                  <div class="mt-3">
+                    <Form.Check 
+                          type='checkbox'
+                          id='checkbox'
+                          label="Name"
+                    />
+                    <Form.Check 
+                          type='checkbox'
+                          id='checkbox'
+                          label="Phone Number"
+                    />
+                    <Form.Check 
+                        type='checkbox'
+                        id='checkbox'
                         label="Street"
-                      />
-                    </div>
-                  ))}
+                    />
+                  </div>
+                  
+                  {/* <div>
+                    <FormControl size="sm" as="select">
+                      <option>Small select</option>
+                    </FormControl>
+                  </div> */}
                 </Form>
             </div>
 

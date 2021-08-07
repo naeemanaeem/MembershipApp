@@ -42,3 +42,32 @@
   border-left: none;
   height: 300px;
 }
+
+.header{
+  margin-left: 5%;
+  margin-top: 4%;
+  margin-bottom: 3%;
+}
+
+.outline{
+  /* border: 1px solid rgb(0, 0, 0); */
+}
+
+hr.solid {
+  border-top: 1px solid rgb(27, 27, 27);
+}
+
+.detailSelWid {
+  width: 250px;
+}
+
+.detailSpace {
+  margin-right: 103px;
+}
+
+.rowSpace {
+  margin-top: 24px;
+  margin-left: 40px;
+}
+
+
