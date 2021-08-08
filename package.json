@@ -40,6 +40,7 @@
     "morgan-body": "^2.6.4",
     "node": "^16.1.0",
     "nodemon": "^2.0.7",
+    "npm": "^7.20.5",
     "passport": "^0.4.1",
     "passport-google-oauth20": "^2.0.0",
     "passport-oauth2": "^1.5.0",
