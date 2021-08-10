@@ -15,5 +15,5 @@ RUN \
   yarn
 
 
-# To run the container do the following in the masjd forlder
+# To run the container do the following with proper path
 # docker run -d -it -p 3000:3000 -v /Users/hefayed/masjid:/home/masjid --name masjid hefayed/masjid yarn run dev
