@@ -153,6 +153,17 @@ class MemberEdit extends Component {
         <br/>
         <InputGroup className="mb-3">
           <InputGroup.Prepend>
+            <InputGroup.Text id="DoB">Date of Birth</InputGroup.Text>
+          </InputGroup.Prepend>
+          <FormControl
+            placeholder="mm/dd/yyyy"
+            aria-label="DoB"
+            aria-describedby="DoB"
+            onChange={e => this.props.member.DateOfBirth = e.target.value.toLocaleUpperCase() }
+            defaultValue={this.props.member.DateOfBirth}
+            className="mr-2"
+           />
+          <InputGroup.Prepend>
             <InputGroup.Text id="Gender">Gender</InputGroup.Text>
           </InputGroup.Prepend>
           <FormControl
@@ -168,7 +179,9 @@ class MemberEdit extends Component {
             <option value="FEMALE">Female</option>
             <option value="MALE">Male</option>
           </FormControl>
-          
+        </InputGroup>
+
+        <InputGroup className="mb-3 w-100">  
           <InputGroup.Prepend>
             <InputGroup.Text id="Voter">Voter</InputGroup.Text>
           </InputGroup.Prepend>
@@ -179,14 +192,13 @@ class MemberEdit extends Component {
             as="select" 
             onChange={e => this.props.member.Voter = e.target.value.toLocaleUpperCase() }
             defaultValue={this.props.member.Voter}
+            className="mr-3"
           >
             <option>n/a</option>
             <option value="No">No</option>
             <option value="Yes">Yes</option>
           </FormControl>
-        </InputGroup>
 
-        <InputGroup className="mb-3 w-50">  
           <InputGroup.Prepend>
             <InputGroup.Text id="Spouse">Spouse</InputGroup.Text>
           </InputGroup.Prepend>
@@ -203,7 +215,7 @@ class MemberEdit extends Component {
           </FormControl>
         </InputGroup>
         <br/>
-        <InputGroup className="mr-3 w-75">
+        <InputGroup className="mr-3 w-100">
           <InputGroup.Prepend>
             <InputGroup.Text id="PhoneNum">Phone Number</InputGroup.Text>
           </InputGroup.Prepend>
@@ -213,6 +225,17 @@ class MemberEdit extends Component {
             aria-describedby="phonenum"
             onChange={e => this.props.member.PhoneNum = e.target.value.toLocaleUpperCase() }
             defaultValue={this.props.member.PhoneNum}
+            className="mr-3"
+          />
+          <InputGroup.Prepend>
+            <InputGroup.Text id="Email">Email</InputGroup.Text>
+          </InputGroup.Prepend>
+          <FormControl
+            placeholder="email"
+            aria-label="Email"
+            aria-describedby="email"
+            onChange={e => this.props.member.Email = e.target.value }
+            defaultValue={this.props.member.Email}
           />
         </InputGroup>
 

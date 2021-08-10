@@ -55,22 +55,7 @@ const MemberSchema = new mongoose.Schema({
         required: false,
         trim: true
     },
-    CardNumber: {
-        type: String,
-        required: false,
-        trim: true
-    },
-    CVV: {
-        type: String,
-        required: false,
-        trim: true
-    },
-    NameOnCard: {
-        type: String,
-        required: false,
-        trim: true
-    },
-    CardExp: {
+    DateOfBirth: {
         type: String,
         required: false,
         trim: true
@@ -81,6 +66,11 @@ const MemberSchema = new mongoose.Schema({
         trim: true
     },
     PhoneNum: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    Email: {
         type: String,
         required: true,
         trim: true

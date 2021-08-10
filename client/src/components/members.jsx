@@ -107,12 +107,10 @@ class Members extends Component {
           member.Gender = m.Gender;
           member.Spouse = m.Spouse;
           member.State = m.State;
-          member.CardNumber = m.CardNumber;
-          member.CVV = m.CVV;
-          member.NameOnCard = m.NameOnCard;
-          member.CardExp = m.CardExp;
           member.Voter = m.Voter;
           member.PhoneNum = m.PhoneNum;
+          member.Email = m.Email;
+          member.DateOfBirth = m.DateOfBirth;
           console.log("Save update member - ", member);
           this.saveUpdatedMember(member);
           this.setState({members: this.state.members}); // fetch from server instead
