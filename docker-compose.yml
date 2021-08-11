@@ -1,0 +1,12 @@
+version: '3.9'
+services:
+  frontend:
+    build: .
+    ports:
+      - '3000:3000'
+    volumes:
+      - '/Users/hefayed/masjid:/home/masjid'
+    # image: 'hefayed/masjid'
+# use below command to start the container
+# docker-compose build
+# docker-compose run --service-ports frontend yarn run dev

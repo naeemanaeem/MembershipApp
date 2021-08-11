@@ -2,7 +2,7 @@ FROM ubuntu:20.04
 ENV DEBIAN_FRONTEND=noninteractive
 #Set working directory
 WORKDIR /home/masjid
-#Install git
+#Install needed packages
 RUN \ 
   apt-get update && \
   apt-get install -y git && \
