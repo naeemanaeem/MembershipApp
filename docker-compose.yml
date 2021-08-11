@@ -5,7 +5,7 @@ services:
     ports:
       - '3000:3000'
     volumes:
-      - '/Users/hefayed/masjid:/home/masjid'
+      - '/Users/hefayed/masjid:/home/masjid' # map to the correct volume on your machine
     # image: 'hefayed/masjid'
 # use below command to start the container
 # docker-compose build
