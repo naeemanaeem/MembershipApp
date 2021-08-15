@@ -46,43 +46,10 @@ import Modal from 'react-bootstrap/Modal';
 class payment extends Component {
  
    render() {
-    function Popup() {
-      const [show, setShow] = useState(false);
+      // const [show, setShow] = useState(false);
 
-      const handleClose = () => setShow(false);
-      const handleShow = () => setShow(true);
-      return (
-        <>
-          <Button variant="primary" onClick={handleShow}>
-            Launch static backdrop modal
-          </Button>
-    
-          <Modal
-            show={show}
-            onHide={handleClose}
-            backdrop="static"
-            keyboard={false}
-          >
-            <Modal.Header closeButton>
-              <Modal.Title>Modal title</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-              I will not close if you click outside me. Don't even try to press
-              escape key.
-            </Modal.Body>
-            <Modal.Footer>
-              <Button variant="secondary" onClick={handleClose}>
-                Close
-              </Button>
-              <Button variant="primary">Understood</Button>
-            </Modal.Footer>
-          </Modal>
-        </>
-      );
-      <div>
-        {Popup()}
-      </div>
-    }
+      // const handleClose = () => setShow(false);
+      // const handleShow = () => setShow(true);
        return (
        <React.Fragment>
          <br/>
@@ -116,8 +83,43 @@ class payment extends Component {
             {/* </ToggleButtonGroup> */}
             <br/>
             <br/>
+            <Button
+            style={{position: 'absolute', backgroundColor: 'red'}}>
+              Clear
+            </Button>
             <br/>
-            
+            <br/>
+            <br/>
+            <br/>
+                    {/* <>
+          <Button variant="primary" onClick={handleShow}>
+            Launch static backdrop modal
+          </Button>
+    
+          <Modal
+            show={show}
+            onHide={handleClose}
+            backdrop="static"
+            keyboard={false}
+          >
+            <Modal.Header closeButton>
+              <Modal.Title>Modal title</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              I will not close if you click outside me. Don't even try to press
+              escape key.
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleClose}>
+                Close
+              </Button>
+              <Button variant="primary">Understood</Button>
+            </Modal.Footer>
+          </Modal>
+        </> */}
+        {/* <Button style={{position:'absolute'}}>
+          Payment History
+        </Button> */}
             </Col>
             <Col>
             <h4>Payment Method</h4>
@@ -143,6 +145,12 @@ class payment extends Component {
                   Venmo
                 </ToggleButton>
                 </ToggleButtonGroup>
+                <br/>
+                <br/>
+            <Button
+            style={{position: 'absolute', backgroundColor: 'red'}}>
+              Clear
+            </Button>
             </Col>
             <Col>
             <h4>Payment Information</h4>
@@ -166,6 +174,12 @@ class payment extends Component {
               aria-label="Amount"
               aria-describedby="Amount"
               />
+             <br/>
+            <Button
+            style={{position: 'absolute', backgroundColor: 'red'}}>
+              Clear
+            </Button>
+              <br/>
               <br/>
 
               <Button variant="primary" type="submit" onClick={this.handleButtonClick}>
