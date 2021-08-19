@@ -37,6 +37,7 @@
 
 import React, {Component, useEffect, useState} from 'react';
 import Button from 'react-bootstrap/Button';
+import Table from './table.jsx';
 import Form from 'react-bootstrap/Form';
 import Col from 'react-bootstrap/Col';
 import ToggleButton from 'react-bootstrap/ToggleButton';
@@ -44,7 +45,43 @@ import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup';
 import Modal from 'react-bootstrap/Modal';
 
 class payment extends Component {
- 
+  
+constructor()
+{
+  super()
+  this.state ={
+    show:false
+  }
+}
+  static lineHeight = 8;
+  static leftMargin = 20;
+
+
+  clearSelection = () => {
+    this.setState({
+      "radio1": null,
+      "radio2": null,
+      "radio3": null,
+      "radio4": null
+    });
+  }
+
+  cancelSelection = () => {
+      const fields = ['radio1', 'radio2', 'radio3', 'radio4'];
+      fields.map(field => {
+        this.value = null;
+      });
+  }
+
+  clearForm = () => {
+    const fields = ['fullname', 'email', 'amount'];
+    fields.map(field => {
+      this.value = '';
+    });
+  }
+  handleModal() {
+    this.setState({show:!this.state.show})
+  }
    render() {
       // const [show, setShow] = useState(false);
 
@@ -57,38 +94,55 @@ class payment extends Component {
            <Form.Row>
              <Col>
              <h4>Payment</h4>
-
-            <ToggleButtonGroup type="radio" name="options" defaultValue={28} vertical>
-            <ToggleButton id="tbg-radio-1" value={1}
+            <div>
+            <ToggleButtonGroup  type="radio" name="options" vertical>
+            <ToggleButton id="radio1" value={1}
             variant="outline-primary"
             style={{height : '60px', width : '400px'}}>
                   Subscription Fee
                 </ToggleButton>
-                <ToggleButton id="tbg-radio-2" value={2}
+                <ToggleButton id="radio2" value={2}
                 variant="outline-primary"
                 style={{height : '60px', width : '400px'}}>
                   Donation
                 </ToggleButton>
-                <ToggleButton id="tbg-radio-3" value={3}
+                <ToggleButton id="radio3" value={3}
                 variant="outline-primary"
                 style={{height : '60px', width : '400px'}}>
                   Sadaqah
                 </ToggleButton>
-                <ToggleButton id="tbg-radio-4" value={4}
+                <ToggleButton id="radio4" value={4}
                 variant="outline-primary"
                 style={{height : '60px', width : '400px'}}>
                   Zakat
                 </ToggleButton>
                 </ToggleButtonGroup>
-            {/* </ToggleButtonGroup> */}
+                </div>
             <br/>
             <br/>
-            <Button
-            style={{position: 'absolute', backgroundColor: 'red'}}>
+            <Button id = "clear1" variant = "danger" onClick = {this.cancelSelection} type = "reset"
+            style={{position: 'absolute'}}>
               Clear
             </Button>
             <br/>
             <br/>
+            <br/>
+            <br/>
+            <div>
+              <Button onClick ={()=>{this.handleModal()}}
+              style = {{position: 'absolute'}}>Payment History</Button>
+              <Modal show={this.state.show}>
+                <Modal.Header>Payment History</Modal.Header>
+                <Modal.Body>
+                  <Table>
+
+                  </Table>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button onClick ={()=>{this.handleModal()}}>Close</Button>
+                </Modal.Footer>
+              </Modal>
+            </div>
             <br/>
             <br/>
                     {/* <>
@@ -123,23 +177,23 @@ class payment extends Component {
             </Col>
             <Col>
             <h4>Payment Method</h4>
-            <ToggleButtonGroup type="radio" name="options" defaultValue={28} vertical>
-            <ToggleButton id="tbg-radio-1" value={1}
+            <ToggleButtonGroup type="radio" name="options" vertical>
+            <ToggleButton id="radio1" value={1}
             variant="outline-primary"
             style={{height : '60px', width : '400px'}}>
                   PayPal
                 </ToggleButton>
-                <ToggleButton id="tbg-radio-2" value={2}
+                <ToggleButton id="radio2" value={2}
                 variant="outline-primary"
                 style={{height : '60px', width : '400px'}}>
                   Bank Deposit
                 </ToggleButton>
-                <ToggleButton id="tbg-radio-3" value={3}
+                <ToggleButton id="radio3" value={3}
                 variant="outline-primary"
                 style={{height : '60px', width : '400px'}}>
                   Zelle
                 </ToggleButton>
-                <ToggleButton id="tbg-radio-4" value={4}
+                <ToggleButton id="radio4" value={4}
                 variant="outline-primary"
                 style={{height : '60px', width : '400px'}}>
                   Venmo
@@ -147,8 +201,8 @@ class payment extends Component {
                 </ToggleButtonGroup>
                 <br/>
                 <br/>
-            <Button
-            style={{position: 'absolute', backgroundColor: 'red'}}>
+            <Button variant= "danger" id = "clear2" type="reset"
+            style={{position: 'absolute'}}>
               Clear
             </Button>
             </Col>
@@ -156,6 +210,7 @@ class payment extends Component {
             <h4>Payment Information</h4>
             <text>Full Name</text>
             <Form.Control
+              ref = "fullname"
               placeholder="Full Name"
               aria-label="fullname"
               aria-describedby="fullname"
@@ -163,6 +218,7 @@ class payment extends Component {
               <br/>
               <text>Email</text>
               <Form.Control
+              ref = "email"
               placeholder="Email"
               aria-label="email"
               aria-describedby="email"
@@ -170,13 +226,14 @@ class payment extends Component {
               <br/>
               <text>Amount</text>
               <Form.Control
+              ref = "amount"
               placeholder="$"
               aria-label="Amount"
               aria-describedby="Amount"
               />
              <br/>
-            <Button
-            style={{position: 'absolute', backgroundColor: 'red'}}>
+            <Button variant = "danger" id = "clear3" type = "reset" onClick = {this.clearForm}
+            style={{position: 'absolute'}}>
               Clear
             </Button>
               <br/>
