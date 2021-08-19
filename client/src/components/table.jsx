@@ -2,48 +2,6 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import './table.css';
 
-// class Table extends Component {
-//    constructor(props) {
-//       super(props) 
-//       this.state = { 
-//          people: [
-//             { id: 1, name: 'Wasif', age: 21, email: 'null' },
-//             { id: 2, name: 'Ali', age: 19, email: 'null' },
-//             { id: 3, name: 'Saad', age: 16, email: 'null' },
-//             { id: 4, name: 'Asad', age: 25, email: 'null' }
-//          ]
-//       }
-//    }
-
-//  renderTableData() {
-//     return this.state.people.map((people, index) => {
-//        const { id, name, age, email } = people //destructuring
-//        return (
-//           <tr key={id}>
-//              <td>{id}</td>
-//              <td>{name}</td>
-//              <td>{age}</td>
-//              <td>{email}</td>
-//           </tr>
-//        )
-//     })
-//  }
-
-//  render() {
-//     return (
-//        <div>
-//           <h1 id='title'>React Dynamic Table</h1>
-//           <table id='students'>
-//              <tbody>
-//                 {this.renderTableData()}
-//              </tbody>
-//           </table>
-//        </div>
-//     )
-//  }
-// }
-// export default Table 
-
 class Table extends Component {
     state = {
         date: new Date()
