@@ -86,7 +86,6 @@ class Table extends Component {
     render() {
        return (
           <div>
-             <h1 id='title'>Payment History</h1>
              <table id='students'>
                 <tbody>
                    <tr>{this.renderTableHeader()}</tr>

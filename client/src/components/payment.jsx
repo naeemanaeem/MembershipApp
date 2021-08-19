@@ -95,7 +95,7 @@ constructor()
              <Col>
              <h4>Payment</h4>
             <div>
-            <ToggleButtonGroup  type="radio" name="options" vertical>
+            <ToggleButtonGroup value = {this.state.value} type="radio" name="options" vertical>
             <ToggleButton id="radio1" value={1}
             variant="outline-primary"
             style={{height : '60px', width : '400px'}}>
@@ -118,7 +118,6 @@ constructor()
                 </ToggleButton>
                 </ToggleButtonGroup>
                 </div>
-            <br/>
             <br/>
             <Button id = "clear1" variant = "danger" onClick = {this.cancelSelection} type = "reset"
             style={{position: 'absolute'}}>
