@@ -1,0 +1,27 @@
+#exportData {
+  clear: left;
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+.btn-export {
+  background-color: white;
+  color: #4caf50;
+  padding: 10px;
+  border: 1px solid #4caf50;
+  font-weight: bold;
+  text-align: center;
+  font-size: 14px;
+  border-radius: 5px;
+  transition-duration: 0.5s;
+}
+.btn-export:hover {
+  background-color: #4caf50;
+  color: white;
+  cursor: pointer;
+}
+.btn-export:active {
+  background-color: #3e8e41;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}

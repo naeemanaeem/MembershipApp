@@ -1,0 +1,64 @@
+* {
+  box-sizing: border-box;
+}
+#main::after {
+  margin-top: 10px;
+  content: "";
+  clear: both;
+}
+#table {
+  float: left;
+  width: 70%;
+  padding: 5px;
+}
+table {
+  font-family: Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+table td,
+table th {
+  border: 1px solid #ddd;
+  padding: 20px;
+  text-align: center;
+}
+
+table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+table tr:hover {
+  background-color: #ddd;
+}
+
+table th,
+tfoot td {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: "center";
+  background-color: #28a745;
+  color: white;
+}
+/* css for filter checkboxes and its labels */
+.checkbox-filter {
+  margin: 5px;
+  float: left;
+  width: 20%;
+  padding: 10px;
+  height: 100%;
+  display: flex;
+  flex-flow: nowrap;
+  flex-direction: column;
+  justify-content: space-between;
+  margin-left: 25px;
+  padding: 15px;
+  background-color: #ddd;
+}
+.filters-checkbox label {
+  margin-left: 10px;
+}
+.filters-checkbox > input {
+  color: white;
+  background-color: grey;
+}

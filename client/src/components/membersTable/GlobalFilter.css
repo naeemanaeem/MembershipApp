@@ -1,0 +1,12 @@
+.global-filter {
+  display: flex;
+  justify-content: flex-end;
+  padding: 15px;
+  margin-right: 35px;
+}
+.global-filter > input {
+  margin-left: 5px;
+  border: 2px solid lightgray;
+  border-radius: 10px;
+  padding: 10px;
+}
