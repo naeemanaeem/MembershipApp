@@ -11,10 +11,10 @@ class Table extends Component {
        this.state = {
           payments: [
              { id: 1, date: '11/17/21', description: 'Subscription Fee', method: 'Bank Deposit', amount: '$30.00' },
-             { id: 1, date: '12/2/21', description: 'Donation', method: 'PayPal', amount: '$500.00' },
-             { id: 2, date: '12/21/21', description: 'Sadaqah', method: 'Zelle', amount: '$25.00' },
-             { id: 3, date: '1/23/22', description: 'Sadaqah', method: 'Venmo', amount: '$50.00' },
-             { id: 4, date: '2/14/22', description: 'Donation', method: 'Bank Deposit', amount: '$1450.00' }
+             { id: 2, date: '12/2/21', description: 'Donation', method: 'PayPal', amount: '$500.00' },
+             { id: 3, date: '12/21/21', description: 'Sadaqah', method: 'Zelle', amount: '$25.00' },
+             { id: 4, date: '1/23/22', description: 'Sadaqah', method: 'Venmo', amount: '$50.00' },
+             { id: 5, date: '2/14/22', description: 'Donation', method: 'Bank Deposit', amount: '$1450.00' }
           ]
        }
     }

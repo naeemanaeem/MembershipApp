@@ -1,9 +1,50 @@
+// import React, {Component} from 'react';
+// import Modal from 'react-bootstrap/Modal';
+// import Button from 'react-bootstrap/Button';
+// import InputGroup from 'react-bootstrap/InputGroup';
+// import FormControl from 'react-bootstrap/FormControl';
+// import Form from 'react-bootstrap/Form'
+// import Col from 'react-bootstrap/Col'
+
+
+// class payment extends Component {
+//     render (){
+//         return (
+//         <Modal {...this.props} size="lg" aria-labelledby="contained-modal-title-vcenter">
+//         <Modal.Header>
+//           <Modal.Title id="contained-modal-title-vcenter">
+//             Payment
+//           </Modal.Title>
+//         </Modal.Header>
+//             <React.Fragment>
+//             <Form> 
+//             <Form.Group controlId = "paymentoptions">
+//             <Form.Control as="select">
+//                 <option>Subscription Fee</option>
+//                 <option>Donation</option>
+//                 <option>Sadaqa</option>
+//                 <option>Zakat</option>
+//             </Form.Control>
+//             </Form.Group>
+//             </Form>
+//             </React.Fragment>
+//             </Modal>
+//         );}
+// }
+
+
+// export default payment;
+
 import React, {Component, useEffect, useState} from 'react';
-import {Button, Form, Col, Row, Card, ToggleButton, ToggleButtonGroup, Modal} from 'react-bootstrap';
+import Button from 'react-bootstrap/Button';
 import Table from './table.jsx';
-import "bootstrap/dist/css/bootstrap.min.css";
-import "./mailto.jsx"
-// import "./Box.css"
+import Form from 'react-bootstrap/Form';
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
+import Card from 'react-bootstrap/Card';
+import ToggleButton from 'react-bootstrap/ToggleButton';
+import ToggleButtonGroup from 'react-bootstrap/ToggleButtonGroup'; 
+import Modal from 'react-bootstrap/Modal';
 
 class payment extends Component {
   
@@ -27,31 +68,24 @@ constructor()
     this.setState({show:!this.state.show})
   }
    render() {
+      // const [show, setShow] = useState(false);
+
+      // const handleClose = () => setShow(false);
+      // const handleShow = () => setShow(true);
        return (
        <React.Fragment>
-         <Row>
-         <Col>
-         <Card className = "mt-3 ml-3 grid" style = {{width: '55rem'}}>
-           <div className = "mt-3 ml-3">
-          <Card.Title>
-            <h2>Payment</h2>
-          </Card.Title>
-          </div>
-          <Card.Body>
-            Please fill out the form below to proceed with your payment.
-          </Card.Body>
-           </Card>
-         <Card className = "mt-3 ml-3 grid" style = {{width: '55rem', height: '35rem'}}>
          <Form>
-           <div>
-           {/* <Card className = "ml-3 mt-3">
+           <div style = {{position: 'initial', left: '5%'}}>
+           <Card className = "ml-3 mt-3">
              Hello there
-           </Card> */}
+           </Card>
            </div>
-            <Row>
+             <Row>
              <Col>
-              <div className = "ml-3 mt-3">
-            <h4>Type of Payment</h4>
+              <div style={{
+                position: 'absolute', left: '10%', top: '5%'
+           }}>
+            <h4>Payment</h4>
             <ToggleButtonGroup value = {this.state.value} type="radio" name="options" vertical>
             <ToggleButton id="radio1" value={1}
             variant="outline-primary"
@@ -76,9 +110,11 @@ constructor()
                 </ToggleButtonGroup>
                 </div>
             </Col>
+
             <Col>
-            <div className = "mt-3"
-            style = {{}} >
+            <div style={{
+                position: 'absolute', top: '5%', left: '-31.5%'
+           }}>
             <h4>Payment Method</h4>
             <ToggleButtonGroup type="radio" name="options" vertical>
             <ToggleButton id="radio1" value={1}
@@ -103,11 +139,15 @@ constructor()
                 </ToggleButton>
                 </ToggleButtonGroup>
                 </div>
+            {/* <Button variant= "danger" id = "clear2" type="reset"
+            style={{position: 'absolute'}}>
+              Clear
+            </Button> */}
             </Col>
             </Row>
             <Row>
-              <Col>
-            <div className = "mt-3 ml-3 mr-3">
+            <div style={{position: 'absolute', top: '45%', left: '4%'
+           }}>
             <h4>Payment Information</h4>
             <Row>
               <Col>
@@ -131,9 +171,7 @@ constructor()
               />
               </Col>
               </Row>
-              </div>
               <br/>
-              <div className = "ml-3 mr-4">
               <Row>
                 <Col>
               <text>Email</text>
@@ -154,63 +192,21 @@ constructor()
               />
               </Col>
               </Row>
-              </div>
              <br/>
-             <div>
+            <Button variant = "danger" id = "clear3" type = "reset" onClick = {this.clearForm}
+            style={{position: 'absolute'}}>
+              Clear
+            </Button>
+              <br/>
+              <br/>
+              <div style = {{position: 'absolute', right: '-3.5%'}}>
               <Button variant="primary" type="submit" onClick={this.handleButtonClick}>
             		 	Make Payment
             	</Button>
               </div>
-            <Button variant = "danger" id = "clear3" type = "reset" onClick = {this.clearForm}>
-              Clear
-            </Button>
-
-              </Col>
+              </div>
               </Row>
             </Form>
-            </Card>
-            </Col>
-            <Col>
-            <Card className = "mt-3 ml-3 mr-3 grid" style = {{width: '29rem'}}>
-            <div className = "mt-3 ml-3">
-              <Card.Title>
-                <h4>Payment History</h4>
-              </Card.Title>
-              </div>
-              <Card.Body>
-                View your transaction history by clicking the button below. 
-                <div>
-                  <br/>
-             <Button onClick ={()=>{this.handleModal()}} className = "ml-3 mr-3"
-             style = {{transform: 'translate(-80%,0%)'}}
-            >Payment History</Button>
-             <Modal show={this.state.show}>
-               <Modal.Header>Payment History</Modal.Header>
-               <Modal.Body>
-                 <Table>
-                 </Table>
-               </Modal.Body>
-               <Modal.Footer>
-                 <Button onClick ={()=>{this.handleModal()}}>Close</Button>
-               </Modal.Footer>
-             </Modal>
-           </div>
-          </Card.Body>
-            </Card>
-            <br/>
-            <Card className = "mb-3 ml-3 mr-3 grid" style = {{width: '29rem'}}>
-              <Card.Title>
-              <div className = "mt-3 ml-3">
-                <h4>Questions or Concerns?</h4>
-              </div>
-              </Card.Title>
-              <Card.Body>
-              <a href="mailto:no-reply@example.com?body=My custom mail body">Contact Us</a>
-
-              </Card.Body>
-            </Card>
-            </Col>
-            </Row>
        </React.Fragment>
        );
   }
