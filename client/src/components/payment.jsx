@@ -18,14 +18,16 @@ constructor()
   static leftMargin = 20;
 
   clearForm = () => {
-    const fields = ['fullname', 'email', 'amount'];
+    const fields = ['amount'];
     fields.map(field => {
       this.value = '';
     });
   }
+
   handleModal() {
     this.setState({show:!this.state.show})
   }
+
    render() {
        return (
        <React.Fragment>
@@ -73,6 +75,9 @@ constructor()
                 style={{height : '60px', width : '400px'}}>
                   Zakat
                 </ToggleButton>
+                <Button variant = "danger" id = "clear3"  type = "reset">
+                    Clear
+                </Button>
                 </ToggleButtonGroup>
                 </div>
             </Col>
@@ -161,10 +166,9 @@ constructor()
             		 	Make Payment
             	</Button>
               </div>
-            <Button variant = "danger" id = "clear3" type = "reset" onClick = {this.clearForm}>
+            <Button variant = "danger" id = "clear3"  type = "reset">
               Clear
             </Button>
-
               </Col>
               </Row>
             </Form>
