@@ -3,19 +3,19 @@ const mongodb = require('mongodb');
 const mongoose = require('mongoose');
 const router = express.Router();
 const {ensureAuth} = require('../middleware/auth');
-const Member = require('../models/Member');
+const Payment = require('../models/Payment');
 
 const ObjectID = mongodb.ObjectID;
 
-// Get all members
+// Get all payments
 router.get('/', ensureAuth, async (req, res) => {
     try {
-        const members = await Member.find({})
+        const payments = await Payment.find({})
             .populate('user')
-            .sort('Street')
+            .sort('Firstname')
             .lean();
 
-        return res.send(members);            
+        return res.send(payments);            
 
     } catch (error) {
         console.error(error);
@@ -24,18 +24,18 @@ router.get('/', ensureAuth, async (req, res) => {
     }
 });
 
-// Get a member
+// Get a single payment
 router.get('/:id', ensureAuth, async (req, res) => {
     try {
-        let member = await Member.findById(req.params.id)
+        let payment = await Payment.findById(req.params.id)
             .populate('user')
             .lean();
 
-        if (!member) {
+        if (!payment) {
             return res.status(404).send('Not found.');
         }
 
-        return res.send(member);
+        return res.send(payment);
 
     } catch (error) {
         console.error(error);
@@ -44,22 +44,24 @@ router.get('/:id', ensureAuth, async (req, res) => {
     }
 });
 
-// Create a new member
+// Create a new payment
 router.post('/', ensureAuth, async (req, res) => {
     try {
-        const m = req.body; // member
+        const m = req.body; // payment
         if (!m.Firstname || m.Firstname.length < 1 ||
           !m.Lastname || m.Lastname.length < 1 ||
-          !m.HouseNo || m.HouseNo.length < 1 ||
-          !m.Street || m.Street.length < 1) {
+          !m.Description || m.Description.length < 1 ||
+          !m.Type || m.Type.length < 1 ||
+          !m.Amount || m.Amount.length < 1 ||
+          !m.Status || m.Status.length < 1 ||
+          !m.PaymentMethod || m.PaymentMethod.length < 1) {
               return res.status(400).send("Member not valid");
           }
-
         //req.body.req.user.id;
+        const payment = await Payment.create(m);
         console.log(m);
-        const member = await Member.create(m);
-        if (member) {
-            return res.status(200).send(member);
+        if (payment) {
+            return res.status(200).send(payment);
         } else {
             return res.status(500);
         }
@@ -71,24 +73,24 @@ router.post('/', ensureAuth, async (req, res) => {
     }
 });
 
-// Update existing member
+// Update an existing payment
 router.put('/:id', ensureAuth, async (req, res) => {
     try {
 
-        const m = req.body;
+        const p = req.body;
 
-        const member = await Member.findOneAndUpdate({_id: req.params.id}, m, {
+        const payment = await Payment.findOneAndUpdate({_id: req.params.id}, p, {
             new: true,
             runValidators: true
         })
         .populate('user')
         .lean();
 
-        if (!member) {
+        if (!payment) {
             res.status(404).send("Member not found");
         }
 
-        return res.send(member);
+        return res.send(payment);
         
     } catch (error) {
         console.error(error);
@@ -97,18 +99,18 @@ router.put('/:id', ensureAuth, async (req, res) => {
     }
 });
 
-// Delete a member
+// Delete a Payment
 router.delete('/:id', ensureAuth, async (req, res) => {
     try {
-        const member = await Member.findByIdAndDelete(req.params.id)
+        const payment = await Payment.findByIdAndDelete(req.params.id)
         .populate('user')
         .lean();
 
-        if (!member) {
+        if (!payment) {
             return res.status(404).send("Member not found");
         }
 
-        return res.send(member);
+        return res.send(payment);
         
     } catch (error) {
         console.error(error);
@@ -117,20 +119,19 @@ router.delete('/:id', ensureAuth, async (req, res) => {
     }
 });
 
-// Member stats
+// Payment stats
 router.get('/stats', ensureAuth, async (req, res) => {
     try {
-        const members = await Member.find({})
+        const payments = await Payment.find({})
             .populate('user')
-            .sort('Street')
             .lean();
 
         const stats = {
-            numberOfMembers: members.length,
-            numberOfStreets: 2,
-            mostPopularStreet: "dfdsfd",
-            newestMembers: "",
-            newestMemberAddTime: Date.now,
+            numberOfPayments: payments.length,
+            numberOfFirstname: 2,
+            mostPopularPaymentMethod: "dfdsfd",
+            newestPayments: "",
+            newestPaymentAddTime: Date.now,
             lastTimeListChanged: Date.now
         }
 
