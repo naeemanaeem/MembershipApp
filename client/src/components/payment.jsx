@@ -30,8 +30,8 @@ constructor()
        return (
        <React.Fragment>
          <div>
-         <Row>
-
+         <Form>
+          <Row>
              <Col>
              <div className = "ml-3 mt-5">
              <Card style = {{width: '27rem', height: '20rem'}}>
@@ -208,6 +208,7 @@ constructor()
             </div>
             </Col>
             </Row>
+            </Form>
             </div>
        </React.Fragment>
        );
