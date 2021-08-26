@@ -14,8 +14,6 @@ constructor()
     show:false
   }
 }
-  static lineHeight = 8;
-  static leftMargin = 20;
 
   clearForm = () => {
     const fields = ['amount'];
@@ -31,27 +29,12 @@ constructor()
    render() {
        return (
        <React.Fragment>
+         <div>
          <Row>
-         <Col>
-         <Card className = "mt-3 ml-3 grid" style = {{width: '55rem'}}>
-           <div className = "mt-3 ml-3">
-          <Card.Title>
-            <h2>Payment</h2>
-          </Card.Title>
-          </div>
-          <Card.Body>
-            Please fill out the form below to proceed with your payment.
-          </Card.Body>
-           </Card>
-         <Card className = "mt-3 ml-3 grid" style = {{width: '55rem', height: '35rem'}}>
-         <Form>
-           <div>
-           {/* <Card className = "ml-3 mt-3">
-             Hello there
-           </Card> */}
-           </div>
-            <Row>
+
              <Col>
+             <div className = "ml-3 mt-5">
+             <Card style = {{width: '27rem', height: '20rem'}}>
               <div className = "ml-3 mt-3">
             <h4>Type of Payment</h4>
             <ToggleButtonGroup value = {this.state.value} type="radio" name="options" vertical>
@@ -75,14 +58,15 @@ constructor()
                 style={{height : '60px', width : '400px'}}>
                   Zakat
                 </ToggleButton>
-                <Button variant = "danger" id = "clear3"  type = "reset">
-                    Clear
-                </Button>
                 </ToggleButtonGroup>
+                </div>
+                </Card>
                 </div>
             </Col>
             <Col>
-            <div className = "mt-3"
+            <div className = "ml-3 mt-5">
+            <Card style = {{width: '27rem', height: '20rem'}}>
+            <div className = "ml-3 mt-3"
             style = {{}} >
             <h4>Payment Method</h4>
             <ToggleButtonGroup type="radio" name="options" vertical>
@@ -108,73 +92,72 @@ constructor()
                 </ToggleButton>
                 </ToggleButtonGroup>
                 </div>
+                </Card>
+                </div>
             </Col>
-            </Row>
-            <Row>
-              <Col>
-            <div className = "mt-3 ml-3 mr-3">
+            <Col>
+            <div className = "ml-3 mt-5">
+            <Card style = {{width: '27rem', height: '20rem'}}>
+              <div className = "ml-3 mt-3 mr-3">
             <h4>Payment Information</h4>
-            <Row>
-              <Col>
+            
+              {/* <import('node:dns').AnyRecordWithTtl> */}
+              <Form>
+                <Row>
+
+                  <Col>
+                  <div className = "mt-3">
               <text>First Name</text>
               <Form.Control
               ref = "firstname"
               placeholder="First Name"
               aria-label="firstname"
               aria-describedby="firstname"
-              style={{width : '400px'}}
               />
+              </div>
               </Col>
               <Col>
+              <div className = "mt-3">
               <text>Last Name</text>
               <Form.Control
               ref = "lastname"
               placeholder="Last Name"
               aria-label="lastname"
               aria-describedby="lastname"
-              style={{width : '400px'}}
               />
+              </div>
               </Col>
               </Row>
-              </div>
-              <br/>
-              <div className = "ml-3 mr-4">
+              <div className = "ml-3 mr-3">
               <Row>
-                <Col>
-              <text>Email</text>
+              <text className = "mt-3">Email</text>
               <Form.Control
               ref = "email"
               placeholder="Email"
               aria-label="email"
               aria-describedby="email"
               />
-              </Col>
-              <Col>
-              <text>Amount</text>
+              </Row>
+              <Row>
+              <text className = "mt-3">Amount</text>
               <Form.Control
               ref = "amount"
               placeholder="$"
               aria-label="Amount"
               aria-describedby="Amount"
               />
-              </Col>
               </Row>
               </div>
+              </Form>
              <br/>
              <div>
-              <Button variant="primary" type="submit" onClick={this.handleButtonClick}>
-            		 	Make Payment
-            	</Button>
-              </div>
-            <Button variant = "danger" id = "clear3"  type = "reset">
-              Clear
-            </Button>
-              </Col>
-              </Row>
-            </Form>
+             </div>
+          
+            </div>
             </Card>
-            </Col>
-            <Col>
+            </div>
+            
+            {/* <Col>
             <Card className = "mt-3 ml-3 mr-3 grid" style = {{width: '29rem'}}>
             <div className = "mt-3 ml-3">
               <Card.Title>
@@ -213,8 +196,19 @@ constructor()
 
               </Card.Body>
             </Card>
+            </Col> */}
+            <div align = "right" className = "mt-3">
+             <Button variant="primary" type="submit" onClick={this.handleButtonClick}>
+            		 	Make Payment
+            	</Button>
+              <Button variant = "danger" id = "clear3"  type = "refresh">
+              Clear
+            </Button>
+            
+            </div>
             </Col>
             </Row>
+            </div>
        </React.Fragment>
        );
   }
