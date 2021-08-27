@@ -15,11 +15,16 @@ constructor()
   }
 }
 
+
   clearForm = () => {
     const fields = ['amount'];
     fields.map(field => {
       this.value = '';
     });
+  }
+
+  handleChange(event) {
+    this.setState({value: event.target.value});
   }
 
   handleModal() {
@@ -156,49 +161,8 @@ constructor()
             </div>
             </Card>
             </div>
-            
-            {/* <Col>
-            <Card className = "mt-3 ml-3 mr-3 grid" style = {{width: '29rem'}}>
-            <div className = "mt-3 ml-3">
-              <Card.Title>
-                <h4>Payment History</h4>
-              </Card.Title>
-              </div>
-              <Card.Body>
-                View your transaction history by clicking the button below. 
-                <div>
-                  <br/>
-             <Button onClick ={()=>{this.handleModal()}} className = "ml-3 mr-3"
-             style = {{transform: 'translate(-80%,0%)'}}
-            >Payment History</Button>
-             <Modal show={this.state.show}>
-               <Modal.Header>Payment History</Modal.Header>
-               <Modal.Body>
-                 <Table>
-                 </Table>
-               </Modal.Body>
-               <Modal.Footer>
-                 <Button onClick ={()=>{this.handleModal()}}>Close</Button>
-               </Modal.Footer>
-             </Modal>
-           </div>
-          </Card.Body>
-            </Card>
-            <br/>
-            <Card className = "mb-3 ml-3 mr-3 grid" style = {{width: '29rem'}}>
-              <Card.Title>
-              <div className = "mt-3 ml-3">
-                <h4>Questions or Concerns?</h4>
-              </div>
-              </Card.Title>
-              <Card.Body>
-              <a href="mailto:no-reply@example.com?body=My custom mail body">Contact Us</a>
-
-              </Card.Body>
-            </Card>
-            </Col> */}
             <div align = "right" className = "mt-3">
-             <Button variant="primary" type="submit" onClick={this.handleButtonClick}>
+             <Button variant="primary" type="submit" onClick={this.handleButtonClick} disabled = {this.handle}>
             		 	Make Payment
             	</Button>
               <Button variant = "danger" id = "clear3"  type = "refresh">
@@ -212,6 +176,7 @@ constructor()
             </div>
        </React.Fragment>
        );
+       
   }
 }
  
