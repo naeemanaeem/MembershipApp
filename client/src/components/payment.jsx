@@ -20,198 +20,131 @@ import "bootstrap/dist/css/bootstrap.min.css";
 const buttonlist1 = ["Membership Fee", "Donation", "Sadaqah", "Zakat"];
 const buttonlist2 = ["PayPal", "Bank Deposit", "Zelle", "Venmo"];
 
-class payment extends Component {
-  constructor() {
-    super();
-    this.state = {
-      show: false,
-    };
-  }
-  static lineHeight = 8;
-  static leftMargin = 20;
-
-  clearForm = () => {
-    alert("clearing form");
-  };
-  handleModal() {
-    this.setState({ show: !this.state.show });
-  }
-
-  render() {
-    return (
-      <React.Fragment>
-        <div>
-          <Form>
-            <Row>
-              <Col>
-                <div className="ml-3 mt-5">
-                  <Card style={{ width: "27rem", height: "20rem" }}>
-                    <div className="ml-3 mt-3">
-                      <h4>Type of Payment</h4>
-                      <ToggleButtonGroup
-                        value={this.state.value}
-                        type="radio"
-                        name="options"
-                        vertical
-                      >
+function payment() {
+  return (
+    <React.Fragment>
+      <div>
+        <Form>
+          <Row>
+            <Col xs="auto">
+              <div className="ml-3 mt-5">
+                <Card style={{ width: "100%", height: "100%" }}>
+                  <div className="ml-3 mt-3 mr-3">
+                    <h4 className="mb-3">Type of Payment</h4>
+                    <ToggleButtonGroup type="radio" name="options1" vertical>
+                      {buttonlist1.map((buttonLabel, i) => (
                         <ToggleButton
-                          id="radio1"
-                          value={1}
+                          id={"radio" + i}
+                          value={i}
                           variant="outline-primary"
                           style={{ height: "60px", width: "400px" }}
+                          className="mb-5"
                         >
-                          Subscription Fee
+                          {buttonLabel}
                         </ToggleButton>
+                      ))}
+                    </ToggleButtonGroup>
+                  </div>
+                </Card>
+              </div>
+            </Col>
+            <Col xs="auto">
+              <div className="ml-3 mt-5">
+                <Card style={{ width: "100%", height: "100%" }}>
+                  <div className="ml-3 mt-3 mr-3" style={{}}>
+                    <h4 className="mb-3">Payment Method</h4>
+                    <ToggleButtonGroup type="radio" name="options2" vertical>
+                      {buttonlist2.map((buttonLabel, i) => (
                         <ToggleButton
-                          id="radio2"
-                          value={2}
+                          id={"radio" + i}
+                          value={i}
                           variant="outline-primary"
                           style={{ height: "60px", width: "400px" }}
+                          className="mb-5"
                         >
-                          Donation
+                          {buttonLabel}
                         </ToggleButton>
-                        <ToggleButton
-                          id="radio3"
-                          value={3}
-                          variant="outline-primary"
-                          style={{ height: "60px", width: "400px" }}
-                        >
-                          Sadaqah
-                        </ToggleButton>
-                        <ToggleButton
-                          id="radio4"
-                          value={4}
-                          variant="outline-primary"
-                          style={{ height: "60px", width: "400px" }}
-                        >
-                          Zakat
-                        </ToggleButton>
-                      </ToggleButtonGroup>
-                    </div>
-                  </Card>
-                </div>
-              </Col>
-              <Col>
-                <div className="ml-3 mt-5">
-                  <Card style={{ width: "27rem", height: "20rem" }}>
-                    <div className="ml-3 mt-3" style={{}}>
-                      <h4>Payment Method</h4>
-                      <ToggleButtonGroup type="radio" name="options" vertical>
-                        <ToggleButton
-                          id="radio1"
-                          value={1}
-                          variant="outline-primary"
-                          style={{ height: "60px", width: "400px" }}
-                        >
-                          PayPal
-                        </ToggleButton>
-                        <ToggleButton
-                          id="radio2"
-                          value={2}
-                          variant="outline-primary"
-                          style={{ height: "60px", width: "400px" }}
-                        >
-                          Bank Deposit
-                        </ToggleButton>
-                        <ToggleButton
-                          id="radio3"
-                          value={3}
-                          variant="outline-primary"
-                          style={{ height: "60px", width: "400px" }}
-                        >
-                          Zelle
-                        </ToggleButton>
-                        <ToggleButton
-                          id="radio4"
-                          value={4}
-                          variant="outline-primary"
-                          style={{ height: "60px", width: "400px" }}
-                        >
-                          Venmo
-                        </ToggleButton>
-                      </ToggleButtonGroup>
-                    </div>
-                  </Card>
-                </div>
-              </Col>
-              <Col>
-                <div className="ml-3 mt-5">
-                  <Card style={{ width: "27rem", height: "20rem" }}>
-                    <div className="ml-3 mt-3 mr-3">
-                      <h4>Payment Information</h4>
-
-                      {/* <import('node:dns').AnyRecordWithTtl> */}
-                      <Form>
+                      ))}
+                    </ToggleButtonGroup>
+                  </div>
+                </Card>
+              </div>
+            </Col>
+            <Col xs="3">
+              <div className="ml-3 mt-5">
+                <Card style={{ width: "27rem", height: "20rem" }}>
+                  <div className="ml-3 mt-3 mr-3">
+                    <h4>Payment Information</h4>
+                    <Form>
+                      <Row>
+                        <Col>
+                          <div className="mt-3">
+                            <text>First Name</text>
+                            <Form.Control
+                              //ref="firstname"
+                              placeholder="First Name"
+                              aria-label="firstname"
+                              aria-describedby="firstname"
+                            />
+                          </div>
+                        </Col>
+                        <Col>
+                          <div className="mt-3">
+                            <text>Last Name</text>
+                            <Form.Control
+                              //ref="lastname"
+                              placeholder="Last Name"
+                              aria-label="lastname"
+                              aria-describedby="lastname"
+                            />
+                          </div>
+                        </Col>
+                      </Row>
+                      <div className="ml-3 mr-3">
                         <Row>
-                          <Col>
-                            <div className="mt-3">
-                              <text>First Name</text>
-                              <Form.Control
-                                ref="firstname"
-                                placeholder="First Name"
-                                aria-label="firstname"
-                                aria-describedby="firstname"
-                              />
-                            </div>
-                          </Col>
-                          <Col>
-                            <div className="mt-3">
-                              <text>Last Name</text>
-                              <Form.Control
-                                ref="lastname"
-                                placeholder="Last Name"
-                                aria-label="lastname"
-                                aria-describedby="lastname"
-                              />
-                            </div>
-                          </Col>
+                          <text className="mt-3">Email</text>
+                          <Form.Control
+                            //ref="email"
+                            placeholder="Email"
+                            aria-label="email"
+                            aria-describedby="email"
+                          />
                         </Row>
-                        <div className="ml-3 mr-3">
-                          <Row>
-                            <text className="mt-3">Email</text>
-                            <Form.Control
-                              ref="email"
-                              placeholder="Email"
-                              aria-label="email"
-                              aria-describedby="email"
-                            />
-                          </Row>
-                          <Row>
-                            <text className="mt-3">Amount</text>
-                            <Form.Control
-                              ref="amount"
-                              placeholder="$"
-                              aria-label="Amount"
-                              aria-describedby="Amount"
-                            />
-                          </Row>
-                        </div>
-                      </Form>
-                      <br />
-                      <div></div>
-                    </div>
-                  </Card>
-                </div>
-                <div align="right" className="mt-3">
-                  <Button
-                    variant="primary"
-                    type="submit"
-                    onClick={this.handleButtonClick}
-                    disabled={this.handle}
-                  >
-                    Make Payment
-                  </Button>
-                  <Button variant="danger" id="clear3" type="refresh">
-                    Clear
-                  </Button>
-                </div>
-              </Col>
-            </Row>
-          </Form>
-        </div>
-      </React.Fragment>
-    );
-  }
+                        <Row>
+                          <text className="mt-3">Amount</text>
+                          <Form.Control
+                            //ref="amount"
+                            placeholder="$"
+                            aria-label="Amount"
+                            aria-describedby="Amount"
+                          />
+                        </Row>
+                      </div>
+                    </Form>
+                    <br />
+                    <div></div>
+                  </div>
+                </Card>
+              </div>
+              <div className="mt-3">
+                <Button
+                  variant="primary"
+                  type="submit"
+                  //onClick={this.handleButtonClick}
+                  //disabled={this.handle}
+                >
+                  Make Payment
+                </Button>
+                <Button variant="danger" id="clear3" type="refresh">
+                  Clear
+                </Button>
+              </div>
+            </Col>
+          </Row>
+        </Form>
+      </div>
+    </React.Fragment>
+  );
 }
 
 export default payment;
