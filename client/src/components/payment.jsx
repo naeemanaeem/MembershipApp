@@ -12,7 +12,7 @@ import {
   Container,
   ButtonToolbar,
 } from "react-bootstrap";
-import Table from "./table.jsx";
+//import Table from "./table.jsx";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const buttonlist1 = ["Membership Fee", "Donation", "Sadaqah", "Zakat"];

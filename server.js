@@ -99,6 +99,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // Routes
 app.use('/auth', require('./routes/auth'));
 app.use('/members', require('./routes/members'));
+app.use('/payments', require('./routes/payments'));
 //app.use('/newmembers', require('./routes/newmembers'));
 
 // This middleware informs the express application to serve our compiled React files
