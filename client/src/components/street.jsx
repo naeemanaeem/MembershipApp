@@ -37,7 +37,7 @@ class Street extends Component {
                    }
                   }
                 </SearchTextContext.Consumer>
-
+                
                 return (
                     <Member 
                         key={member.MemberId} 
@@ -45,6 +45,7 @@ class Street extends Component {
                         handleMemberEdit={this.handleMemberEdit}
                         handleMemberRemove={this.handleMemberRemove}
                     />
+
                 );
             })}
 

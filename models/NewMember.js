@@ -30,6 +30,26 @@ const NewMemberSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
+    DateOfBirth: {
+        type: String,
+        required: false,
+        trim: true
+    },
+    Voter: {
+        type: String,
+        required: false,
+        trim: true
+    },
+    PhoneNum: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    Email: {
+        type: String,
+        required: true,
+        trim: true
+    },
     createAt: {
         type: Date,
         default: Date.now

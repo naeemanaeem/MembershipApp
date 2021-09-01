@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const MemberSchema = new mongoose.Schema({
+const DataSchema = new mongoose.Schema({
     Firstname: {
         type: String,
         required: true,
@@ -67,18 +67,33 @@ const MemberSchema = new mongoose.Schema({
     },
     PhoneNum: {
         type: String,
-        required: true,
+        required: false,
         trim: true
     },
     Email: {
         type: String,
-        required: true,
+        required: false,
         trim: true
     },
+    // Guardians: {
+    //     type: Array,
+    //     required: false,
+    //     trim: true
+    // },
+    // Dependents: {
+    //     type: Array,
+    //     required: false,
+    //     trim: true
+    // },
     createAt: {
         type: Date,
         default: Date.now
     }
 });
+const MemberSchema = new mongoose.Schema({
+    Member: {DataSchema}, 
+    Guardians:[DataSchema],
+    Dependents:[DataSchema]
+})
 
-module.exports = mongoose.model('Member', MemberSchema);
+module.exports = mongoose.model('Member', DataSchema);

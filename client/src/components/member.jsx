@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import Button from 'react-bootstrap/Button';
-import ButtonGroup from 'react-bootstrap/ButtonGroup';
-import Table from 'react-bootstrap/Table';
-import Image from 'react-bootstrap/Image';
 import './css_stuff/member.css';
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import Tooltip from 'react-bootstrap/Tooltip'
+import icon from './imgs/ViewInfoIcon.jpg'
 
 class Member extends Component {
     
@@ -16,27 +15,23 @@ class Member extends Component {
     }
 
     render () {
-        const name = this.props.member.Firstname + " " + this.props.member.Lastname;
-        const phoneNum = this.props.member.PhoneNum;
-        const address = this.props.member.HouseNo + " " + this.props.member.Street;
-        const village = this.props.member.Village;   
-        const membSince = this.props.member.createAt.substr(0, 10);
+        const renderTooltip = (props) => (
+            <Tooltip id="button-tooltip" {...props}>
+              View Member Info
+            </Tooltip>
+          );
 
         let component;
         component =
              <React.Fragment>
-            <tr className="border-bottom">
-                <td class="center">{this.props.member.MemberId}</td>
-                <td class="center">{name}</td>
-                <td class="center">{phoneNum}</td>
-                <td class="center">{address}</td>
-                <td class="center">{village}</td>
-                <td class="center">{membSince}</td>
                 <td class="centerimg">
-                    <Button variant="outline-warning" onClick={this.handleEditButtonClick}>edit</Button>
-                    {/* <Image src="imgs/ViewInfoIcon.jpg" onClick={this.handleEditButtonClick} /> */}
+                <OverlayTrigger
+                placement="left"
+                delay={{ show: 250, hide: 400 }}
+                overlay={renderTooltip}>
+                    <img src={icon} onClick={this.handleEditButtonClick} className="pointer image centerimg" alt="View Member"/>
+                </OverlayTrigger>
                 </td>
-            </tr>
             </React.Fragment>
         return component;
     }

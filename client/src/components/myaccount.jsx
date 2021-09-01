@@ -5,13 +5,13 @@ import Button from 'react-bootstrap/Button';
 import axios from 'axios';
 
 // import Street from './street';
-import MemberEdit from './memberedit';
-import Member from './member';
-import Members from './members';
-import TabContainer from 'react-bootstrap/TabContainer'
+// import MemberEdit from './memberedit';
+// import Member from './member';
+// import Members from './members';
+// import TabContainer from 'react-bootstrap/TabContainer'
 import Tab from 'react-bootstrap/Tab'
-import TabContent from 'react-bootstrap/TabContent'
-import TabPane from 'react-bootstrap/TabPane'
+// import TabContent from 'react-bootstrap/TabContent'
+// import TabPane from 'react-bootstrap/TabPane'
 import Nav from 'react-bootstrap/Nav'
 import {Row, Col } from 'reactstrap';
 import Form from 'react-bootstrap/Form'
