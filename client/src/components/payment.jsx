@@ -13,39 +13,67 @@ import {
   ButtonToolbar,
 } from "react-bootstrap";
 //import Table from "./table.jsx";
+import PayPal from "./paypal";
 import "bootstrap/dist/css/bootstrap.min.css";
+import axios from "axios";
 
 const buttonlist1 = ["Membership Fee", "Donation", "Sadaqah", "Zakat"];
 const buttonlist2 = ["PayPal", "Bank Deposit", "Zelle", "Venmo"];
 
-function Payment({addTextLog}) {
-    const [profile, setProfile] = useState({
-      PaymentType : "",
-      PaymentMethod : "",
-      Firstname : "",
-      Lastname : "",
-      Email : "",
-      Amount : ""
-    });
-    const handleChange = ({ target }) => {
-      const { name, value } = target;
-      setProfile({
-        ...profile,
-        [name]: value
-      });
+function Payment({ addTextLog }) {
+  const [profile, setProfile] = useState({
+    Description: "",
+    PaymentMethod: "",
+    Firstname: "",
+    Lastname: "",
+    Email: "",
+    Amount: "",
+    Status: "Processing",
+    Type: "Outgoing",
+  });
+
+  const [payments, setPayments] = useState([]);
+  useEffect(() => {
+    const getAllPayments = async () => {
+      try {
+        const res = await axios.get("/payments");
+        setPayments(res.data);
+        console.log("refreshed");
+      } catch (e) {
+        console.log(e);
+      }
     };
+    getAllPayments();
+  }, []);
+
+  const saveNewPayment = async (p) => {
+    const res = await axios.post("/payments", p);
+    const newpayments = [...payments, res.data];
+    setPayments(newpayments);
+  };
+
+  const handleChange = ({ target }) => {
+    const { name, value } = target;
+    setProfile({
+      ...profile,
+      [name]: value,
+    });
+  };
+  const handleSubmit = (e) => {
+    saveNewPayment(profile);
+  };
 
   return (
     <React.Fragment>
       <div>
-        <Form>
+        <Form onSubmit={handleSubmit}>
           <Row>
             <Col xs="auto">
               <div className="ml-3 mt-5">
                 <Card style={{ width: "100%", height: "100%" }}>
                   <div className="ml-3 mt-3 mr-3">
                     <h4 className="mb-3">Type of Payment</h4>
-                    <ToggleButtonGroup type="radio" name="PaymentType" vertical>
+                    <ToggleButtonGroup type="radio" name="Description" vertical>
                       {buttonlist1.map((buttonLabel, i) => (
                         <ToggleButton
                           id={"radio" + i}
@@ -53,7 +81,7 @@ function Payment({addTextLog}) {
                           variant="outline-primary"
                           style={{ height: "60px", width: "400px" }}
                           className="mb-5"
-                          onChange = {handleChange}
+                          onChange={handleChange}
                         >
                           {buttonLabel}
                         </ToggleButton>
@@ -68,7 +96,11 @@ function Payment({addTextLog}) {
                 <Card style={{ width: "100%", height: "100%" }}>
                   <div className="ml-3 mt-3 mr-3" style={{}}>
                     <h4 className="mb-3">Payment Method</h4>
-                    <ToggleButtonGroup type="radio" name="PaymentMethod" vertical>
+                    <ToggleButtonGroup
+                      type="radio"
+                      name="PaymentMethod"
+                      vertical
+                    >
                       {buttonlist2.map((buttonLabel, i) => (
                         <ToggleButton
                           id={"radio" + i}
@@ -76,7 +108,7 @@ function Payment({addTextLog}) {
                           variant="outline-primary"
                           style={{ height: "60px", width: "400px" }}
                           className="mb-5"
-                          onChange = {handleChange}
+                          onChange={handleChange}
                         >
                           {buttonLabel}
                         </ToggleButton>
@@ -98,8 +130,8 @@ function Payment({addTextLog}) {
                             <text>First Name</text>
                             <Form.Control
                               placeholder="First Name"
-                              value = {profile.Firstname}
-                              name = "Firstname"
+                              value={profile.Firstname}
+                              name="Firstname"
                               aria-label="firstname"
                               aria-describedby="firstname"
                               onChange={handleChange}
@@ -111,10 +143,10 @@ function Payment({addTextLog}) {
                             <text>Last Name</text>
                             <Form.Control
                               placeholder="Last Name"
-                              value = {profile.Lastname}
-                              name = "Lastname"
+                              value={profile.Lastname}
+                              name="Lastname"
                               aria-label="lastname"
-                              type = "text"
+                              type="text"
                               aria-describedby="lastname"
                               onChange={handleChange}
                             />
@@ -126,9 +158,9 @@ function Payment({addTextLog}) {
                           <text className="mt-3">Email</text>
                           <Form.Control
                             placeholder="Email"
-                            value = {profile.Email}
-                            name = "Email"
-                            type = "text"
+                            value={profile.Email}
+                            name="Email"
+                            type="text"
                             aria-label="email"
                             aria-describedby="email"
                             onChange={handleChange}
@@ -138,12 +170,12 @@ function Payment({addTextLog}) {
                           <text className="mt-3">Amount</text>
                           <Form.Control
                             placeholder="$"
-                            value = {profile.Amount}
-                            name = "Amount"
+                            value={profile.Amount}
+                            name="Amount"
                             aria-label="Amount"
                             aria-describedby="Amount"
                             onChange={handleChange}
-                            type = "decimal"
+                            type="decimal"
                           />
                         </Row>
                       </div>
@@ -154,16 +186,18 @@ function Payment({addTextLog}) {
                 </Card>
               </div>
               <div className="mt-3">
+                <PayPal />
                 <Button
                   variant="primary"
                   type="submit"
-                  onClick={() => alert(JSON.stringify(profile, '', 2))}
+                  onClick={() => alert(JSON.stringify(profile, "", 2))}
                 >
                   Make Payment
                 </Button>
                 <Button variant="danger" id="clear3" type="refresh">
                   Clear
                 </Button>
+                <Button onClick={() => console.log(payments)}>hello</Button>
               </div>
             </Col>
           </Row>
