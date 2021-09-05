@@ -9,75 +9,27 @@ import StateSelector from './helper/stateselector.jsx'
 import Form from 'react-bootstrap/Form'
 import {Col} from 'reactstrap';
 import './css_stuff/memberedit.css';
-import DependentEdit from './dependentedit';
 
 
-class MemberEdit extends Component {
-  state = {
-    modalShow: false,
-    tempmember: {},
-    dependents: []
-  };
-
+class DependentEdit extends Component {
   handleSave = (e) => {
-    this.props.onSave(this.props.member);
+    this.props.addDependent(this.props.member);
+    this.props.onCancel();
   }
   
   handleCancel = () => {
-    this.props.onCancel(this.props.member);
-  }
-
-  setModalShow = (e) => {
-    this.setState({modalShow: e});
-  }
-
-  showDependentEditDialog = () => {
-    let m = {...this.props.member};
-    this.setState({ 
-      tempmember: {
-        Firstname: "", Lastname: "", 
-        HouseNo: m.HouseNo, Street: m.Street,  Village: m.Village,
-        City: m.City, State: m.State, Country: m.Country,
-        Postcode: m.Postcode, Guardians: [m._id]
-      }
-    },
-    this.setModalShow(true),
-    this.props.onDependentShow());
-  }
-
-  hideDependentEditDialog = () => {
-    this.setModalShow(false);
-    this.props.onDependentHide();
-  }
-
-  addDependent = (dep) => {
-    let depArr = this.state.dependents;
-    depArr.push(dep);
-    // this.setState({dependents: depArr})
-    // console.log(this.state.dependents)
-    this.props.addDependentMember(this.props.member, dep);
+    this.props.onCancel();
   }
 
   render() {
-    let component;
-    let depArr = this.state.dependents;
-
-    component = 
-    <React.Fragment>
-      <DependentEdit
-              member={this.state.tempmember}
-              show={this.state.modalShow}
-              onCancel={this.hideDependentEditDialog}
-              addDependent={this.addDependent}
-      />
-
+    return (
       <Modal
         {...this.props}
         size="lg"
         aria-labelledby="contained-modal-title-vcenter">
         <Modal.Header>
           <Modal.Title id="contained-modal-title-vcenter">
-            Member details
+            Dependent details
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -90,7 +42,7 @@ class MemberEdit extends Component {
                   aria-label="Firstname"
                   aria-describedby="firstname"
                   onChange={e => this.props.member.Firstname = e.target.value.toLocaleUpperCase() }
-                  defaultValue={this.props.member.Firstname}
+                  defaultValue=""
                   className="mr-2"
                 />
               </Form.Group>            
@@ -102,7 +54,7 @@ class MemberEdit extends Component {
                   aria-label="Lastname"
                   aria-describedby="lastname"
                   onChange={e => this.props.member.Lastname = e.target.value.toLocaleUpperCase() }
-                  defaultValue={this.props.member.Lastname}
+                  defaultValue=""
                 />
               </Form.Group>
             </InputGroup>
@@ -115,7 +67,7 @@ class MemberEdit extends Component {
                   aria-label="PhoneNum"
                   aria-describedby="phonenum"
                   onChange={e => this.props.member.PhoneNum = e.target.value.toLocaleUpperCase() }
-                  defaultValue={this.props.member.PhoneNum}
+                  defaultValue=""
                   className="mr-3"
                 />
               </Form.Group>
@@ -127,7 +79,7 @@ class MemberEdit extends Component {
                   aria-label="Email"
                   aria-describedby="email"
                   onChange={e => this.props.member.Email = e.target.value }
-                  defaultValue={this.props.member.Email}
+                  defaultValue=""
                 />
               </Form.Group>
             </InputGroup>
@@ -234,7 +186,7 @@ class MemberEdit extends Component {
                   aria-label="DoB"
                   aria-describedby="DoB"
                   onChange={e => this.props.member.DateOfBirth = e.target.value.toLocaleUpperCase() }
-                  defaultValue={this.props.member.DateOfBirth}
+                  defaultValue=""
                   className="mr-2"
                 />
               </Form.Group>
@@ -247,7 +199,6 @@ class MemberEdit extends Component {
                   aria-describedby="gender"
                   as="select"
                   onChange={e => this.props.member.Gender = e.target.value.toLocaleUpperCase() }
-                  defaultValue={this.props.member.Gender}
                   className="mr-2"
                 >
                   <option>n/a</option>
@@ -266,7 +217,7 @@ class MemberEdit extends Component {
                   aria-describedby="voter" 
                   as="select" 
                   onChange={e => this.props.member.Voter = e.target.value.toLocaleUpperCase() }
-                  defaultValue={this.props.member.Voter}
+                  defaultValue="No"
                   className="mr-3"
                 >
                   <option>n/a</option>
@@ -283,7 +234,7 @@ class MemberEdit extends Component {
                   aria-describedby="spouse"
                   as="select"
                   onChange={e => this.props.member.Spouse = e.target.value.toLocaleUpperCase() }
-                  defaultValue={this.props.member.Spouse}
+                  defaultValue="No"
                 >
                   <option value="No">No</option>
                   <option value="Yes">Yes</option>
@@ -294,16 +245,12 @@ class MemberEdit extends Component {
 
       </Modal.Body>
       <Modal.Footer>
-        {/* {(depArr.length > 0) ? depArr[0].Firstname : console.log()} */}
-        <Button variant="link" className="depButton" onClick={this.showDependentEditDialog}>Add Dependent</Button>
+        {/* <Button variant="link" className="depButton">Add Dependent</Button> */}
         <Button variant="secondary" onClick={this.handleCancel}>Cancel</Button>
         <Button variant="primary" onClick={this.handleSave}>Save</Button>
       </Modal.Footer>
     </Modal>
-    </React.Fragment>
-    
-    return component;
-    }
+  );}
 }
 
-export default MemberEdit;
+export default DependentEdit;

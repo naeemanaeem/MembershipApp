@@ -1,4 +1,4 @@
-import React, { Component, useMemo } from "react";
+import React, { useMemo } from "react";
 import {
   useTable,
   useSortBy,
@@ -19,6 +19,7 @@ import "jspdf-autotable";
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button';
 import Member from './member.jsx';
+import icon from './imgs/ViewInfoIcon.jpg'
 
 
 const PaginationTable = (props) => {
@@ -86,7 +87,7 @@ const PaginationTable = (props) => {
     // Other formats goes here
     return false;
   }
-
+  
   const tableInstance = useTable(
     {
       columns: columns,
@@ -126,9 +127,9 @@ const PaginationTable = (props) => {
 
   const { globalFilter, pageIndex, pageSize } = state;
 
-  let component;
+  // console.log("DATA, PROPS.DATA", data, props.data);
 
-  component = 
+  return (
     <React.Fragment>
       <div id="inline">
         <div
@@ -378,8 +379,8 @@ const PaginationTable = (props) => {
         ))}
       </div> */}
     </React.Fragment>
+    );
   
-  return component;
 };
 
 export default PaginationTable;

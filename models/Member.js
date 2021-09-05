@@ -1,4 +1,5 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose'),
+Schema=mongoose.Schema;
 
 const DataSchema = new mongoose.Schema({
     Firstname: {
@@ -75,25 +76,27 @@ const DataSchema = new mongoose.Schema({
         required: false,
         trim: true
     },
-    // Guardians: {
-    //     type: Array,
-    //     required: false,
-    //     trim: true
-    // },
-    // Dependents: {
-    //     type: Array,
-    //     required: false,
-    //     trim: true
-    // },
+    Guardians: {
+        type: [],
+        required: false,
+        trim: true
+    },
+    Dependents: {
+        type: [],
+        required: false,
+        trim: true
+    },
     createAt: {
         type: Date,
         default: Date.now
     }
 });
-const MemberSchema = new mongoose.Schema({
-    Member: {DataSchema}, 
-    Guardians:[DataSchema],
-    Dependents:[DataSchema]
-})
+
+// const Datamodel =  mongoose.model('Datamodel', DataSchema);
+// const MemberSchema = new mongoose.Schema({
+//     Member: { type: Schema.ObjectId, ref: 'Datamodel' }, 
+//     Guardians:[DataSchema],
+//     Dependents:[DataSchema]
+// })
 
 module.exports = mongoose.model('Member', DataSchema);

@@ -22,7 +22,7 @@ class Member extends Component {
           );
 
         let component;
-        component =
+        component = 
              <React.Fragment>
                 <td class="centerimg">
                 <OverlayTrigger
