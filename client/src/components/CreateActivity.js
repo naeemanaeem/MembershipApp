@@ -38,7 +38,12 @@ const ActivityForm = (props) => {
 
   const [data, setData] = useState(currentData);
   const [isOnline, setIsOnline] = useState(false);
-  const formatDate = (date) => {};
+  const formatDate = (date) => {
+    const year = date.slice(0, 4);
+    const month = date.slice(5, 7);
+    const day = date.slice(8, 10);
+    return { year, month, day };
+  };
   const formatTime = (time) => {
     let slicingIdx = time.indexOf(":");
     let hours = time.slice(0, slicingIdx);
@@ -153,13 +158,16 @@ const ActivityForm = (props) => {
               type="date"
               defaultValue={eventToBeEdited.startDate}
               onChange={(e) => {
-                let year = e.target.value.slice(0, 4);
-                let month = e.target.value.slice(5, 7);
-                let day = e.target.value.slice(8, 10);
+                let dateObject = formatDate(e.target.value);
 
                 setData({
                   ...data,
-                  startDate: month + "/" + day + "/" + year,
+                  startDate:
+                    dateObject.month +
+                    "/" +
+                    dateObject.day +
+                    "/" +
+                    dateObject.year,
                 });
               }}
             />
@@ -174,13 +182,15 @@ const ActivityForm = (props) => {
               type="date"
               defaultValue={eventToBeEdited.endDate}
               onChange={(e) => {
-                let year = e.target.value.slice(0, 4);
-                let month = e.target.value.slice(5, 7);
-                let day = e.target.value.slice(8, 10);
-
+                let dateObject = formatDate(e.target.value);
                 setData({
                   ...data,
-                  endDate: month + "/" + day + "/" + year,
+                  endDate:
+                    dateObject.month +
+                    "/" +
+                    dateObject.day +
+                    "/" +
+                    dateObject.year,
                 });
               }}
             />
