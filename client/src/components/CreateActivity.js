@@ -30,6 +30,7 @@ const ActivityForm = (props) => {
     registration: "Open",
     contactEmail: "",
     tagName: "",
+    isRecurring: false,
   };
 
   let currentData =
@@ -240,10 +241,10 @@ const ActivityForm = (props) => {
           </InputGroup>
           <InputGroup className="mb-3">
             <InputGroup.Prepend className="ml-rounded">
-              <InputGroup.Text id="tag">Special Tag</InputGroup.Text>
+              <InputGroup.Text id="tag">Special Tag/s</InputGroup.Text>
             </InputGroup.Prepend>
             <FormControl
-              placeholder="Example: Free Event"
+              placeholder="Example: Tag1, Tag2, Tag3 etc (Max Allowed: 4)"
               aria-label="tag"
               aria-describedby="tag"
               type="text"
@@ -390,7 +391,7 @@ const ActivityForm = (props) => {
               }}
             />
 
-            <label className="form-check-label" htmlFor="recurringEvent">
+            <label className="form-check-label" htmlFor="onlineEvent">
               Online Event
             </label>
           </div>
@@ -408,6 +409,24 @@ const ActivityForm = (props) => {
               />
             </InputGroup>
           )}
+
+          <div className="form-check">
+            <input
+              className="form-check-input"
+              type="checkbox"
+              value=""
+              id="recurringEvent"
+              // checked={isOnline}
+              defaultValue={eventToBeEdited.isRecurring}
+              onChange={(e) => {
+                setData({ ...data, isRecurring: e.target.checked });
+              }}
+            />
+
+            <label className="form-check-label" htmlFor="recurringEvent">
+              Recurring Event
+            </label>
+          </div>
         </form>
       </Modal.Body>
       <Modal.Footer>

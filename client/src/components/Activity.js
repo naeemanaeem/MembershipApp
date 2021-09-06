@@ -2,6 +2,10 @@ import React from "react";
 import Card from "react-bootstrap/Card";
 
 const Activity = (props) => {
+  const tags = props.data.tagName
+    ? props.data.tagName.split(",").slice(0, 4)
+    : "";
+  const colors = ["orange", "green", "blue", "red"];
   return (
     <Card
       className="card text-center"
@@ -24,21 +28,51 @@ const Activity = (props) => {
         alt={props.data.name}
         style={{ height: "65%", width: "100%" }}
       />
+
       <Card.Title style={{ paddingTop: "5%", fontSize: "2rem" }}>
-        {props.data.title}
+        {props.data.title}{" "}
+        {props.data.isRecurring ? (
+          <span
+            style={{
+              color: "black",
+              backgroundColor: "yellow",
+              fontSize: "0.5em",
+              fontFamily: "robo",
+              margin: "0 auto",
+              width: "5rem",
+              padding: "2%",
+              borderRadius: "5px",
+            }}
+          >
+            Recurring
+          </span>
+        ) : null}
       </Card.Title>
+
       <Card.Body>
         {props.data.tagName ? (
           <div
             style={{
-              color: "white",
-              backgroundColor: "orange",
-              margin: "0 auto",
-              width: "10rem",
-              padding: "2%",
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-evenly",
             }}
           >
-            {props.data.tagName}
+            {tags.map((tag, i) => (
+              <div
+                key={i}
+                style={{
+                  color: "white",
+                  width: "8rem",
+                  padding: "2%",
+                  margin: "1%",
+                  borderRadius: "5px",
+                  backgroundColor: `${colors[i]}`,
+                }}
+              >
+                {tag}
+              </div>
+            ))}
           </div>
         ) : null}
       </Card.Body>

@@ -25,6 +25,7 @@ const Activities = () => {
       },
       online: false,
       registration: "Open",
+      isRecurring: false,
       meetingLinK: "zoomLink",
       contactEmail: "abc&xyz.com",
       cost: "$50",
@@ -41,6 +42,7 @@ const Activities = () => {
       startTime: "6:00 PM",
       endTime: "7:30 PM",
       registration: "Close",
+      isRecurring: false,
       contactEmail: "abc&xyz.com",
       location: {
         street: "Central Park",
@@ -51,7 +53,7 @@ const Activities = () => {
       },
       meetingLink: "",
       online: false,
-      maxAttendees: "25",
+
       cost: "$0",
       recurring: true,
       imageUrl:
@@ -67,6 +69,7 @@ const Activities = () => {
       startTime: "6:00 PM",
       endTime: "7:30 PM",
       registration: "Close",
+      isRecurring: false,
       meetingLink: "zoom link",
       contactEmail: "abc&xyz.com",
       location: {
@@ -92,6 +95,7 @@ const Activities = () => {
       startTime: "6:00 PM",
       endTime: "7:30 PM",
       registration: "Close",
+      isRecurring: false,
       contactEmail: "abc&xyz.com",
       location: {
         street: "",
@@ -124,7 +128,8 @@ const Activities = () => {
         country: "",
         zip: "",
       },
-      online: "true",
+      online: true,
+      isRecurring: false,
       meetingLink: "zoom link",
       cost: "$0",
       imageUrl:
@@ -140,6 +145,8 @@ const Activities = () => {
       endDate: "09/22/21",
       startTime: "6:00 PM",
       endTime: "7:30 PM",
+      isRecurring: false,
+      online: false,
       contactEmail: "abc&xyz.com",
       location: {
         street: "Central Park",
