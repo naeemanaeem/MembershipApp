@@ -13,7 +13,7 @@ const Activity = (props) => {
         width: "22rem",
         padding: "2%",
         margin: "1%",
-        height: "25rem",
+        height: "30rem",
         fontFamily: "robo",
         cursor: "pointer",
       }}

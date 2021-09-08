@@ -10,7 +10,7 @@ const Activities = () => {
   const [activities, setActivities] = useState([
     {
       title: "Kids Soccer",
-      tagName: "Kids Event",
+      tagName: "Kids Event, Summer Program",
       id: JSON.stringify(Math.random()),
       startDate: "09/22/21",
       endDate: "09/22/21",
@@ -42,7 +42,7 @@ const Activities = () => {
       startTime: "6:00 PM",
       endTime: "7:30 PM",
       registration: "Close",
-      isRecurring: false,
+      isRecurring: true,
       contactEmail: "abc&xyz.com",
       location: {
         street: "Central Park",
@@ -55,7 +55,6 @@ const Activities = () => {
       online: false,
 
       cost: "$0",
-      recurring: true,
       imageUrl:
         "https://wacdn-img1.secure.footprint.net/media/28010/slider-image-1.jpg?v=637332651830000000",
       description:
@@ -70,6 +69,7 @@ const Activities = () => {
       endTime: "7:30 PM",
       registration: "Close",
       isRecurring: false,
+      tagName: "Monthly Event",
       meetingLink: "zoom link",
       contactEmail: "abc&xyz.com",
       location: {
@@ -120,7 +120,7 @@ const Activities = () => {
       endTime: "7:30 PM",
       registration: "Open",
       contactEmail: "abc&xyz.com",
-      tagName: "Free Class",
+      tagName: "Free Classes",
       location: {
         street: "Mountain House Musallah",
         city: "",
@@ -129,7 +129,7 @@ const Activities = () => {
         zip: "",
       },
       online: true,
-      isRecurring: false,
+      isRecurring: true,
       meetingLink: "zoom link",
       cost: "$0",
       imageUrl:
