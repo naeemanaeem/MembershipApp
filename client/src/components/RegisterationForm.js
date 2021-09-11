@@ -4,11 +4,6 @@ import Card from "react-bootstrap/Card";
 import Checkbox from "./Views/Checkbox";
 import Button from "react-bootstrap/Button";
 const RegistrationForm = (props) => {
-  const dependents = [
-    { Firstname: "Afeef", Lastname: "Ali" },
-    { Firstname: "Ahsan", Lastname: "Ali" },
-  ];
-  console.log(localStorage);
   const [members, setMembers] = useState([]);
   const [error, setError] = useState("");
 
@@ -27,12 +22,12 @@ const RegistrationForm = (props) => {
     fetchData();
   }, []);
 
-  console.log("members:", members, "error: ", error);
+  // console.log("members:", members, "error: ", error);
   const currentMember = members.find(
     (member) =>
       member.Firstname + " " + member.Lastname === localStorage.user_displayName
   );
-  console.log("currentMember: ", currentMember);
+  // console.log("currentMember: ", currentMember);
   return (
     <React.Fragment>
       <Card style={{ width: "70vw" }}>
@@ -60,20 +55,17 @@ const RegistrationForm = (props) => {
 
           {currentMember ? (
             <Checkbox
-              // type="checkbox"
               id="member"
               name={currentMember.Firstname + " " + currentMember.Lastname}
-              // age="age"
             />
           ) : null}
 
-          {dependents
-            ? dependents.map((dependent, index) => (
+          {currentMember && currentMember.Dependents
+            ? currentMember.Dependents.map((dependent, index) => (
                 <Checkbox
                   key={index}
                   id={index}
                   name={dependent.Firstname + " " + dependent.Lastname}
-                  // age={dependent.age}
                 />
               ))
             : null}
@@ -82,7 +74,6 @@ const RegistrationForm = (props) => {
               display: "flex",
               marginTop: "100px",
               flexDirection: "row",
-              // justifyContent: "start",
               fontSize: "1.2em",
               fontFamily: "robo",
             }}

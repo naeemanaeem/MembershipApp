@@ -11,7 +11,9 @@ import {
 
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+
 import RenderTooltip from "./Views/ToolTip";
+import parser from "html-react-parser";
 // on submit, this form will send data to the Activities component by using it's addActivity handler;
 // addActivity handler will add the activity to the activities array defined in the activities component's state.
 
@@ -42,6 +44,8 @@ const ActivityForm = (props) => {
 
   const [data, setData] = useState(currentData);
   const [isOnline, setIsOnline] = useState(false);
+  console.log("data.description: ", data.description);
+
   const formatDate = (date) => {
     const year = date.slice(0, 4);
     const month = date.slice(5, 7);
@@ -152,14 +156,23 @@ const ActivityForm = (props) => {
                 placement="bottom"
                 tooltip="Event Details"
               >
-                <div className="editor" style={{ marginBottom: "15px" }}>
+                <div id="editor" style={{ marginBottom: "15px" }}>
                   <CKEditor
+                    id={data.id}
                     editor={ClassicEditor}
                     data={data.descrition}
-                    placeholder="Enter Event Details Here"
                     onChange={(event, editor) => {
                       const editorData = editor.getData();
                       setData({ ...data, description: editorData });
+                    }}
+                    onError={(error, details) => {
+                      console.log("error: ", error);
+                      console.log("error details: ", details);
+                    }}
+                    config={{
+                      ckfinder: {
+                        uploadUrl: "/upload",
+                      },
                     }}
                   />
                 </div>
