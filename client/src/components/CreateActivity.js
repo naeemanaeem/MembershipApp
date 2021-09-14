@@ -7,26 +7,26 @@ import {
   Button,
   DropdownButton,
   Dropdown,
+  Row,
+  Col,
 } from "react-bootstrap";
 
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-
-import RenderTooltip from "./Views/ToolTip";
-import parser from "html-react-parser";
+import moment from "moment";
 // on submit, this form will send data to the Activities component by using it's addActivity handler;
 // addActivity handler will add the activity to the activities array defined in the activities component's state.
 
 const ActivityForm = (props) => {
+  /* State and constants
+   *************************** */
   const eventToBeEdited = props.selectedEvent;
-  let newData = {
+  const newData = {
     title: "",
-    id: "",
+    id: Math.floor(Math.random()),
     description: "",
-    startDate: "",
-    startTime: "",
-    endDate: "",
-    endTime: "",
+    startDateTime: "",
+    endDateTime: "",
     location: {},
     recurringEvent: false,
     cost: "$0",
@@ -38,36 +38,60 @@ const ActivityForm = (props) => {
     tagName: "",
     isRecurring: false,
   };
-
-  let currentData =
+  const currentData =
     Object.keys(eventToBeEdited).length > 0 ? eventToBeEdited : newData;
-
+  const errors = {
+    title: "",
+    description: "",
+    startDateTime: "",
+    contactEmail: "",
+    imageUrl: "",
+  };
   const [data, setData] = useState(currentData);
   const [isOnline, setIsOnline] = useState(false);
-  console.log("data.description: ", data.description);
+  const [formErrors, setErrors] = useState(errors);
 
-  const formatDate = (date) => {
-    const year = date.slice(0, 4);
-    const month = date.slice(5, 7);
-    const day = date.slice(8, 10);
-    return { year, month, day };
+  const minDate = moment(new Date()).format("YYYY-MM-DDTHH:MM");
+  const maxDate = data.startDateTime;
+  const validEmail = (val) =>
+    /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/i.test(val);
+  const validURL = (str) => {
+    var pattern = new RegExp(
+      "^(https?:\\/\\/)?" + // protocol
+        "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
+        "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
+        "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
+        "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
+        "(\\#[-a-z\\d_]*)?$",
+      "i"
+    ); // fragment locator
+    return !!pattern.test(str);
   };
-  const formatTime = (time) => {
-    let slicingIdx = time.indexOf(":");
-    let hours = time.slice(0, slicingIdx);
-    let minutes = time.slice(slicingIdx + 1, slicingIdx + 3);
-    let newTime = "";
-    if (hours === "00") {
-      newTime = `12:${minutes} AM`;
-    } else if (+hours < 12) {
-      newTime = `${+hours}:${minutes} AM`;
-    } else if (+hours === 12) {
-      newTime = `12:${minutes} PM`;
-    } else {
-      newTime = `${+hours - 12}:${minutes} PM`;
-    }
-    return newTime;
+
+  const findFormErrors = () => {
+    const { title, description, startDateTime, contactEmail, imageUrl } = data;
+    const newErrors = {};
+    // title errors
+    if (!title || title === "") newErrors.title = "Title cannot be blank!";
+    else if (title.length > 20) newErrors.title = "Title is too long!";
+    // description errors
+    if (!description || description === "")
+      newErrors.description = "Some event description is required!";
+    // startDateTime errors
+    if (!startDateTime || startDateTime === "")
+      newErrors.startDateTime = "Start date and time is required!";
+    // contactEmail errors
+    if (!contactEmail || contactEmail === "")
+      newErrors.contactEmail = "Email cannot be blank!";
+    else if (validEmail(contactEmail) === false)
+      newErrors.contactEmail = "Invalid Email address!";
+    // imageUrl errors
+    if (validURL(imageUrl.toString()) === false)
+      newErrors.imageUrl = "Invalid URL!";
+    return newErrors;
   };
+  //***********************************
+
   return (
     <Modal
       size="lg"
@@ -85,85 +109,103 @@ const ActivityForm = (props) => {
             </Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Form>
-              <InputGroup className="mb-3">
-                <RenderTooltip
-                  id="title"
-                  placement="bottom"
-                  tooltip="Event Title"
-                >
-                  <FormControl
-                    className="mr-3 mr-rounded"
-                    placeholder="Enter Event Title"
-                    aria-label="title"
-                    aria-describedby="title"
-                    type="text"
-                    defaultValue={eventToBeEdited.title}
-                    onChange={(e) =>
-                      setData({
-                        ...data,
-                        title: e.target.value,
-                      })
-                    }
-                  />
-                </RenderTooltip>
-                <DropdownButton
-                  id="dropdown-item-button"
-                  title="Registration"
-                  variant="primary"
-                >
-                  <Dropdown.Item
-                    as="button"
-                    style={{
-                      fontSize: "16px",
-                      margin: "0",
-                    }}
-                    defaultValue={eventToBeEdited.registration}
-                    value="Open"
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setData({
-                        ...data,
-                        registration: e.target.value,
-                      });
-                    }}
-                  >
-                    Open
-                  </Dropdown.Item>
-                  <Dropdown.Item
-                    as="button"
-                    style={{
-                      fontSize: "16px",
-                      margin: "0",
-                    }}
-                    value="Close"
-                    defaultValue={eventToBeEdited.registration}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setData({
-                        ...data,
-                        registration: e.target.value,
-                      });
-                    }}
-                  >
-                    Close
-                  </Dropdown.Item>
-                </DropdownButton>
-              </InputGroup>
-
-              <RenderTooltip
-                id="description"
-                placement="bottom"
-                tooltip="Event Details"
-              >
+            <Form onSubmit={() => {}}>
+              <Form.Group className="mb-3" controlId="formGroupTitle">
+                <Row>
+                  <Col className="col-7">
+                    <Form.Label>Title</Form.Label>
+                    <Form.Control
+                      id="title"
+                      placeholder="Enter Event Title"
+                      aria-label="title"
+                      aria-describedby="title"
+                      type="text"
+                      maxLength="20"
+                      defaultValue={eventToBeEdited.title}
+                      onChange={(e) => {
+                        setData({
+                          ...data,
+                          title: e.target.value,
+                        });
+                        if (!!formErrors.title)
+                          setErrors({
+                            ...formErrors,
+                            title: null,
+                          });
+                      }}
+                      isInvalid={!!formErrors.title}
+                    />
+                    <Form.Text className="text-muted">
+                      Title must be unique. Max Allowed: 20 characters including
+                      spaces.
+                    </Form.Text>
+                    <Form.Control.Feedback type="invalid">
+                      {formErrors.title}
+                    </Form.Control.Feedback>
+                  </Col>
+                  <Col>
+                    <Form.Label className="mt-4 "></Form.Label>
+                    <DropdownButton
+                      id="dropdown-item-button"
+                      title="Registration"
+                      variant="primary"
+                    >
+                      <Dropdown.Item
+                        as="button"
+                        style={{
+                          fontSize: "16px",
+                          margin: "0",
+                        }}
+                        defaultValue={eventToBeEdited.registration}
+                        value="Open"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setData({
+                            ...data,
+                            registration: e.target.value,
+                          });
+                        }}
+                      >
+                        Open
+                      </Dropdown.Item>
+                      <Dropdown.Item
+                        as="button"
+                        style={{
+                          fontSize: "16px",
+                          margin: "0",
+                        }}
+                        value="Close"
+                        defaultValue={eventToBeEdited.registration}
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setData({
+                            ...data,
+                            registration: e.target.value,
+                          });
+                        }}
+                      >
+                        Close
+                      </Dropdown.Item>
+                    </DropdownButton>
+                  </Col>
+                </Row>
+              </Form.Group>
+              <hr></hr>
+              <Form.Group className="mb-3" controlId="formGroupDescription">
+                <Form.Label className="mt-3 ">Event Details</Form.Label>
                 <div id="editor" style={{ marginBottom: "15px" }}>
                   <CKEditor
                     id={data.id}
                     editor={ClassicEditor}
                     data={data.descrition}
                     onChange={(event, editor) => {
-                      const editorData = editor.getData();
+                      const editorData = encodeURIComponent(editor.getData());
                       setData({ ...data, description: editorData });
+                      if (!!formErrors.description)
+                        setErrors({
+                          ...formErrors,
+                          description: null,
+                        });
                     }}
                     onError={(error, details) => {
                       console.log("error: ", error);
@@ -175,281 +217,274 @@ const ActivityForm = (props) => {
                       },
                     }}
                   />
+                  <Form.Control isInvalid={!!formErrors.description} />
+                  <Form.Control.Feedback type="invalid">
+                    {formErrors.description}
+                  </Form.Control.Feedback>
                 </div>
-              </RenderTooltip>
+                <Form.Text className="text-muted">
+                  Images might need resizing for proper display in the event
+                  detail page.
+                </Form.Text>
+                <Form.Control.Feedback type="invalid">
+                  {formErrors.description}
+                </Form.Control.Feedback>
+              </Form.Group>
+              <hr></hr>
+              <Form.Group className="mb-3" controlId="formGroupDatetime">
+                <Row>
+                  <Col>
+                    <Form.Label className="mt-3">
+                      Start Date And Time
+                    </Form.Label>
 
-              <InputGroup className="mb-3">
-                <InputGroup.Prepend>
-                  <InputGroup.Text id="startDate">Start Date </InputGroup.Text>
-                </InputGroup.Prepend>
-                <FormControl
-                  className="mr-rounded"
-                  placeholder="Start Date"
-                  aria-label="start date"
-                  aria-describedby="start date"
-                  type="date"
-                  defaultValue={eventToBeEdited.startDate}
-                  onChange={(e) => {
-                    let dateObject = formatDate(e.target.value);
-
-                    setData({
-                      ...data,
-                      startDate:
-                        dateObject.month +
-                        "/" +
-                        dateObject.day +
-                        "/" +
-                        dateObject.year,
-                    });
-                  }}
-                />
-                <InputGroup.Prepend>
-                  <InputGroup.Text id="startDate">End Date </InputGroup.Text>
-                </InputGroup.Prepend>
-                <FormControl
-                  className="mr-rounded"
-                  placeholder="End Date"
-                  aria-label="end date"
-                  aria-describedby="end date"
-                  type="date"
-                  defaultValue={eventToBeEdited.endDate}
-                  onChange={(e) => {
-                    let dateObject = formatDate(e.target.value);
-                    setData({
-                      ...data,
-                      endDate:
-                        dateObject.month +
-                        "/" +
-                        dateObject.day +
-                        "/" +
-                        dateObject.year,
-                    });
-                  }}
-                />
-              </InputGroup>
-              <InputGroup className="mb-3">
-                <InputGroup.Prepend className="ml-rounded">
-                  <InputGroup.Text id="time">Starts</InputGroup.Text>
-                </InputGroup.Prepend>
-                <FormControl
-                  className="mr-rounded"
-                  placeholder="Start Time"
-                  aria-label="start-time"
-                  aria-describedby="start-time"
-                  type="time"
-                  defaultValue={eventToBeEdited.startTime}
-                  onChange={(e) => {
-                    setData({
-                      ...data,
-
-                      startTime: formatTime(e.target.value),
-                    });
-                  }}
-                />
-
-                <InputGroup.Prepend className="mr-rounded">
-                  <InputGroup.Text id="time">Ends</InputGroup.Text>
-                </InputGroup.Prepend>
-                <FormControl
-                  placeholder="End Time"
-                  aria-label="end-time"
-                  aria-describedby="end-time"
-                  type="time"
-                  defaultValue={eventToBeEdited.endTime}
-                  onChange={(e) => {
-                    setData({
-                      ...data,
-
-                      endTime: formatTime(e.target.value),
-                    });
-                  }}
-                />
-              </InputGroup>
-
-              <InputGroup className="mb-3">
-                <InputGroup.Prepend className="ml-rounded">
-                  <InputGroup.Text id="contact">Contact Email</InputGroup.Text>
-                </InputGroup.Prepend>
-                <RenderTooltip
-                  id="contactEmail"
-                  placement="bottom"
-                  tooltip="Contact Email Address
-                           Example: abc@xyz.com"
-                >
-                  <FormControl
-                    placeholder="abc@xyz.com"
-                    aria-label="contact email"
-                    aria-describedby="contact email"
-                    type="email"
-                    defaultValue={eventToBeEdited.contactEmail}
-                    onChange={(e) => {
-                      setData({ ...data, contactEmail: e.target.value });
-                    }}
-                  />
-                </RenderTooltip>
-              </InputGroup>
-
-              <InputGroup className="mb-3">
-                <InputGroup.Prepend className="ml-rounded">
-                  <InputGroup.Text id="tags">Special Tag /s</InputGroup.Text>
-                </InputGroup.Prepend>
-                <RenderTooltip
-                  id="tags"
-                  placement="bottom"
-                  tooltip="Example: Tag1, Tag2, Tag3...
-                           Max Allowed: 4"
-                >
-                  <FormControl
-                    placeholder="Example: Tag1, Tag2, Tag3... (Max Allowed: 4)"
-                    aria-label="tags"
-                    aria-describedby="tags"
-                    type="text"
-                    defaultValue={eventToBeEdited.tagName}
-                    onChange={(e) => {
-                      setData({ ...data, tagName: e.target.value });
-                    }}
-                  />
-                </RenderTooltip>
-              </InputGroup>
-              <InputGroup className="mb-3">
-                <InputGroup.Prepend>
-                  <InputGroup.Text id="Location">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      width="18"
-                      height="18"
-                      fill="currentColor"
-                      className="bi bi-geo-alt"
-                      viewBox="0 0 16 16"
+                    <Form.Control
+                      className="rounded"
+                      aria-label="start datetime"
+                      aria-describedby="start datetime"
+                      type="datetime-local"
+                      min={minDate}
+                      required
+                      onChange={(e) => {
+                        setData({
+                          ...data,
+                          startDateTime: e.target.value,
+                          endDateTime: e.target.value,
+                        });
+                        if (!!formErrors.startDateTime)
+                          setErrors({
+                            ...formErrors,
+                            startDateTime: null,
+                          });
+                      }}
+                      isInvalid={!!formErrors.startDateTime}
+                    />
+                    <Form.Control.Feedback type="invalid">
+                      {formErrors.startDateTime}
+                    </Form.Control.Feedback>
+                  </Col>
+                  <Col>
+                    <Form.Label
+                      className="mt-3"
+                      controlId="formGroupEndDatetime"
                     >
-                      <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A31.493 31.493 0 0 1 8 14.58a31.481 31.481 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94zM8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10z" />
-                      <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
-                    </svg>
-                  </InputGroup.Text>
-                </InputGroup.Prepend>
-                <RenderTooltip
-                  id="address"
-                  placement="bottom"
-                  tooltip="Street Address"
-                >
-                  <FormControl
-                    type="text"
-                    placeholder="Address"
-                    aria-label="address"
-                    aria-describedby="address"
-                    defaultValue={
-                      eventToBeEdited.location
-                        ? eventToBeEdited.location.street
-                        : ""
-                    }
-                    onChange={(e) =>
-                      setData({
-                        ...data,
-                        location: { ...data.location, street: e.target.value },
-                      })
-                    }
-                  />
-                </RenderTooltip>
-                <RenderTooltip id="city" placement="bottom" tooltip="City">
-                  <FormControl
-                    type="text"
-                    placeholder="City"
-                    aria-label="city"
-                    aria-describedby="city"
-                    defaultValue={
-                      eventToBeEdited.location
-                        ? eventToBeEdited.location.city
-                        : ""
-                    }
-                    onChange={(e) =>
-                      setData({
-                        ...data,
-                        location: { ...data.location, city: e.target.value },
-                      })
-                    }
-                  />
-                </RenderTooltip>
-                <RenderTooltip
-                  id="state"
-                  placement="bottom"
-                  tooltip="State (2-letter abr)"
-                >
-                  <FormControl
-                    placeholder="State"
-                    aria-label="state"
-                    aria-describedby="state"
-                    type="text"
-                    maxLength="2"
-                    defaultValue={
-                      eventToBeEdited.location
-                        ? eventToBeEdited.location.state
-                        : ""
-                    }
-                    onChange={(e) =>
-                      setData({
-                        ...data,
-                        location: { ...data.location, state: e.target.value },
-                      })
-                    }
-                  />
-                </RenderTooltip>
-                <RenderTooltip
-                  id="country"
-                  placement="bottom"
-                  tooltip="Country"
-                >
-                  <FormControl
-                    type="text"
-                    placeholder="Country"
-                    aria-label="country"
-                    aria-describedby="country"
-                    defaultValue={
-                      eventToBeEdited.location
-                        ? eventToBeEdited.location.country
-                        : ""
-                    }
-                    onChange={(e) =>
-                      setData({
-                        ...data,
-                        location: { ...data.location, country: e.target.value },
-                      })
-                    }
-                  />
-                </RenderTooltip>
-                <RenderTooltip
-                  id="zip"
-                  placement="bottom"
-                  tooltip="Zip or Postal code"
-                >
-                  <FormControl
-                    placeholder="ZIP"
-                    aria-label="zip"
-                    aria-describedby="zip"
-                    type="number"
-                    min="0"
-                    defaultValue={
-                      eventToBeEdited.location
-                        ? eventToBeEdited.location.zip
-                        : ""
-                    }
-                    onChange={(e) =>
-                      setData({
-                        ...data,
-                        location: { ...data.location, zip: e.target.value },
-                      })
-                    }
-                  />
-                </RenderTooltip>
-              </InputGroup>
-              <InputGroup className="mb-3">
-                <InputGroup.Prepend className="ml-rounded">
-                  <InputGroup.Text id="cost">$</InputGroup.Text>
-                </InputGroup.Prepend>
-                <RenderTooltip
-                  id="cost"
-                  placement="bottom"
-                  tooltip="Event Registration Cost if apply"
-                >
+                      End Date and Time
+                    </Form.Label>
+                    <Form.Control
+                      className="rounded"
+                      aria-label="end datetime"
+                      aria-describedby="end datetime"
+                      type="datetime-local"
+                      min={maxDate}
+                      onChange={(e) => {
+                        setData({
+                          ...data,
+                          endDateTime: e.target.value,
+                        });
+                      }}
+                    />
+                  </Col>
+                </Row>
+              </Form.Group>
+              <hr></hr>
+              <Form.Group className="mb-3" controlId="formGroupContactEmail">
+                <Form.Label className="mt-3 ">Contact Email</Form.Label>
+
+                <Form.Control
+                  placeholder="name@example.com"
+                  aria-label="contact email"
+                  aria-describedby="contact email"
+                  type="email"
+                  defaultValue={eventToBeEdited.contactEmail}
+                  onChange={(e) => {
+                    setData({ ...data, contactEmail: e.target.value });
+                    if (!!formErrors.contactEmail)
+                      setErrors({
+                        ...formErrors,
+                        contactEmail: null,
+                      });
+                  }}
+                  isInvalid={!!formErrors.contactEmail}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {formErrors.contactEmail}
+                </Form.Control.Feedback>
+              </Form.Group>
+              <hr></hr>
+
+              <Form.Group className="mb-3" controlId="formGroupTags">
+                <Form.Label className="mt-3">Special Tag(s)</Form.Label>
+
+                <Form.Control
+                  placeholder="Example: Tag1, Tag2, Tag3... (Max Allowed: 4)"
+                  aria-label="tags"
+                  aria-describedby="tags"
+                  type="text"
+                  defaultValue={eventToBeEdited.tagName}
+                  onChange={(e) => {
+                    setData({ ...data, tagName: e.target.value });
+                  }}
+                />
+
+                <Form.Text className="text-muted">
+                  Multiple Tags can be entered as comma separated values.
+                  Example: Tag1, Tag2, Tag3... Max Allowed: 4
+                </Form.Text>
+              </Form.Group>
+              <hr></hr>
+
+              <Form.Group className="mb-3" controlId="formGroupAddress">
+                <Form.Label className="mt-3">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="18"
+                    height="18"
+                    fill="currentColor"
+                    className="bi bi-geo-alt"
+                    viewBox="0 0 16 16"
+                  >
+                    <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A31.493 31.493 0 0 1 8 14.58a31.481 31.481 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94zM8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10z" />
+                    <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+                  </svg>{" "}
+                  Location
+                </Form.Label>
+
+                <Form.Control
+                  type="text"
+                  placeholder="Street Address"
+                  aria-label="street address"
+                  aria-describedby="street address"
+                  defaultValue={
+                    eventToBeEdited.location
+                      ? eventToBeEdited.location.street
+                      : ""
+                  }
+                  onChange={(e) =>
+                    setData({
+                      ...data,
+                      location: {
+                        ...data.location,
+                        street: e.target.value,
+                      },
+                    })
+                  }
+                />
+
+                <Row>
+                  <Col>
+                    <Form.Label className="mt-3" controlId="formGroupCity">
+                      City
+                    </Form.Label>
+
+                    <Form.Control
+                      type="text"
+                      placeholder="City"
+                      aria-label="city"
+                      aria-describedby="city"
+                      defaultValue={
+                        eventToBeEdited.location
+                          ? eventToBeEdited.location.city
+                          : ""
+                      }
+                      onChange={(e) =>
+                        setData({
+                          ...data,
+                          location: {
+                            ...data.location,
+                            city: e.target.value,
+                          },
+                        })
+                      }
+                    />
+                  </Col>
+                  <Col>
+                    <Form.Label className="mt-3" controlId="formGroupState">
+                      State
+                    </Form.Label>
+
+                    <Form.Control
+                      placeholder="State"
+                      aria-label="state"
+                      aria-describedby="state"
+                      type="text"
+                      maxLength="2"
+                      defaultValue={
+                        eventToBeEdited.location
+                          ? eventToBeEdited.location.state
+                          : ""
+                      }
+                      onChange={(e) =>
+                        setData({
+                          ...data,
+                          location: {
+                            ...data.location,
+                            state: e.target.value,
+                          },
+                        })
+                      }
+                    />
+                  </Col>
+
+                  <Col>
+                    <Form.Label className="mt-3" controlId="formGroupCountry">
+                      Country
+                    </Form.Label>
+
+                    <FormControl
+                      type="text"
+                      placeholder="Country"
+                      aria-label="country"
+                      aria-describedby="country"
+                      defaultValue={
+                        eventToBeEdited.location
+                          ? eventToBeEdited.location.country
+                          : ""
+                      }
+                      onChange={(e) =>
+                        setData({
+                          ...data,
+                          location: {
+                            ...data.location,
+                            country: e.target.value,
+                          },
+                        })
+                      }
+                    />
+                  </Col>
+                  <Col>
+                    <Form.Label className=" mt-3" controlId="formGroupZip">
+                      Zip Code
+                    </Form.Label>
+
+                    <FormControl
+                      placeholder="ZIP"
+                      aria-label="zip"
+                      aria-describedby="zip"
+                      type="text"
+                      defaultValue={
+                        eventToBeEdited.location
+                          ? eventToBeEdited.location.zip
+                          : ""
+                      }
+                      onChange={(e) =>
+                        setData({
+                          ...data,
+                          location: { ...data.location, zip: e.target.value },
+                        })
+                      }
+                    />
+                  </Col>
+                </Row>
+              </Form.Group>
+              <hr></hr>
+
+              <Form.Group className="mb-3" controlId="formGroupCost">
+                <Form.Label className="mt-3">Event Cost</Form.Label>
+                <InputGroup>
+                  <InputGroup.Prepend className="ml-rounded">
+                    <InputGroup.Text id="cost">$</InputGroup.Text>
+                  </InputGroup.Prepend>
+
                   <FormControl
                     placeholder="Cost"
                     aria-label="cost"
@@ -463,28 +498,40 @@ const ActivityForm = (props) => {
                       setData({ ...data, cost: "$" + e.target.value })
                     }
                   />
-                </RenderTooltip>
-                <InputGroup.Prepend className="mr-rounded ml-2">
-                  <InputGroup.Text id="imageUrl">Image URL</InputGroup.Text>
-                </InputGroup.Prepend>
+                </InputGroup>
+              </Form.Group>
+              <hr></hr>
 
-                <FormControl
+              <Form.Group className="mb-3" controlId="formGroupImageUrl">
+                <Form.Label className="mt-3">Image URL</Form.Label>
+
+                <Form.Control
                   placeholder="Image URL"
-                  aria-label="image"
-                  aria-describedby="image"
+                  aria-label="image url"
+                  aria-describedby="image url"
                   type="url"
                   defaultValue={eventToBeEdited.imageUrl}
-                  onChange={(e) =>
-                    setData({ ...data, imageUrl: e.target.value })
-                  }
+                  onChange={(e) => {
+                    setData({ ...data, imageUrl: e.target.value });
+                    if (!!formErrors.imageUrl)
+                      setErrors({
+                        ...errors,
+                        imageUrl: null,
+                      });
+                  }}
+                  isInvalid={!!formErrors.imageUrl}
                 />
-              </InputGroup>
-              <InputGroup className="mb-3">
-                <div className="form-check">
+                <Form.Control.Feedback type="invalid">
+                  {formErrors.imageUrl}
+                </Form.Control.Feedback>
+              </Form.Group>
+
+              <hr></hr>
+              <Form.Group className="mb-3" controlId="formGroupOnline">
+                <div className="mb-3 form-check">
                   <input
                     className="form-check-input"
                     type="checkbox"
-                    value=""
                     id="online"
                     checked={isOnline}
                     defaultValue={eventToBeEdited.online}
@@ -502,35 +549,35 @@ const ActivityForm = (props) => {
                     Online Event
                   </label>
                 </div>
-              </InputGroup>
+              </Form.Group>
+
               {isOnline && (
-                <InputGroup className="mb-3">
-                  <RenderTooltip
-                    id="meetingLink"
-                    placement="bottom"
-                    tooltip="Enter meeting link or URL only. Meeting ID, if needed, can be provided in the event details"
-                  >
-                    <FormControl
-                      placeholder="Meeting Link"
-                      aria-label="meeting-link"
-                      aria-describedby="meeting-link"
-                      type="url"
-                      defaultValue={eventToBeEdited.meetingLink}
-                      onChange={(e) =>
-                        setData({ ...data, meetingLink: e.target.value })
-                      }
-                    />
-                  </RenderTooltip>
-                </InputGroup>
+                <Form.Group className="mb-3" controlId="formGroupMeetinglink">
+                  <Form.Control
+                    placeholder="Meeting Link"
+                    aria-label="meeting-link"
+                    aria-describedby="meeting-link"
+                    type="url"
+                    defaultValue={eventToBeEdited.meetingLink}
+                    onChange={(e) =>
+                      setData({ ...data, meetingLink: e.target.value })
+                    }
+                  />
+
+                  <Form.Text className="text-muted">
+                    Enter meeting link or URL. Meeting ID, if required, can be
+                    provided in the event detail
+                  </Form.Text>
+                </Form.Group>
               )}
-              <InputGroup className="mb-3">
+              <hr></hr>
+              <Form.Group className="mb-3" controlId="formGroupImageUrl">
                 <div className="form-check">
                   <input
                     className="form-check-input"
                     type="checkbox"
                     value=""
                     id="recurringEvent"
-                    // checked={isOnline}
                     defaultValue={eventToBeEdited.isRecurring}
                     onChange={(e) => {
                       setData({ ...data, isRecurring: e.target.checked });
@@ -545,7 +592,8 @@ const ActivityForm = (props) => {
                     Recurring Event
                   </label>
                 </div>
-              </InputGroup>
+              </Form.Group>
+              <hr></hr>
             </Form>
           </Modal.Body>
           <Modal.Footer>
@@ -555,10 +603,18 @@ const ActivityForm = (props) => {
             <Button
               variant="primary"
               onClick={(event) => {
-                let id = JSON.stringify(Math.random());
-                const newData = { ...data, id: id };
-                props.addActivity(newData);
-                props.onCancel();
+                const newErrors = findFormErrors();
+                if (Object.keys(newErrors).length > 0) {
+                  setErrors(newErrors);
+                } else {
+                  let id = Math.floor(Math.random());
+                  const newData = { ...data, id: id };
+
+                  console.log("newData: ", newData);
+                  console.log("Your Event has been created successively!");
+                  props.addActivity(newData);
+                  props.onCancel();
+                }
               }}
             >
               Save
