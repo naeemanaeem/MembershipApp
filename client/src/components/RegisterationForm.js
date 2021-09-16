@@ -81,8 +81,10 @@ const RegistrationForm = (props) => {
             <Card.Text>Transaction Fee: </Card.Text>
 
             <Card.Text>
-              {"  "}
-              <b>{props.eventCost}</b>
+              <b>
+                {"   $"}
+                {props.eventCost}
+              </b>
             </Card.Text>
           </div>
         </Card.Body>

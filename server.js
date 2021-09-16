@@ -112,6 +112,7 @@ app.use(express.static("uploads"));
 // Routes
 app.use("/auth", require("./routes/auth"));
 app.use("/members", require("./routes/members"));
+app.use("/activities", require("./routes/activities"));
 
 //app.use('/newmembers', require('./routes/newmembers'));
 

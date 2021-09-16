@@ -1,181 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Activity from "./Activity";
 import ActivityForm from "./CreateActivity";
 import EventDetail from "./EventDetail";
 import Container from "react-bootstrap/Container";
 import { Row, Col } from "react-bootstrap";
+import axios from "axios";
 
 const Activities = () => {
-  console.log(localStorage);
-  const [activities, setActivities] = useState([
-    {
-      title: "Kids Soccer",
-      tagName: "Kids Event, Summer Program",
-      id: JSON.stringify(Math.random()),
-      startDate: "09/22/21",
-      endDate: "09/22/21",
-      startTime: "6:00 PM",
-      endTime: "7:30 PM",
-      location: {
-        street: "Central Park",
-        city: "Mountain House",
-        state: "Ca",
-        country: "USA",
-        zip: "95132",
-      },
-      online: false,
-      registration: "Open",
-      isRecurring: false,
-      meetingLinK: "zoomLink",
-      contactEmail: "abc&xyz.com",
-      cost: "$50",
-      imageUrl:
-        "https://images.freeimages.com/images/small-previews/a3c/kiddies-soccer-1313513.jpg",
-      description:
-        "lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum.lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum",
-    },
-    {
-      title: "MH Fit",
-      id: JSON.stringify(Math.random()),
-      startDate: "09/22/21",
-      endDate: "09/22/21",
-      startTime: "6:00 PM",
-      endTime: "7:30 PM",
-      registration: "Close",
-      isRecurring: true,
-      contactEmail: "abc&xyz.com",
-      location: {
-        street: "Central Park",
-        city: "",
-        state: "",
-        country: "",
-        zip: "",
-      },
-      meetingLink: "",
-      online: false,
-
-      cost: "$0",
-      imageUrl:
-        "https://wacdn-img1.secure.footprint.net/media/28010/slider-image-1.jpg?v=637332651830000000",
-      description:
-        "lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum.lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum",
-    },
-    {
-      title: "Family Night",
-      id: JSON.stringify(Math.random()),
-      startDate: "09/22/21",
-      endDate: "09/22/21",
-      startTime: "6:00 PM",
-      endTime: "7:30 PM",
-      registration: "Close",
-      isRecurring: false,
-      tagName: "Monthly Event",
-      meetingLink: "zoom link",
-      contactEmail: "abc&xyz.com",
-      location: {
-        street: "Central Park",
-        city: "",
-        state: "",
-        country: "",
-        zip: "",
-      },
-      online: true,
-      cost: "$15 per adult, $7 per kid",
-      imageUrl:
-        "https://www.opkansas.org/wp-content/uploads/2020/09/Thompson-Park-Concert-Grass-web.jpg",
-      description:
-        "lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum.lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum",
-    },
-    {
-      title: "Half Marathon",
-      id: JSON.stringify(Math.random()),
-      startDate: "09/22/21",
-      endDate: "09/22/21",
-      // date: "09/22/21",
-      startTime: "6:00 PM",
-      endTime: "7:30 PM",
-      registration: "Close",
-      isRecurring: false,
-      contactEmail: "abc&xyz.com",
-      location: {
-        street: "",
-        city: "Livermore",
-        state: "CA",
-        country: "",
-        zip: "",
-      },
-      cost: "$0",
-      online: false,
-      meetingLink: "",
-      imageUrl: "https://wmimg.azureedge.net/public/img/home/hp-4-min.jpg",
-      description:
-        "lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum.lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum",
-    },
-    {
-      title: "Tafseer-e-Quran",
-      id: JSON.stringify(Math.random()),
-      startDate: "09/22/21",
-      endDate: "09/22/21",
-      startTime: "6:00 PM",
-      endTime: "7:30 PM",
-      registration: "Open",
-      contactEmail: "abc&xyz.com",
-      tagName: "Free Classes",
-      location: {
-        street: "Mountain House Musallah",
-        city: "",
-        state: "",
-        country: "",
-        zip: "",
-      },
-      online: true,
-      isRecurring: true,
-      meetingLink: "zoom link",
-      cost: "$0",
-      imageUrl:
-        "https://st2.depositphotos.com/1904083/6499/i/950/depositphotos_64992431-stock-photo-quran-holy-book-of-islam.jpg",
-      description:
-        "lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum.lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum",
-    },
-
-    {
-      title: "Basketball",
-      id: JSON.stringify(Math.random()),
-      startDate: "09/22/21",
-      endDate: "09/22/21",
-      startTime: "6:00 PM",
-      endTime: "7:30 PM",
-      isRecurring: false,
-      online: false,
-      contactEmail: "abc&xyz.com",
-      location: {
-        street: "Central Park",
-        city: "",
-        state: "",
-        country: "",
-        zip: "",
-      },
-      cost: "$0",
-      tagName: "Women Only",
-      imageUrl:
-        "https://images.unsplash.com/photo-1576438162986-c685b1cfed7a?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Mnx8YmFza2V0YmFsbCUyMG5ldHxlbnwwfHwwfHw%3D&ixlib=rb-1.2.1&w=1000&q=80",
-      description:
-        "lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum.lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum lorum ipsum",
-    },
-  ]);
+  const [activities, setActivities] = useState([]);
+  const [error, setError] = useState();
   const [showForm, setShowForm] = useState(false);
   const [eventDetail, setEventDetail] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState({});
 
-  const addActivityHandler = (data) => {
-    if (Object.keys(selectedEvent).length > 0) {
-      const newActivities = activities.map((activity) =>
-        activity.id === selectedEvent.id ? { ...activity, ...data } : activity
-      );
-      setActivities(newActivities);
-    } else {
-      setActivities([...activities, data]);
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        const res = await axios.get("/activities");
+        setActivities(res.data);
+      } catch (e) {
+        setError(e.message);
+        console.error(error);
+      }
     }
+    fetchData();
+  }, []);
+
+  const addActivityHandler = (data) => {
+    setActivities(data);
   };
   const handleHideEventDetail = () => {
     setEventDetail((prevState) => !prevState);
@@ -184,23 +36,35 @@ const Activities = () => {
   const showFormHandler = () => {
     setShowForm((prevState) => !prevState);
   };
-  const deleteActivityHandler = (id) => {
-    setActivities((prevState) =>
-      prevState.filter((activity) => {
-        console.log(activity.id);
-        return activity.id !== id;
+  const deleteActivityHandler = (id, title) => {
+    axios
+      .delete(`/activities/${id}`)
+      .then((res) => {
+        console.log("response:", res);
+        alert(`Your Event with the Title "${title}" has been deleted!`);
+        axios
+          .get("/activities")
+          .then((res) => {
+            setActivities(res.data);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
       })
-    );
+      .catch((error) => {
+        console.log(error);
+      });
+
     setEventDetail((state) => !state);
   };
   const editActivityHandler = (id) => {
     const editedEvent = activities.reduce((acc, activity) => {
-      if (activity.id === id) {
+      if (activity._id === id) {
         acc = { ...activity };
       }
       return acc;
     }, {});
-    console.log("editedEvent: ", editedEvent);
+
     setSelectedEvent(editedEvent);
     setEventDetail((prevState) => !prevState);
 
@@ -258,17 +122,25 @@ const Activities = () => {
           </span>
         </div>
         <main>
-          <Row xs={1} md={2} lg={3} className="g-4">
-            {activities.map((activity) => (
-              <Col key={activity.id}>
-                <Activity
-                  onCardClick={setSelectedEvent}
-                  onEventDetail={setEventDetail}
-                  data={activity}
-                />
-              </Col>
-            ))}
-          </Row>
+          {activities.length ? (
+            <Row xs={1} md={2} lg={3} className="g-4">
+              {activities.map((activity) => (
+                <Col key={activity._id}>
+                  <Activity
+                    onCardClick={setSelectedEvent}
+                    onEventDetail={setEventDetail}
+                    data={activity}
+                  />
+                </Col>
+              ))}
+            </Row>
+          ) : (
+            <center>
+              <h1 style={{ color: "red", marginTop: "20px" }}>
+                Activites coming soon!
+              </h1>
+            </center>
+          )}
         </main>
       </Container>
     );

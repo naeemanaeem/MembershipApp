@@ -14,32 +14,17 @@ import {
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import moment from "moment";
-// on submit, this form will send data to the Activities component by using it's addActivity handler;
-// addActivity handler will add the activity to the activities array defined in the activities component's state.
+import axios from "axios";
 
 const ActivityForm = (props) => {
   /* State and constants
    *************************** */
   const eventToBeEdited = props.selectedEvent;
-  const newData = {
-    title: "",
-    id: Math.floor(Math.random()),
-    description: "",
-    startDateTime: "",
-    endDateTime: "",
-    location: {},
-    recurringEvent: false,
-    cost: "$0",
-    imageUrl: "",
-    online: false,
-    meetingLink: "",
-    registration: "Open",
-    contactEmail: "",
-    tagName: "",
-    isRecurring: false,
-  };
+
   const currentData =
-    Object.keys(eventToBeEdited).length > 0 ? eventToBeEdited : newData;
+    Object.keys(eventToBeEdited).length > 0
+      ? eventToBeEdited
+      : { id: Math.floor(Math.random()) };
   const errors = {
     title: "",
     description: "",
@@ -86,7 +71,7 @@ const ActivityForm = (props) => {
     else if (validEmail(contactEmail) === false)
       newErrors.contactEmail = "Invalid Email address!";
     // imageUrl errors
-    if (validURL(imageUrl.toString()) === false)
+    if (imageUrl && validURL(imageUrl.toString()) === false)
       newErrors.imageUrl = "Invalid URL!";
     return newErrors;
   };
@@ -197,7 +182,11 @@ const ActivityForm = (props) => {
                   <CKEditor
                     id={data.id}
                     editor={ClassicEditor}
-                    data={data.descrition}
+                    data={
+                      data.description
+                        ? decodeURIComponent(data.description)
+                        : ""
+                    }
                     onChange={(event, editor) => {
                       const editorData = encodeURIComponent(editor.getData());
                       setData({ ...data, description: editorData });
@@ -217,18 +206,18 @@ const ActivityForm = (props) => {
                       },
                     }}
                   />
-                  <Form.Control isInvalid={!!formErrors.description} />
+                  <Form.Text className="text-muted">
+                    Images might need resizing for proper display in the event
+                    detail page.
+                  </Form.Text>
+                  <Form.Control
+                    isInvalid={!!formErrors.description}
+                    style={{ border: "none" }}
+                  />
                   <Form.Control.Feedback type="invalid">
                     {formErrors.description}
                   </Form.Control.Feedback>
                 </div>
-                <Form.Text className="text-muted">
-                  Images might need resizing for proper display in the event
-                  detail page.
-                </Form.Text>
-                <Form.Control.Feedback type="invalid">
-                  {formErrors.description}
-                </Form.Control.Feedback>
               </Form.Group>
               <hr></hr>
               <Form.Group className="mb-3" controlId="formGroupDatetime">
@@ -494,9 +483,7 @@ const ActivityForm = (props) => {
                     max="10000.00"
                     step="0.01"
                     defaultValue={eventToBeEdited ? eventToBeEdited.cost : ""}
-                    onChange={(e) =>
-                      setData({ ...data, cost: "$" + e.target.value })
-                    }
+                    onChange={(e) => setData({ ...data, cost: e.target.value })}
                   />
                 </InputGroup>
               </Form.Group>
@@ -512,7 +499,12 @@ const ActivityForm = (props) => {
                   type="url"
                   defaultValue={eventToBeEdited.imageUrl}
                   onChange={(e) => {
-                    setData({ ...data, imageUrl: e.target.value });
+                    setData({
+                      ...data,
+                      imageUrl: e.target.value
+                        ? e.target.value
+                        : "https://mhma.info/wp-content/uploads/2021/07/MHMA-logo-1-1024x410.png",
+                    });
                     if (!!formErrors.imageUrl)
                       setErrors({
                         ...errors,
@@ -606,14 +598,51 @@ const ActivityForm = (props) => {
                 const newErrors = findFormErrors();
                 if (Object.keys(newErrors).length > 0) {
                   setErrors(newErrors);
+                  alert("Please correct erros in your form entries!");
                 } else {
-                  let id = Math.floor(Math.random());
-                  const newData = { ...data, id: id };
+                  if (Object.keys(eventToBeEdited).length > 0) {
+                    axios
+                      .put(`/activities/${eventToBeEdited._id}`, data)
+                      .then((res) => {
+                        console.log("response:", res);
+                        alert(
+                          `Your Event with the Title "${eventToBeEdited.title}" has been updated!`
+                        );
+                        axios
+                          .get("/activities")
+                          .then((res) => {
+                            props.addActivity(res.data);
+                          })
+                          .catch((error) => {
+                            console.log(error);
+                          });
 
-                  console.log("newData: ", newData);
-                  console.log("Your Event has been created successively!");
-                  props.addActivity(newData);
-                  props.onCancel();
+                        props.onCancel();
+                      })
+                      .catch((error) => {
+                        console.log(error);
+                      });
+                  } else {
+                    axios
+                      .post("/activities", data)
+                      .then((res) => {
+                        console.log(res);
+                        alert("Your Event has been created successively!");
+                        axios
+                          .get("/activities")
+                          .then((res) => {
+                            props.addActivity(res.data);
+                          })
+                          .catch((error) => {
+                            console.log(error);
+                          });
+
+                        props.onCancel();
+                      })
+                      .catch((error) => {
+                        console.log(error);
+                      });
+                  }
                 }
               }}
             >
