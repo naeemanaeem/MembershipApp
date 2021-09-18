@@ -10,39 +10,68 @@ import Form from 'react-bootstrap/Form'
 import {Col} from 'reactstrap';
 import './css_stuff/memberedit.css';
 import DependentEdit from './dependentedit';
+import { connection } from 'mongoose';
+import Member from './member.jsx';
+import './css_stuff/member.css';
 
 
 class MemberEdit extends Component {
   state = {
     modalShow: false,
+    isNewMember: false,
     tempmember: {},
-    dependents: []
+    replacemember: {},
+    dependents: [],
+    isEdit: false
   };
 
   handleSave = (e) => {
-    this.props.onSave(this.props.member);
+    if(this.props.myAccount){
+      this.props.onSave(this.props.member);
+    } else {
+      this.setIsNewMember(false);
+      this.props.onSave(this.props.member);
+      for(var i = 0; i < this.state.dependents.length; ++i){
+        // console.log("length", this.state.dependents.length, this)
+        this.props.addDependentMember(this.props.member, this.state.dependents[i]);
+      }
+      this.setState({dependents: []});
+    }
   }
   
   handleCancel = () => {
+    this.setIsNewMember(false);
     this.props.onCancel(this.props.member);
+    this.setState({dependents: []});
   }
 
   setModalShow = (e) => {
     this.setState({modalShow: e});
   }
 
+  setIsNewMember = (e) => {
+    this.setState({isNewMember: e});
+  }
+
   showDependentEditDialog = () => {
-    let m = {...this.props.member};
-    this.setState({ 
-      tempmember: {
-        Firstname: "", Lastname: "", 
-        HouseNo: m.HouseNo, Street: m.Street,  Village: m.Village,
-        City: m.City, State: m.State, Country: m.Country,
-        Postcode: m.Postcode, Guardians: [m._id]
-      }
-    },
-    this.setModalShow(true),
-    this.props.onDependentShow());
+    if(!this.state.isEdit){ 
+      let m = {...this.props.member};
+      if(!m._id){this.setIsNewMember(true);}
+      this.setState({ 
+        tempmember: {
+          Firstname: "", Lastname: "", 
+          HouseNo: m.HouseNo, Street: m.Street,  Village: m.Village,
+          City: m.City, State: m.State, Country: m.Country,
+          Postcode: m.Postcode, Guardians: []
+        }
+      },
+      this.setModalShow(true),
+      this.props.onDependentShow());
+    }
+    else{
+      this.setModalShow(true);
+      this.props.onDependentShow();
+    }
   }
 
   hideDependentEditDialog = () => {
@@ -52,10 +81,27 @@ class MemberEdit extends Component {
 
   addDependent = (dep) => {
     let depArr = this.state.dependents;
-    depArr.push(dep);
-    // this.setState({dependents: depArr})
-    // console.log(this.state.dependents)
-    this.props.addDependentMember(this.props.member, dep);
+    if(!this.state.isEdit){
+      depArr.push(dep);
+    }
+    else{
+      let index = depArr.findIndex((element) => element === this.state.replacemember)
+      depArr[index] = dep;
+      this.setState({isEdit: false});
+    }
+    this.setState({dependents: depArr});
+  }
+
+  editDependent = (dep) => {
+    this.setState({tempmember: dep, replacemember: dep, isEdit: true},
+    this.showDependentEditDialog());
+  }
+
+  removeDependent = (dep) => {
+    let depArr = this.state.dependents;
+    let index = depArr.findIndex((element) => element === dep)
+    depArr.splice(index, 1);
+    this.setState({dependents: depArr});
   }
 
   render() {
@@ -293,11 +339,47 @@ class MemberEdit extends Component {
           </Form>
 
       </Modal.Body>
+      {(this.state.dependents.length > 0) ?
+      <tbody>
+        <hr class="dashed" />
+        {
+          depArr.map( (dep) => {
+            return(
+              <React.Fragment>
+                <div id="inline">
+                <p className="mr-3 dependentButtons">{dep.Firstname + ' ' + dep.Lastname}</p>
+                <div>
+                  <Member 
+                    key={dep.Firstname} 
+                    member={dep}
+                    handleMemberEdit={this.editDependent}
+                    handleMemberRemove={this.removeDependent}
+                    isNewDep={true}
+                  />     
+                </div>
+                </div>   
+              </React.Fragment>
+            );
+          }
+          )
+        }
+      </tbody>
+      : console.log()
+      }
       <Modal.Footer>
-        {/* {(depArr.length > 0) ? depArr[0].Firstname : console.log()} */}
-        <Button variant="link" className="depButton" onClick={this.showDependentEditDialog}>Add Dependent</Button>
-        <Button variant="secondary" onClick={this.handleCancel}>Cancel</Button>
-        <Button variant="primary" onClick={this.handleSave}>Save</Button>
+        {
+          (this.props.myAccount) ?   
+          <React.Fragment>
+            <Button variant="secondary" onClick={this.handleCancel}>Cancel</Button>
+            <Button variant="primary" onClick={this.handleSave}>Save</Button>
+          </React.Fragment>
+          :
+          <React.Fragment>
+            <Button variant="link" className="depButton" onClick={this.showDependentEditDialog}>Add Dependent</Button>
+            <Button variant="secondary" onClick={this.handleCancel}>Cancel</Button>
+            <Button variant="primary" onClick={this.handleSave}>Save</Button>
+          </React.Fragment>
+        }
       </Modal.Footer>
     </Modal>
     </React.Fragment>

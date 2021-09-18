@@ -5,7 +5,6 @@ export const GROUPED_COLUMNS = [
     Header: "ID",
     Footer: "ID",
     accessor: "_id",
-    checked: true,
 
     disableFilters: true,
   },

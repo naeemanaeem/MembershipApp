@@ -127,7 +127,16 @@ const PaginationTable = (props) => {
 
   const { globalFilter, pageIndex, pageSize } = state;
 
-  // console.log("DATA, PROPS.DATA", data, props.data);
+  // console.log("BP", page, page.length);
+
+  // for (let i = 0; i < page.length; i++) {
+  //   if(page[i].original.Guardians.length > 0){
+  //     page.splice(i, 1);
+  //     i--;
+  //   }
+  // }
+
+  // console.log("AP", page, page.length);
 
   return (
     <React.Fragment>
@@ -146,6 +155,7 @@ const PaginationTable = (props) => {
             <Checkbox className="ml-2 mt-4" {...getToggleHideAllColumnsProps()} /> ToggleAll
           </div>
           {allColumns.map((column) => (
+            (column.checked) ?
             <div key={column.id}>
               <Form.Check 
                 type='checkbox'
@@ -155,6 +165,7 @@ const PaginationTable = (props) => {
                 {...column.getToggleHiddenProps()}
               />
             </div>
+            : console.log()
           ))}
         </div>
         <table {...getTableProps()}>
@@ -178,22 +189,25 @@ const PaginationTable = (props) => {
           <tbody {...getTableBodyProps()}>
             {page.map((row) => {
               prepareRow(row);
-              return (
-                <tr {...row.getRowProps()}>
-                  {row.cells.map((cell) => (
-                    (cell.column.checked && cell.column.Header != "View Member") ?
-                    <td {...cell.getCellProps}>{cell.render("Cell")}</td>
-                    : 
-                    (cell.column.Header == "View Member") ?
-                    <Member 
-                        key={row.original._id} 
-                        member={row.original}
-                        handleMemberEdit={props.updateMember}
-                    />
-                    : console.log()
-                  ))}
-                </tr>
-              );
+              if(row.original.Guardians.length === 0){
+                return (
+                  <tr {...row.getRowProps()}>
+                    {row.cells.map((cell) => (
+                      (cell.column.checked && cell.column.Header != "View Member") ?
+                      <td {...cell.getCellProps}>{cell.render("Cell")}</td>
+                      : 
+                      (cell.column.Header == "View Member") ?
+                      <Member 
+                          key={row.original._id} 
+                          member={row.original}
+                          handleMemberEdit={props.updateMember}
+                          isNewDep={false}
+                      />
+                      : console.log()
+                    ))}
+                  </tr>
+                );
+              }
             })}
           </tbody>
         </table>

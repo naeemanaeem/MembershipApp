@@ -70,4 +70,19 @@ hr.solid {
   margin-left: 40px;
 }
 
+table {
+  border: 1px solid black;
+}
+
+td {
+  text-align: center;
+  height: 10px;
+  width: 20px;
+  margin-top: auto;
+}
+
+.depTableHead {
+  background-color: #04AA6D;
+  color: white;
+}
 

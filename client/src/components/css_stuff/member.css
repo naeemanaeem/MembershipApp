@@ -69,3 +69,8 @@ tr:hover {background-color: rgb(235, 235, 235);}
     border: 1px solid black;
     background-color: white;
 }
+
+.dependentButtons{
+    float: right;
+    margin-left: auto;
+}

@@ -13,7 +13,9 @@ import './css_stuff/memberedit.css';
 
 class DependentEdit extends Component {
   handleSave = (e) => {
-    this.props.addDependent(this.props.member);
+    if(this.props.myAccount){
+      this.props.onSave(this.props.member, false);
+    } else{this.props.addDependent(this.props.member);}
     this.props.onCancel();
   }
   
@@ -22,6 +24,7 @@ class DependentEdit extends Component {
   }
 
   render() {
+    // console.log("DEPMEM", this.props)
     return (
       <Modal
         {...this.props}
@@ -42,7 +45,7 @@ class DependentEdit extends Component {
                   aria-label="Firstname"
                   aria-describedby="firstname"
                   onChange={e => this.props.member.Firstname = e.target.value.toLocaleUpperCase() }
-                  defaultValue=""
+                  defaultValue={(this.props.member.Firstname) ? this.props.member.Firstname : ""}
                   className="mr-2"
                 />
               </Form.Group>            
@@ -54,7 +57,7 @@ class DependentEdit extends Component {
                   aria-label="Lastname"
                   aria-describedby="lastname"
                   onChange={e => this.props.member.Lastname = e.target.value.toLocaleUpperCase() }
-                  defaultValue=""
+                  defaultValue={(this.props.member.Lastname) ? this.props.member.Lastname : ""}
                 />
               </Form.Group>
             </InputGroup>
@@ -67,7 +70,7 @@ class DependentEdit extends Component {
                   aria-label="PhoneNum"
                   aria-describedby="phonenum"
                   onChange={e => this.props.member.PhoneNum = e.target.value.toLocaleUpperCase() }
-                  defaultValue=""
+                  defaultValue={(this.props.member.PhoneNum) ? this.props.member.PhoneNum : ""}
                   className="mr-3"
                 />
               </Form.Group>
@@ -79,7 +82,7 @@ class DependentEdit extends Component {
                   aria-label="Email"
                   aria-describedby="email"
                   onChange={e => this.props.member.Email = e.target.value }
-                  defaultValue=""
+                  defaultValue={(this.props.member.Email) ? this.props.member.Email : ""}
                 />
               </Form.Group>
             </InputGroup>
@@ -179,19 +182,31 @@ class DependentEdit extends Component {
             </InputGroup>
           <br/>
             <InputGroup>
-              <Form.Group as={Col} md="6">
+              <Form.Group as={Col} md="4">
                 <Form.Label id="DoB" >Date of Birth</Form.Label>
                 <FormControl
                   placeholder="mm/dd/yyyy"
                   aria-label="DoB"
                   aria-describedby="DoB"
                   onChange={e => this.props.member.DateOfBirth = e.target.value.toLocaleUpperCase() }
-                  defaultValue=""
+                  defaultValue={(this.props.member.DateOfBirth) ? this.props.member.DateOfBirth : ""}
                   className="mr-2"
                 />
               </Form.Group>
 
-              <Form.Group as={Col} md="6">
+              <Form.Group as={Col} md="4">
+                <Form.Label id="Relationship" >Relationship</Form.Label>
+                <FormControl
+                  placeholder="Ex: Son, Daughter"
+                  aria-label="Relationship"
+                  aria-describedby="Relationship"
+                  onChange={e => this.props.member.Relationship = e.target.value.toLocaleUpperCase() }
+                  defaultValue={(this.props.member.Relationship) ? this.props.member.Relationship : ""}
+                  className="mr-2"
+                />
+              </Form.Group>
+
+              <Form.Group as={Col} md="4">
                 <Form.Label id="Gender" >Gender</Form.Label>
                 <FormControl
                   placeholder="Gender"
@@ -200,6 +215,7 @@ class DependentEdit extends Component {
                   as="select"
                   onChange={e => this.props.member.Gender = e.target.value.toLocaleUpperCase() }
                   className="mr-2"
+                  defaultValue={(this.props.member.Gender) ? this.props.member.Gender : "n/a"}
                 >
                   <option>n/a</option>
                   <option value="FEMALE">Female</option>
@@ -208,7 +224,9 @@ class DependentEdit extends Component {
               </Form.Group>
             </InputGroup>
 
-            <InputGroup>
+            {/* NO NEED FOR THE VOTER OR SPOUSE SINCE THEY ARE DEPENDENTS */}
+            
+            {/* <InputGroup>
               <Form.Group as={Col} md="6">
                 <Form.Label id="Voter" >Voter</Form.Label>
                 <FormControl
@@ -240,7 +258,7 @@ class DependentEdit extends Component {
                   <option value="Yes">Yes</option>
                 </FormControl>
               </Form.Group>
-            </InputGroup>
+            </InputGroup> */}
           </Form>
 
       </Modal.Body>

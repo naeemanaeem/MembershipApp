@@ -33,7 +33,8 @@ function Login() {
         const res = await axios.post('/auth/google', userData);
 
         localStorage.user_displayName = res.data.displayName;
-        localStorage.user_email = res.email;
+        localStorage.user_email = res.data.email;
+        localStorage.googleId = res.data.googleId;
 
         //history.push("/");
         // store returned user somehow

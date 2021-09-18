@@ -18,7 +18,7 @@ class Members extends Component {
   state = {
     modalShow: false,
     tempmember:  {Firstname: "FIRSTNAME", Lastname: "LASTNAME", HouseNo: "1", Street: "STREET 1", Town: "LUTON"},
-    dependentmember:  {Firstname: "FIRSTNAME", Lastname: "LASTNAME", HouseNo: "1", Street: "STREET 1", Town: "LUTON"},
+    savedmember:  {Dependents: [], Guardians: [], Relationship: ""},
     isAddNewMember: false,
     isAddDependentMember: false,
     members: [],
@@ -57,15 +57,11 @@ class Members extends Component {
         m.HouseNo && m.HouseNo.length > 0 &&
         m.Street && m.Street.length > 0) {
 
-        // console.log("before res call");
+        m.GoogleId = localStorage.getItem("googleId");
         const res = await axios.post('/members', m);  
-        // console.log("after res call");
+
         const newmembers = [...this.state.members, res.data];
-        this.setState({members: newmembers});
-        if(this.state.isAddDependentMember){
-          this.setState({isAddDependentMember: false});
-          this.updateDependentArr();
-        }
+        this.setState({members: newmembers, savedmember: res.data});
     }
   }
 
@@ -73,15 +69,12 @@ class Members extends Component {
     if (m.Firstname && m.Firstname.length > 0 &&
         m.Lastname && m.Lastname.length > 0 &&
         m.HouseNo && m.HouseNo.length > 0 &&
-        m.Street && m.Street.length > 0 && this.state.isAddDependentMember) {
+        m.Street && m.Street.length > 0) {
 
         const res = await axios.post('/members', m);  
         const newmembers = [...this.state.members, res.data];
         this.setState({members: newmembers});
-        if(this.state.isAddDependentMember){
-          this.setState({isAddDependentMember: false});
-          this.updateDependentArr();
-        }
+        this.updateDependentArr(res.data);
     }
   }
 
@@ -116,9 +109,10 @@ class Members extends Component {
       if (this.state.isAddNewMember) {
         console.log("Save new member - ", m);
         this.saveNewMember(m);
+        this.setState({isAddNewMember: false})
       } else {
         // find the member to update
-        const member = this.state.members.find(m => m._id === this.state.tempmember._id);
+        const member = this.state.members.find(el => el._id === m._id);
         if(member) {
           member.Firstname = m.Firstname;
           member.Lastname = m.Lastname;
@@ -135,11 +129,12 @@ class Members extends Component {
           member.PhoneNum = m.PhoneNum;
           member.Email = m.Email;
           member.DateOfBirth = m.DateOfBirth;
+          member.Relationship = m.Relationship;
           member.Guardians = m.Guardians;
           member.Dependents = m.Dependents;
           console.log("Save update member - ", member);
           this.saveUpdatedMember(member);
-          this.setState({members: this.state.members}); // fetch from server instead
+          this.setState({members: this.state.members, tempmember: member}); // fetch from server instead
         }
       }
 
@@ -147,7 +142,6 @@ class Members extends Component {
     } catch (error) {
       console.error(error);
     }
-    // window.location.reload();
   }
 
   removeMember = (m) => {
@@ -164,7 +158,7 @@ class Members extends Component {
 
   addNewMember = (street) => {
     this.setState({ 
-        tempmember:  {Firstname: "", Lastname: "", HouseNo: "", Street: street.name,  Town: "LUTON"},
+        tempmember:  {Firstname: "", Lastname: "", HouseNo: "", Street: street.name,  Town: "LUTON", Guardians: [], Dependents: []},
         isAddNewMember: true,
         isAddDependentMember: false
       }, this.showMemberEditDialog);
@@ -181,23 +175,27 @@ class Members extends Component {
 
   addDependentMember = (mem, dep) => {
     this.setState({ 
-        tempmember: mem,
-        isAddNewMember: false,
         isAddDependentMember: true
       });
     console.log("Save Dependent member - ", dep, " to ", mem);
-    this.saveNewMember(dep);
+    if(!this.state.isAddNewMember){dep.Guardians.push(this.state.tempmember._id); this.setState({savedmember: mem});}
+    this.saveDependentMember(dep);
   }
 
-  updateDependentArr = () => {
-    let dependent = this.state.members.find(m => m.Guardians.length > 0 && m.Guardians.find(id => id === this.state.tempmember._id));
-    let member = this.state.tempmember;
+  updateDependentArr = (dependent) => {
+    let member = this.state.savedmember;
     member.Dependents.push(dependent._id);
     this.handleMemberEditSave(member);
+    if(dependent.Guardians.length < 1){dependent.Guardians.push(member._id); this.handleMemberEditSave(dependent);}
+    else if (!dependent.Guardians.find(id => id === member._id)){dependent.Guardians.push(member._id); this.handleMemberEditSave(dependent);}
   }
 
   hiddenUpdate = (m) => {
     this.updateMember(m);
+  }
+
+  isAddNewMemberChange = (e) => {
+    this.setState({isAddNewMember: e})
   }
 
   render () {
@@ -244,6 +242,7 @@ class Members extends Component {
               onCancel={this.handleMemberEditCancel}
               onSave={this.handleMemberEditSave}
               addDependentMember={this.addDependentMember}
+              myAccount={false}
             />
   
             <div >

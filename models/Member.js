@@ -1,7 +1,7 @@
 const mongoose = require('mongoose'),
 Schema=mongoose.Schema;
 
-const DataSchema = new mongoose.Schema({
+const MemberSchema = new mongoose.Schema({
     Firstname: {
         type: String,
         required: true,
@@ -76,6 +76,16 @@ const DataSchema = new mongoose.Schema({
         required: false,
         trim: true
     },
+    Relationship: {
+        type: String,
+        required: false,
+        trim: true
+    },
+    GoogleId: {
+        type: String,
+        required: false,
+        trim: true
+    },
     Guardians: {
         type: [],
         required: false,
@@ -92,11 +102,6 @@ const DataSchema = new mongoose.Schema({
     }
 });
 
-// const Datamodel =  mongoose.model('Datamodel', DataSchema);
-// const MemberSchema = new mongoose.Schema({
-//     Member: { type: Schema.ObjectId, ref: 'Datamodel' }, 
-//     Guardians:[DataSchema],
-//     Dependents:[DataSchema]
-// })
 
-module.exports = mongoose.model('Member', DataSchema);
+
+module.exports = mongoose.model('Member', MemberSchema);
