@@ -2,9 +2,7 @@ import React from "react";
 import Card from "react-bootstrap/Card";
 
 const Activity = (props) => {
-  const tags = props.data.tagName
-    ? props.data.tagName.split(",").slice(0, 4)
-    : "";
+  const tags = props.data.tags ? props.data.tags.split(",").slice(0, 4) : "";
   const colors = ["orange", "green", "blue", "red"];
   return (
     <Card
@@ -50,7 +48,7 @@ const Activity = (props) => {
       </Card.Title>
 
       <Card.Body>
-        {props.data.tagName ? (
+        {props.data.tags ? (
           <div
             style={{
               display: "flex",

@@ -63,7 +63,11 @@ const EventDetail = (props) => {
                 variant="danger"
                 style={{ width: "16vw" }}
                 size="small"
-                onClick={() => props.onDelete(props.data._id, props.data.title)}
+                onClick={() => {
+                  window.confirm(
+                    "Are you sure you wish to delete this event?"
+                  ) && props.onDelete(props.data._id, props.data.title);
+                }}
               >
                 Remove
               </Button>
@@ -147,7 +151,7 @@ const EventDetail = (props) => {
                 </React.Fragment>
               ) : null}
             </Card.Text>
-            <Button variant="secondary" onClick={props.hideEventDetail}>
+            <Button variant="secondary" onClick={props.onCancel}>
               Cancel
             </Button>
             <Button variant="primary" onClick={handleRegisteration}>

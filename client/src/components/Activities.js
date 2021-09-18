@@ -20,28 +20,41 @@ const Activities = () => {
         setActivities(res.data);
       } catch (e) {
         setError(e.message);
-        console.error(error);
+        console.error("ERROR: ", error);
       }
     }
     fetchData();
-  }, []);
-
+  }, [error]);
+  // Adds new activity to activities array
   const addActivityHandler = (data) => {
     setActivities(data);
   };
-  const handleHideEventDetail = () => {
+  //
+
+  // closes event detail page and brings to landing page.
+  const hideEventDetailHandler = () => {
+    setSelectedEvent({}); // reinitialize selected event to {}
     setEventDetail((prevState) => !prevState);
-    setSelectedEvent({});
   };
+  // handles form (modal) opening / showing
   const showFormHandler = () => {
     setShowForm((prevState) => !prevState);
   };
+  // handles form (modal) closing
+  const hideFormHandler = () => {
+    setSelectedEvent({}); // reinitialize selected event to {}
+    setShowForm((prevState) => !prevState);
+  };
+  // deletes activity from database
+  // and updates the activites array in the component's state
   const deleteActivityHandler = (id, title) => {
     axios
       .delete(`/activities/${id}`)
       .then((res) => {
-        console.log("response:", res);
-        alert(`Your Event with the Title "${title}" has been deleted!`);
+        alert(`The "${title}" has been deleted!`);
+        setSelectedEvent(() => {
+          return {};
+        });
         axios
           .get("/activities")
           .then((res) => {
@@ -57,27 +70,39 @@ const Activities = () => {
 
     setEventDetail((state) => !state);
   };
+  //
   const editActivityHandler = (id) => {
+    // first find the event to be updated by _id from the activities array
     const editedEvent = activities.reduce((acc, activity) => {
       if (activity._id === id) {
         acc = { ...activity };
       }
       return acc;
     }, {});
-
+    // set selectedEvent to the event to be edited, it will be used by the activity form
+    // to fill out the form fields with the selected event values
     setSelectedEvent(editedEvent);
+    // To close eventDetail page
     setEventDetail((prevState) => !prevState);
-
+    // show event create/edit form
     showFormHandler();
   };
-  if (!eventDetail) {
+  // If Error Fetching Data from Server
+  if (error) {
+    return (
+      <center>
+        <h1 style={{ color: "red", marginTop: "5%" }}>{error}</h1>
+      </center>
+    );
+    // If eventDetail is false, render activities landing page
+  } else if (!eventDetail) {
     return (
       <Container>
         {/* show activityForm Modal here on Edit click */}
         <ActivityForm
           showForm={showForm}
           addActivity={addActivityHandler}
-          onCancel={showFormHandler}
+          onCancel={hideFormHandler}
           selectedEvent={selectedEvent}
         />
         <div
@@ -144,13 +169,14 @@ const Activities = () => {
         </main>
       </Container>
     );
+    // If eventDetail is true, render event detail page.
   } else {
     return (
       <EventDetail
         data={selectedEvent}
         onDelete={deleteActivityHandler}
         onEdit={editActivityHandler}
-        hideEventDetail={handleHideEventDetail}
+        onCancel={hideEventDetailHandler}
       />
     );
   }

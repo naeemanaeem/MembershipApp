@@ -19,12 +19,10 @@ import axios from "axios";
 const ActivityForm = (props) => {
   /* State and constants
    *************************** */
-  const eventToBeEdited = props.selectedEvent;
 
+  const eventToBeEdited = props.selectedEvent;
   const currentData =
-    Object.keys(eventToBeEdited).length > 0
-      ? eventToBeEdited
-      : { id: Math.floor(Math.random()) };
+    Object.keys(eventToBeEdited).length > 0 ? eventToBeEdited : {};
   const errors = {
     title: "",
     description: "",
@@ -35,7 +33,6 @@ const ActivityForm = (props) => {
   const [data, setData] = useState(currentData);
   const [isOnline, setIsOnline] = useState(false);
   const [formErrors, setErrors] = useState(errors);
-
   const minDate = moment(new Date()).format("YYYY-MM-DDTHH:MM");
   const maxDate = data.startDateTime;
   const validEmail = (val) =>
@@ -75,7 +72,7 @@ const ActivityForm = (props) => {
       newErrors.imageUrl = "Invalid URL!";
     return newErrors;
   };
-  //***********************************
+  /************************************/
 
   return (
     <Modal
@@ -100,7 +97,6 @@ const ActivityForm = (props) => {
                   <Col className="col-7">
                     <Form.Label>Title</Form.Label>
                     <Form.Control
-                      id="title"
                       placeholder="Enter Event Title"
                       aria-label="title"
                       aria-describedby="title"
@@ -178,46 +174,50 @@ const ActivityForm = (props) => {
               <hr></hr>
               <Form.Group className="mb-3" controlId="formGroupDescription">
                 <Form.Label className="mt-3 ">Event Details</Form.Label>
-                <div id="editor" style={{ marginBottom: "15px" }}>
-                  <CKEditor
-                    id={data.id}
-                    editor={ClassicEditor}
-                    data={
-                      data.description
-                        ? decodeURIComponent(data.description)
-                        : ""
+
+                <CKEditor
+                  editor={ClassicEditor}
+                  onReady={(editor) => {
+                    console.log("Editor is ready to use!");
+                    if (eventToBeEdited.description) {
+                      editor.setData(
+                        decodeURIComponent(eventToBeEdited.description)
+                      );
+                    } else {
+                      editor.setData("");
                     }
-                    onChange={(event, editor) => {
-                      const editorData = encodeURIComponent(editor.getData());
-                      setData({ ...data, description: editorData });
-                      if (!!formErrors.description)
-                        setErrors({
-                          ...formErrors,
-                          description: null,
-                        });
-                    }}
-                    onError={(error, details) => {
-                      console.log("error: ", error);
-                      console.log("error details: ", details);
-                    }}
-                    config={{
-                      ckfinder: {
-                        uploadUrl: "/upload",
-                      },
-                    }}
-                  />
-                  <Form.Text className="text-muted">
-                    Images might need resizing for proper display in the event
-                    detail page.
-                  </Form.Text>
-                  <Form.Control
-                    isInvalid={!!formErrors.description}
-                    style={{ border: "none" }}
-                  />
-                  <Form.Control.Feedback type="invalid">
-                    {formErrors.description}
-                  </Form.Control.Feedback>
-                </div>
+                  }}
+                  onChange={(event, editor) => {
+                    const editorData = encodeURIComponent(editor.getData());
+                    setData({ ...data, description: editorData });
+
+                    if (!!formErrors.description)
+                      setErrors({
+                        ...formErrors,
+                        description: null,
+                      });
+                  }}
+                  onError={(error, details) => {
+                    console.log("error: ", details, details.phase);
+                    details.willEditorRestart = true;
+                  }}
+                  config={{
+                    ckfinder: {
+                      uploadUrl: "/upload",
+                    },
+                  }}
+                />
+                <Form.Text className="text-muted">
+                  Images might need resizing for proper display in the event
+                  detail page.
+                </Form.Text>
+                <Form.Control
+                  isInvalid={!!formErrors.description}
+                  style={{ border: "none" }}
+                />
+                <Form.Control.Feedback type="invalid">
+                  {formErrors.description}
+                </Form.Control.Feedback>
               </Form.Group>
               <hr></hr>
               <Form.Group className="mb-3" controlId="formGroupDatetime">
@@ -253,12 +253,7 @@ const ActivityForm = (props) => {
                     </Form.Control.Feedback>
                   </Col>
                   <Col>
-                    <Form.Label
-                      className="mt-3"
-                      controlId="formGroupEndDatetime"
-                    >
-                      End Date and Time
-                    </Form.Label>
+                    <Form.Label className="mt-3">End Date and Time</Form.Label>
                     <Form.Control
                       className="rounded"
                       aria-label="end datetime"
@@ -309,9 +304,9 @@ const ActivityForm = (props) => {
                   aria-label="tags"
                   aria-describedby="tags"
                   type="text"
-                  defaultValue={eventToBeEdited.tagName}
+                  defaultValue={eventToBeEdited.tags}
                   onChange={(e) => {
-                    setData({ ...data, tagName: e.target.value });
+                    setData({ ...data, tags: e.target.value });
                   }}
                 />
 
@@ -361,9 +356,7 @@ const ActivityForm = (props) => {
 
                 <Row>
                   <Col>
-                    <Form.Label className="mt-3" controlId="formGroupCity">
-                      City
-                    </Form.Label>
+                    <Form.Label className="mt-3">City</Form.Label>
 
                     <Form.Control
                       type="text"
@@ -387,9 +380,7 @@ const ActivityForm = (props) => {
                     />
                   </Col>
                   <Col>
-                    <Form.Label className="mt-3" controlId="formGroupState">
-                      State
-                    </Form.Label>
+                    <Form.Label className="mt-3">State</Form.Label>
 
                     <Form.Control
                       placeholder="State"
@@ -415,9 +406,7 @@ const ActivityForm = (props) => {
                   </Col>
 
                   <Col>
-                    <Form.Label className="mt-3" controlId="formGroupCountry">
-                      Country
-                    </Form.Label>
+                    <Form.Label className="mt-3">Country</Form.Label>
 
                     <FormControl
                       type="text"
@@ -441,9 +430,7 @@ const ActivityForm = (props) => {
                     />
                   </Col>
                   <Col>
-                    <Form.Label className=" mt-3" controlId="formGroupZip">
-                      Zip Code
-                    </Form.Label>
+                    <Form.Label className=" mt-3">Zip Code</Form.Label>
 
                     <FormControl
                       placeholder="ZIP"
@@ -471,7 +458,7 @@ const ActivityForm = (props) => {
                 <Form.Label className="mt-3">Event Cost</Form.Label>
                 <InputGroup>
                   <InputGroup.Prepend className="ml-rounded">
-                    <InputGroup.Text id="cost">$</InputGroup.Text>
+                    <InputGroup.Text>$</InputGroup.Text>
                   </InputGroup.Prepend>
 
                   <FormControl
@@ -524,7 +511,6 @@ const ActivityForm = (props) => {
                   <input
                     className="form-check-input"
                     type="checkbox"
-                    id="online"
                     checked={isOnline}
                     defaultValue={eventToBeEdited.online}
                     onChange={(e) => {
@@ -569,7 +555,6 @@ const ActivityForm = (props) => {
                     className="form-check-input"
                     type="checkbox"
                     value=""
-                    id="recurringEvent"
                     defaultValue={eventToBeEdited.isRecurring}
                     onChange={(e) => {
                       setData({ ...data, isRecurring: e.target.checked });
@@ -589,7 +574,13 @@ const ActivityForm = (props) => {
             </Form>
           </Modal.Body>
           <Modal.Footer>
-            <Button variant="secondary" onClick={props.onCancel}>
+            <Button
+              variant="secondary"
+              onClick={() => {
+                setData({});
+                props.onCancel();
+              }}
+            >
               Cancel
             </Button>
             <Button
@@ -604,9 +595,9 @@ const ActivityForm = (props) => {
                     axios
                       .put(`/activities/${eventToBeEdited._id}`, data)
                       .then((res) => {
-                        console.log("response:", res);
                         alert(
-                          `Your Event with the Title "${eventToBeEdited.title}" has been updated!`
+                          `The Event "${eventToBeEdited.title}" has been updated!`,
+                          JSON.stringify(res)
                         );
                         axios
                           .get("/activities")
@@ -626,8 +617,9 @@ const ActivityForm = (props) => {
                     axios
                       .post("/activities", data)
                       .then((res) => {
-                        console.log(res);
-                        alert("Your Event has been created successively!");
+                        alert(
+                          `The Event "${res.data.title}" has been created successively!`
+                        );
                         axios
                           .get("/activities")
                           .then((res) => {
@@ -643,6 +635,7 @@ const ActivityForm = (props) => {
                         console.log(error);
                       });
                   }
+                  setData({});
                 }
               }}
             >
