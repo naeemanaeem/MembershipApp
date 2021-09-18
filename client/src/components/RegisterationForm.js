@@ -3,6 +3,8 @@ import axios from "axios";
 import Card from "react-bootstrap/Card";
 import Checkbox from "./Views/Checkbox";
 import Button from "react-bootstrap/Button";
+import PropTypes from "prop-types";
+
 const RegistrationForm = (props) => {
   const [members, setMembers] = useState([]);
   const [error, setError] = useState("");
@@ -100,5 +102,12 @@ const RegistrationForm = (props) => {
       </React.Fragment>
     );
   }
+};
+
+RegistrationForm.propTypes = {
+  onClose: PropTypes.func,
+  eventTitle: PropTypes.string,
+  eventCost: PropTypes.string,
+  Checkbox: PropTypes.node,
 };
 export default RegistrationForm;

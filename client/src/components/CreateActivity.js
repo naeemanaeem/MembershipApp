@@ -15,6 +15,7 @@ import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import moment from "moment";
 import axios from "axios";
+import PropTypes from "prop-types";
 
 const ActivityForm = (props) => {
   /* State and constants
@@ -554,7 +555,6 @@ const ActivityForm = (props) => {
                   <input
                     className="form-check-input"
                     type="checkbox"
-                    value=""
                     defaultValue={eventToBeEdited.isRecurring}
                     onChange={(e) => {
                       setData({ ...data, isRecurring: e.target.checked });
@@ -647,4 +647,11 @@ const ActivityForm = (props) => {
     </Modal>
   );
 };
+ActivityForm.propTypes = {
+  selectedEvent: PropTypes.object,
+  showForm: PropTypes.bool,
+  addActivity: PropTypes.func,
+  onCancel: PropTypes.func,
+};
+
 export default ActivityForm;

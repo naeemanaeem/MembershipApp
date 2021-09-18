@@ -4,6 +4,8 @@ import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import RegisterationForm from "./RegisterationForm";
 import parser from "html-react-parser";
+import PropTypes from "prop-types";
+
 const EventDetail = (props) => {
   const [showRegisterForm, setShowRegisterForm] = useState(false);
   const handleRegisteration = () => {
@@ -102,8 +104,6 @@ const EventDetail = (props) => {
 
             <Card.Text>
               <b>Date: </b>
-              {/* {props.data.startDate}{" "}
-              {props.data.endDate ? " - " + props.data.endDate : ""} */}
               {eventStartDate}{" "}
               {eventEndDate !== eventStartDate ? " - " + eventEndDate : ""}
             </Card.Text>
@@ -170,5 +170,12 @@ const EventDetail = (props) => {
       )}
     </Container>
   );
+};
+EventDetail.propTypes = {
+  data: PropTypes.object,
+  onDelete: PropTypes.func,
+  onEdit: PropTypes.func,
+  onCancel: PropTypes.func,
+  RegisterationForm: PropTypes.node,
 };
 export default EventDetail;

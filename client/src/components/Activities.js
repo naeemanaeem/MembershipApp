@@ -5,6 +5,7 @@ import EventDetail from "./EventDetail";
 import Container from "react-bootstrap/Container";
 import { Row, Col } from "react-bootstrap";
 import axios from "axios";
+import PropTypes from "prop-types";
 
 const Activities = () => {
   const [activities, setActivities] = useState([]);
@@ -98,7 +99,7 @@ const Activities = () => {
   } else if (!eventDetail) {
     return (
       <Container>
-        {/* show activityForm Modal here on Edit click */}
+        {/* show activityForm Modal here*/}
         <ActivityForm
           showForm={showForm}
           addActivity={addActivityHandler}
@@ -180,5 +181,10 @@ const Activities = () => {
       />
     );
   }
+};
+Activities.propTypes = {
+  ActivityForm: PropTypes.node,
+  EventDetail: PropTypes.node,
+  Activity: PropTypes.node,
 };
 export default Activities;

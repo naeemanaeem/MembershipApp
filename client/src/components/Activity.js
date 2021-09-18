@@ -1,5 +1,6 @@
 import React from "react";
 import Card from "react-bootstrap/Card";
+import PropTypes from "prop-types";
 
 const Activity = (props) => {
   const tags = props.data.tags ? props.data.tags.split(",").slice(0, 4) : "";
@@ -76,5 +77,10 @@ const Activity = (props) => {
       </Card.Body>
     </Card>
   );
+};
+Activity.propTypes = {
+  data: PropTypes.object,
+  onCardClick: PropTypes.func,
+  onEventDetail: PropTypes.func,
 };
 export default Activity;
