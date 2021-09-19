@@ -16,6 +16,14 @@ import {
 import PayPal from "./paypal";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
+import styled from "styled-components";
+import Stripe from "./stripe";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
+
+const PUBLIC_KEY =
+  "pk_test_51JR4m9CMdg35S26EAT3K6nPEVlxPHubEwzlQ4c2VetzslZmjts2FNQKWxkwZAiQdIgA1kWbCbvmQBGWBrbRONn7a00BSJqSyYd";
+const stripePromise = loadStripe(PUBLIC_KEY);
 
 const buttonlist1 = ["Membership Fee", "Donation", "Sadaqah", "Zakat"];
 const buttonlist2 = ["PayPal", "Bank Deposit", "Zelle", "Venmo"];
@@ -187,6 +195,9 @@ function Payment({ addTextLog }) {
               </div>
               <div className="mt-3">
                 <PayPal />
+                <Elements stripe={stripePromise}>
+                  <Stripe />
+                </Elements>
                 <Button
                   variant="primary"
                   type="submit"
@@ -197,7 +208,6 @@ function Payment({ addTextLog }) {
                 <Button variant="danger" id="clear3" type="refresh">
                   Clear
                 </Button>
-                <Button onClick={() => console.log(payments)}>hello</Button>
               </div>
             </Col>
           </Row>
