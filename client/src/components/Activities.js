@@ -48,7 +48,7 @@ const Activities = () => {
   };
   // deletes activity from database
   // and updates the activites array in the component's state
-  const deleteActivityHandler = (id, title) => {
+  const deleteActivityHandler = (id, title, imageSrc) => {
     axios
       .delete(`/activities/${id}`)
       .then((res) => {
@@ -56,10 +56,19 @@ const Activities = () => {
         setSelectedEvent(() => {
           return {};
         });
+
+        // Remove images associated with this event from /upload
         axios
-          .get("/activities")
+          .delete(`/upload/${imageSrc.join(",")}`)
           .then((res) => {
-            setActivities(res.data);
+            axios
+              .get("/activities")
+              .then((res) => {
+                setActivities(res.data);
+              })
+              .catch((error) => {
+                console.log(error);
+              });
           })
           .catch((error) => {
             console.log(error);

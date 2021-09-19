@@ -68,7 +68,12 @@ const EventDetail = (props) => {
                 onClick={() => {
                   window.confirm(
                     "Are you sure you wish to delete this event?"
-                  ) && props.onDelete(props.data._id, props.data.title);
+                  ) &&
+                    props.onDelete(
+                      props.data._id,
+                      props.data.title,
+                      props.data.imageSrc
+                    );
                 }}
               >
                 Remove

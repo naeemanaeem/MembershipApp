@@ -189,8 +189,17 @@ const ActivityForm = (props) => {
                     }
                   }}
                   onChange={(event, editor) => {
+                    let srcArray = [
+                      ...new DOMParser()
+                        .parseFromString(editor.getData(), "text/html")
+                        .querySelectorAll("img"),
+                    ].map((img) => img.getAttribute("src"));
                     const editorData = encodeURIComponent(editor.getData());
-                    setData({ ...data, description: editorData });
+                    setData({
+                      ...data,
+                      description: editorData,
+                      imageSrc: srcArray,
+                    });
 
                     if (!!formErrors.description)
                       setErrors({

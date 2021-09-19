@@ -12,6 +12,7 @@ const morganBody = require("morgan-body");
 const connectDB = require("./config/db");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+// a middleware that allows us to create temporary files on the server
 const multiparty = require("connect-multiparty");
 const MultipartyMiddleware = multiparty({ uploadDir: "./uploads" });
 
@@ -157,9 +158,20 @@ app.post("/upload", MultipartyMiddleware, (req, res) => {
       if (err) return console.log(err);
     });
   }
-  console.log(imageFile);
+  // console.log(imageFile);
 });
+// delete the images of the event from /upload folder when the event is deleted
 
+app.delete("/upload/:imageSrc", (req, res) => {
+  let imageSrc = req.params.imageSrc.split(",");
+  imageSrc.forEach((src) => {
+    try {
+      fs.unlinkSync(path.join(__dirname, "/uploads/" + src));
+    } catch (err) {
+      console.error(err);
+    }
+  });
+});
 // Set our backend port to be either an environment variable or port 5000
 const PORT = process.env.PORT || 5000;
 

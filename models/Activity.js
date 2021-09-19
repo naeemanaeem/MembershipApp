@@ -80,6 +80,10 @@ const ActivitySchema = new mongoose.Schema(
       default:
         "https://mhma.info/wp-content/uploads/2021/07/MHMA-logo-1-1024x410.png",
     },
+    imageSrc: {
+      type: Array,
+      trim: true,
+    },
     description: {
       type: String,
       required: [true, "Event Details are required"],
