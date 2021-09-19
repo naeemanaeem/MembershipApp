@@ -177,6 +177,13 @@ function Payment({ addTextLog }) {
                   </InputGroup>
                 </Col>
               </Row>
+              <Row className="ml-2">
+                <Col className="mt-3 ml-3 mr-2 mb-3">
+                  <Button variant="danger" id="clear3" type="refresh">
+                    Clear
+                  </Button>
+                </Col>
+              </Row>
               <Row className="middle mb-3">
                 <div className="mt-3">
                   <PayPal />
@@ -186,9 +193,6 @@ function Payment({ addTextLog }) {
                     onClick={() => alert(JSON.stringify(profile, "", 2))}
                   >
                     Make Payment
-                  </Button>
-                  <Button variant="danger" id="clear3" type="refresh">
-                    Clear
                   </Button>
                   <Button onClick={() => console.log(payments)}>hello</Button>
                 </div>
