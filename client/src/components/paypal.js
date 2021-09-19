@@ -4,9 +4,9 @@ import ReactDOM from "react-dom"
 let style = {
   'label':'pay', 
   'tagline': false, 
-  'size':'medium', 
+  'size':'small', 
   'shape':'pill', 
-  'color':'black'
+  'color':'blue'
 };
 
 const PayPalButton = window.paypal.Buttons.driver("react", { React, ReactDOM });
@@ -26,6 +26,7 @@ function PayPal() {
       ],
     });
   };
+  
 
   const onApprove = (data, actions) => {
     return actions.order.capture();
