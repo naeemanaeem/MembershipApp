@@ -1,6 +1,3 @@
-
-//add comment section
-
 import React, { Component, useEffect, useState } from "react";
 import {
   Button,
