@@ -50,7 +50,8 @@ router.post('/', ensureAuth, async (req, res) => {
         const m = req.body; // payment
         if (!m.Firstname || m.Firstname.length < 1 ||
           !m.Lastname || m.Lastname.length < 1 ||
-          !m.Description || m.Description.length < 1 ||
+          !m.Email || m.Email.length < 1 ||
+          !m.PaymentReason || m.PaymentReason.length < 1 ||
           !m.Type || m.Type.length < 1 ||
           !m.Amount || m.Amount.length < 1 ||
           !m.Status || m.Status.length < 1 ||

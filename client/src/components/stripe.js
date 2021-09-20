@@ -21,12 +21,15 @@ import {
 
 const CardElementContainer = styled.div`
   height: 50px;
-  display: flex-inline;
+  display: flex;
+  margin-left: 65%;
   align-items: center;
+  justify-content center:
   margin-top: 10px;
   margin-bottom: 20px;
   background-color: lightblue;
   border-radius: 5px;
+  width: 400px;
 
   & .StripeElement {
     width: 100%;
@@ -95,11 +98,8 @@ function Stripe() {
 }
 
     return (
-            <div>
-                <CardElementContainer>
-                    <CardElement options={cardElementOptions} />
-                </CardElementContainer>
-                <Button onClick={handleSubmit}>Stripe</Button>
-        </div>
+    <CardElementContainer>
+      <CardElement options={cardElementOptions} />
+    </CardElementContainer>
     )
 }export default Stripe
