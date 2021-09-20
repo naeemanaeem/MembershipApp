@@ -1,49 +1,50 @@
 const mongoose = require('mongoose');
 
 const PaymentSchema = new mongoose.Schema({
-    GoogleId: {
-        type: String,
-        required: false,
-        trim: true
-    },
     Firstname: {
         type: String,
-        required: false,
+        required: true,
         trim: true
     },
     Lastname: {
         type: String,
-        required: false,
+        required: true,
         trim: true
     },
-    Description: {
+    PaymentReason: {
         type: String,
-        trim: true
-    },
-    Type: {
-        type: String,
-        required: false,
         trim: true
     },
     PaymentMethod: {
         type: String,
-        required: false,
+        required: true,
+        trim: true
+    },
+    Type: {
+        type: String,
+        required: true,
+        trim: true
+    },
+    Comments: {
+        type: String,
+        required: true,
         trim: true
     },
     Amount: {
         type: String,
-        required: false,
+        required: true,
         trim: true
     },
     Status: {
         type: String,
-        required: false,
+        required: true,
         trim: true
     },
     createAt: {
         type: Date,
         default: Date.now
     }
+
 });
 
 module.exports = mongoose.model('Payment', PaymentSchema);

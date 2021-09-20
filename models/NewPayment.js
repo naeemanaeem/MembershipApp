@@ -1,11 +1,6 @@
 const mongoose = require('mongoose');
 
 const NewPaymentSchema = new mongoose.Schema({
-    googleId: {
-        type: String,
-        required: true,
-        trim: true
-    },
     firstname: {
         type: String,
         required: true,
@@ -16,13 +11,13 @@ const NewPaymentSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    paymentId: {
+    paymentreason: {
         type: String,
-        required: true,
         trim: true
     },
-    description: {
+    paymentmethod: {
         type: String,
+        required: true,
         trim: true
     },
     type: {
@@ -30,7 +25,7 @@ const NewPaymentSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    paymentmethod: {
+    comments: {
         type: String,
         required: true,
         trim: true
@@ -45,7 +40,7 @@ const NewPaymentSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
-    createAt: {
+    createat: {
         type: Date,
         default: Date.now
     }
