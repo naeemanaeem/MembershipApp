@@ -56,16 +56,15 @@ const Activities = () => {
         setSelectedEvent(() => {
           return {};
         });
-
-        // Remove images associated with this event from /upload
+        // update your component state
         axios
-          .delete(`/upload/${imageSrc.join(",")}`)
-          .then((res) => {
+          .get("/activities")
+          .then((response) => {
+            setActivities(response.data);
+            // Remove images associated with this event from /upload
             axios
-              .get("/activities")
-              .then((res) => {
-                setActivities(res.data);
-              })
+              .delete(`/upload/${imageSrc.join(",")}`)
+              .then(() => {})
               .catch((error) => {
                 console.log(error);
               });

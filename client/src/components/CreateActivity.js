@@ -504,7 +504,7 @@ const ActivityForm = (props) => {
                     });
                     if (!!formErrors.imageUrl)
                       setErrors({
-                        ...errors,
+                        ...formErrors,
                         imageUrl: null,
                       });
                   }}
