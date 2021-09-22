@@ -12,6 +12,7 @@ import Form from 'react-bootstrap/Form'
 import FormControl from 'react-bootstrap/FormControl'
 import './css_stuff/member.css';
 import PaginationTable from "./PaginationTable.jsx";
+import DropdownButton from 'react-bootstrap/DropdownButton'
 
 class Members extends Component {
 
@@ -57,8 +58,16 @@ class Members extends Component {
         m.HouseNo && m.HouseNo.length > 0 &&
         m.Street && m.Street.length > 0) {
 
+        const dependents = [...m.Dependents];
+        m.Dependents = [];
         m.GoogleId = localStorage.getItem("googleId");
         const res = await axios.post('/members', m);  
+
+        if(dependents.length > 0){
+          for(var i = 0; i < dependents.length; ++i){
+            this.addDependentMember(m, dependents[i]);
+          }
+        }
 
         const newmembers = [...this.state.members, res.data];
         this.setState({members: newmembers, savedmember: res.data});
@@ -81,6 +90,8 @@ class Members extends Component {
   async saveUpdatedMember(m) {
     try {
       await axios.put('members/' + m._id, m);
+      const newmembers = await axios.get('/members');
+      this.setState({members: newmembers.data})
       // TODO: update with the member details returned from server? 
     } catch (error) {
       console.error(error);
@@ -178,7 +189,7 @@ class Members extends Component {
         isAddDependentMember: true
       });
     console.log("Save Dependent member - ", dep, " to ", mem);
-    if(!this.state.isAddNewMember){dep.Guardians.push(this.state.tempmember._id); this.setState({savedmember: mem});}
+    if(!this.state.isAddNewMember && mem._id){dep.Guardians.push(this.state.tempmember._id); this.setState({savedmember: mem});}
     this.saveDependentMember(dep);
   }
 
@@ -246,10 +257,26 @@ class Members extends Component {
             />
   
             <div >
+              <div>
               <h1 className="ml-5 mt-3">
                 Member 
               </h1>
+              {/* <FormControl as="select" className="w-25">
+                <option value="">--Please choose an option--</option>
+                <option value={console.log("HI")}>Dog</option>
+                <option value="cat">Cat</option>
+                <option value="hamster">Hamster</option>
+              </FormControl>
+              <DropdownButton id="dropdown-item-button" title="Dropdown button">
+                <Dropdown.ItemText>Dropdown item text</Dropdown.ItemText>
+                <Dropdown.Item as="button">Action</Dropdown.Item>
+                <Dropdown.Item as="button" onClick={alert("HI")}>Another action</Dropdown.Item>
+                <Dropdown.Item as="button">Something else</Dropdown.Item>
+              </DropdownButton> */}
+
               <Button className="addbutton" onClick={this.handleAddNewMemberButtonClick}>Add Member</Button>
+              </div>
+
               <PaginationTable id="AdminDataTable" data={memData} updateMember={this.updateMember}/>
             </div>
             </React.Fragment>

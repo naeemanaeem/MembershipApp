@@ -9,7 +9,8 @@ import Nav from 'react-bootstrap/Nav'
 import {Row, Col } from 'reactstrap';
 import Form from 'react-bootstrap/Form'
 import DependentEdit from './dependentedit';
-import MemberEdit from './memberedit';
+import CountrySelector from './helper/countryselector.jsx'
+import StateSelector from './helper/stateselector.jsx'
 
 import './css_stuff/myaccount.css'
 
@@ -17,7 +18,6 @@ class MyAccount extends Component {
 
   state = {
     modalShow: false,
-    memberShow: false,
     myaccount: {Dependents: []},
     tempdependent: {},
     dependents: [],
@@ -30,7 +30,7 @@ class MyAccount extends Component {
   async componentDidMount() {
     try {
       const id = localStorage.getItem("googleId"); //TRY TO USE THIS TO GET MEMBER
-      const res = await axios.get('members/613fd51ee12a4d7b84e56881');{/*members/id syntax for id*/}
+      const res = await axios.get('members/614915b63d1e5066b0675a94');{/*members/id syntax for id*/}
       this.setState({myaccount: res.data, error: ""});
     } catch (e) {
       this.setState({error: e.message});
@@ -71,6 +71,8 @@ class MyAccount extends Component {
   async saveUpdatedMember(m) {
     try {
       await axios.put('members/' + m._id, m);
+      const member = await axios.get('members/' + m._id)
+      this.setState({myaccount: member.data})
       // TODO: update with the member details returned from server? 
     } catch (error) {
       console.error(error);
@@ -188,21 +190,38 @@ class MyAccount extends Component {
       }, this.setModalShow(true));
   }
 
-  //SHOWS MEMBER EDIT MODAL
-  showEditMember = () => {
-    this.setState({memberShow: true});
+  //CANCELS MEMBER EDIT
+  editMemberOnCancel = () => {
+    this.editMember();
   }
 
-  //HIDES MEMBER EDIT MODAL
-  hideEditMember = () => {
-    this.setState({memberShow: false});
-  }
-
-  //SAVES EDITED MEMBER FROM MEMBER EDIT MODAL
-  saveEditMember = (m) => {
-    this.setState({memberShow: false, myaccount: m});
+  //SAVES EDITED MEMBER
+  editMemberOnSave = (m) => {
+    this.editMember();
     console.log("Update member - ", m);
     this.saveUpdatedMember(m, true);
+  }
+
+  editMember = () => {
+    //FOR HIDING AND SHOWING SAVE AND CANCEL
+    var x = document.getElementById("editing");
+    if(x.style.display === 'none'){
+      x.style.display = 'block';
+      document.getElementById('editMemButton').style.display = 'none';
+    } else {
+      x.style.display = 'none';
+      document.getElementById('editMemButton').style.display = 'block';
+    }
+
+    //FOR DISABLING AND ENABLING FORM
+    var y = document.getElementById("target").elements;
+    for(var i = 0; i < y.length; i++){
+      if(y[i].disabled){
+        y[i].disabled = false;
+      } else{
+        y[i].disabled = true;
+      }
+    }
   }
 
   //CALULATES AGE OF DEPENDENT
@@ -232,46 +251,88 @@ class MyAccount extends Component {
     let detailPage, dependentPage;
     // console.log("LOCAL", localStorage.getItem("user_displayName"), localStorage.getItem("user_email"),localStorage.getItem("test") );
     const thisaccount = this.state.myaccount;
+    var editaccount = {...thisaccount};
     const dependent = this.state.dependents;
-
+    console.log(thisaccount, editaccount, this.state.myaccount)
     // console.log("LOCALstorage", localStorage);
-    detailPage  = 
+    
+    if(editaccount.Firstname && editaccount.Firstname === this.state.myaccount.Firstname){
+      detailPage  = 
       <React.Fragment>
         
         {/* Personal Information Below */}
         <h4 className="ml-3">
           Personal Information 
-          <Button onClick={this.showEditMember}>Edit Member</Button>
+          <Button id="editMemButton" onClick={/*this.showEditMember*/ this.editMember}>Edit Member</Button>
           </h4>
         <hr class="solid mr-2" />
+
+        <Form id="target">
         <Row className="ml-4 mt-4">
           <Col>
-            <Form id="target" disabled>
-            <Form.Group className="mb-4">
+            <Form.Group className="mb-4" >
               <Form.Label>First Name</Form.Label>
-              <Form.Control id="dp" value={thisaccount.Firstname} className="detailSelWid"/>  
+              <Form.Control 
+                defaultValue={editaccount.Firstname} 
+                onChange={(e) => {
+                  editaccount.Firstname = e.target.value.toLocaleUpperCase();
+                }} 
+                className="detailSelWid" 
+                disabled/>  
             </Form.Group>
             <Form.Group className="mb-4">
               <Form.Label>Date of Birth</Form.Label>
-              <Form.Control value={thisaccount.DateOfBirth} className="detailSelWid"/>  
+              <Form.Control 
+                defaultValue={editaccount.DateOfBirth} 
+                onChange={(e) => {
+                  editaccount.DateOfBirth = e.target.value.toLocaleUpperCase();
+                }} 
+                className="detailSelWid" 
+                disabled/>  
             </Form.Group>
-            </Form>
+            
           </Col>
           <Col>
               <Form.Group className="mb-4">
                 <Form.Label>Last Name</Form.Label>
-                <Form.Control value={thisaccount.Lastname} className="detailSelWid"/>  
+                <Form.Control 
+                  defaultValue={editaccount.Lastname} 
+                  onChange={(e) => {
+                    editaccount.Lastname = e.target.value.toLocaleUpperCase();
+                  }} 
+                  className="detailSelWid" 
+                  disabled/>  
               </Form.Group>
-
               <Form.Group className="mb-4">
                 <Form.Label>Gender</Form.Label>
-                <Form.Control value={thisaccount.Gender} className="detailSelWid"/>  
+                <Form.Control            
+                  defaultValue={editaccount.Gender} 
+                  onChange={(e) => {
+                    editaccount.Gender = e.target.value.toLocaleUpperCase();
+                  }}             
+                  className="detailSelWid" 
+                  as="select"
+                  disabled>
+                    <option>n/a</option>
+                    <option value="FEMALE">Female</option>
+                    <option value="MALE">Male</option>
+                </Form.Control>  
               </Form.Group>
           </Col>
           <Col>
             <Form.Group className="mb-4">
               <Form.Label>Spouse</Form.Label>
-              <Form.Control value={(thisaccount.Spouse) ? thisaccount.Spouse : "No"} className="detailSelWid"/>   
+              <Form.Control  
+                defaultValue={editaccount.Spouse}
+                className="detailSelWid"
+                onChange={(e) => {
+                  editaccount.Spouse = e.target.value.toLocaleUpperCase();
+                }}  
+                as="select"
+                disabled>
+                  <option value="No">No</option>
+                  <option value="Yes">Yes</option>
+              </Form.Control>   
             </Form.Group>
           </Col>
         </Row>
@@ -282,31 +343,75 @@ class MyAccount extends Component {
         <Row className="ml-4 mt-4">
           <Col>
             <Form.Group className="mb-4">
-              <Form.Label>Address</Form.Label>
-              <Form.Control value={thisaccount.HouseNo + ' ' + thisaccount.Street} className="detailSelWid"/>  
+              <Form.Label>House Number</Form.Label>
+              <Form.Control
+                defaultValue={this.state.myaccount.HouseNo}
+                onChange={(e) => {
+                  editaccount.HouseNo = e.target.value.toLocaleUpperCase();
+                }}
+                className="detailSelWid" 
+                disabled/>  
             </Form.Group>
-
             <Form.Group className="mb-4">
-              <Form.Label>State</Form.Label>
-              <Form.Control value={thisaccount.State} className="detailSelWid"/>  
+                <Form.Label>City</Form.Label>
+                <Form.Control 
+                  defaultValue={editaccount.City} 
+                  onChange={(e) => {
+                    editaccount.City = e.target.value.toLocaleUpperCase();
+                  }} 
+                  className="detailSelWid" 
+                  disabled/>   
             </Form.Group>
           </Col>
           <Col>
-              <Form.Group className="mb-4">
-                <Form.Label>City</Form.Label>
-                <Form.Control value={thisaccount.City} className="detailSelWid"/>   
-              </Form.Group>
-
-              <Form.Group className="mb-4">
-                <Form.Label>Country</Form.Label>
-                <Form.Control value={thisaccount.Country} className="detailSelWid"/> 
-              </Form.Group>
+            <Form.Group className="mb-4">
+              <Form.Label>Street</Form.Label>
+              <Form.Control
+                defaultValue={this.state.myaccount.Street}
+                onChange={(e) => {
+                  editaccount.Street = e.target.value.toLocaleUpperCase();
+                }}
+                className="detailSelWid" 
+                disabled/>  
+            </Form.Group>
+            <Form.Group className="mb-4">
+              <Form.Label>State</Form.Label>
+              <Form.Control 
+                defaultValue={editaccount.State} 
+                onChange={(e) => {
+                  editaccount.State = e.target.value.toLocaleUpperCase();
+                }} 
+                className="detailSelWid" 
+                as="select"
+                disabled>
+                  <StateSelector /> 
+                </Form.Control> 
+            </Form.Group>
           </Col>
           <Col>
             <Form.Group className="mb-4">
               <Form.Label>Village</Form.Label>
-              <Form.Control value={thisaccount.Village} className="detailSelWid"/>    
+              <Form.Control 
+                defaultValue={editaccount.Village} 
+                onChange={(e) => {
+                  editaccount.Village = e.target.value.toLocaleUpperCase();
+                }} 
+                className="detailSelWid" 
+                disabled/>    
             </Form.Group>
+            <Form.Group className="mb-4">
+                <Form.Label>Country</Form.Label>
+                <Form.Control 
+                  defaultValue={editaccount.Country} 
+                  onChange={(e) => {
+                    editaccount.Country = e.target.value.toLocaleUpperCase();
+                  }} 
+                  className="detailSelWid" 
+                  as="select"
+                  disabled> 
+                    <CountrySelector />
+                  </Form.Control>
+              </Form.Group>
           </Col>
         </Row>
 
@@ -316,14 +421,27 @@ class MyAccount extends Component {
         <Row className="rowSpace">
            <Form.Group className="detailSpace mb-4">
                 <Form.Label>Email</Form.Label>
-                <Form.Control value={thisaccount.Email} className="detailSelWid"/>    
+                <Form.Control 
+                  defaultValue={editaccount.Email} 
+                  onChange={(e) => {
+                    editaccount.Email = e.target.value.toLocaleUpperCase();
+                  }} 
+                  className="detailSelWid" 
+                  disabled/>    
                </Form.Group>
 
               <Form.Group className="mb-4">
                 <Form.Label>Phone Number</Form.Label>
-                <Form.Control value={thisaccount.PhoneNum} className="detailSelWid"/>    
+                <Form.Control 
+                  defaultValue={editaccount.PhoneNum} 
+                  onChange={(e) => {
+                    editaccount.PhoneNum = e.target.value.toLocaleUpperCase();
+                  }} 
+                  className="detailSelWid" 
+                  disabled/>    
                </Form.Group> 
-        </Row>
+        </Row>      
+        </Form>
 
          {/* Member Info Below UNCOMMENT ONCE THE MEMBER TYPE AND STATUS ARE IMPLEMENTED*/}
 
@@ -340,7 +458,14 @@ class MyAccount extends Component {
                 <Form.Control value="Active" className="detailSelWid"/>    
                </Form.Group> 
         </Row>*/}
+
+        <div id="editing" style={{display: 'none'}}>
+          <hr class="dsolid mr-2" />
+          <Button variant="dark" onClick={() => {this.editMemberOnSave(editaccount)}} style={{float:'left'}}>Save</Button>
+          <Button variant="dark" onClick={() => {editaccount = {...thisaccount}; this.editMemberOnCancel()}}style={{float:'left'}}>Cancel</Button>
+        </div>
       </React.Fragment>;
+    }
 
     if(thisaccount.Dependents.length > 0){
       if(this.state.depArrSize !== thisaccount.Dependents.length){
@@ -388,7 +513,17 @@ class MyAccount extends Component {
             </tbody>
           </Table>
         </React.Fragment>
-    } else{ dependentPage = <h2>NO DEPENDENTS</h2>}
+    } else{ 
+        dependentPage =  
+        <React.Fragment>
+          <h4 className="ml-3">
+            Dependents 
+            <Button variant="warning" className="mb-3" onClick={this.addNewDependent}>Add Dependent</Button>
+          </h4>
+          <hr class="solid mr-2" />
+          <h2>NO DEPENDENTS</h2>
+        </React.Fragment>}
+
 
     return (
       <React.Fragment>
@@ -398,14 +533,6 @@ class MyAccount extends Component {
           onCancel={this.hideDependentEditDialog}
           onSave={this.handleEditSave}
           addDependent={this.addDependent}
-          myAccount={true}
-        />
-
-        <MemberEdit
-          member={this.state.myaccount}
-          show={this.state.memberShow}
-          onCancel={this.hideEditMember}
-          onSave={this.saveEditMember}
           myAccount={true}
         />
 

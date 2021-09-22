@@ -44,6 +44,8 @@ router.get('/:id', ensureAuth, async (req, res) => {
     }
 });
 
+
+
 // Create a new member
 router.post('/', ensureAuth, async (req, res) => {
     try {

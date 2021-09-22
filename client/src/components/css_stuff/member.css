@@ -10,9 +10,9 @@
 }
 
 .addbutton {
-    margin-bottom: 0.8%;
-    block-size: 5%;
-    margin-right: 73%;
+    margin-bottom: 0.5%;
+    float: right
+
 }
    
 #inline{

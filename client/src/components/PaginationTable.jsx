@@ -20,6 +20,7 @@ import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button';
 import Member from './member.jsx';
 import icon from './imgs/ViewInfoIcon.jpg'
+import './css_stuff/paginationtable.css'
 
 
 const PaginationTable = (props) => {
@@ -168,16 +169,16 @@ const PaginationTable = (props) => {
             : console.log()
           ))}
         </div>
-        <table {...getTableProps()}>
+        <table className="table" {...getTableProps()}>
           <thead>
             {headerGroups.map((headerGroup) => (
               <tr {...headerGroup.getHeaderGroupProps()}>
                 {headerGroup.headers.map((column) => (
                   (document.getElementById(column.Header + "check") && column.checked) ?
-                  <th {...column.getHeaderProps(column.getSortByToggleProps())}>
+                  <th className="tableHead" {...column.getHeaderProps(column.getSortByToggleProps())}>
                     {column.render("Header")}
                     {/* Apply Filter on column */}
-                    <div>{column.canFilter ? column.render("Filter") : null}</div>
+                    {/* <div>{column.canFilter ? column.render("Filter") : null}</div>*/} {/*TOOK OUT FILTERS IN EACH COLUMN HERE*/}
                     <span>
                       {column.isSorted ? (column.isSortedDesc ? "⬇️" : "⬆️") : ""}
                     </span>
@@ -194,7 +195,7 @@ const PaginationTable = (props) => {
                   <tr {...row.getRowProps()}>
                     {row.cells.map((cell) => (
                       (cell.column.checked && cell.column.Header != "View Member") ?
-                      <td {...cell.getCellProps}>{cell.render("Cell")}</td>
+                      <td className="td" {...cell.getCellProps}>{cell.render("Cell")}</td>
                       : 
                       (cell.column.Header == "View Member") ?
                       <Member 

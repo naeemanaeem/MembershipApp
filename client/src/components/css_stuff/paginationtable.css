@@ -1,0 +1,14 @@
+.td {
+    padding: 0px;
+  }
+
+  .tableHead {
+    background-color:darkcyan;
+  }
+
+  .table {
+    padding: 0%;
+    text-align: center;
+    width: 75%;
+  }
+

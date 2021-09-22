@@ -14,7 +14,7 @@ import { connection } from 'mongoose';
 import Member from './member.jsx';
 import './css_stuff/member.css';
 
-
+//FIR FORM CONTROL SET UP VALIDATION BY USING AN OBJECT IN STATE TO SET ERRORS AND IF THE OBJECT.KEY.LENGTH IS THERE THEN THERE IS AN ERROR
 class MemberEdit extends Component {
   state = {
     modalShow: false,
@@ -22,20 +22,28 @@ class MemberEdit extends Component {
     tempmember: {},
     replacemember: {},
     dependents: [],
+    errors: {
+      Firstname: "", Lastname: "", PhoneNum: "", Email: "", HouseNo: "", Street: "", City: "", 
+      State: "", Country: "", Postcode: "", DoB: "", Gender: "", Voter: "", Spouse: ""
+    },
     isEdit: false
   };
 
   handleSave = (e) => {
     if(this.props.myAccount){
       this.props.onSave(this.props.member);
-    } else {
-      this.setIsNewMember(false);
+    } 
+    else if(!this.state.isNewMember) {
       this.props.onSave(this.props.member);
       for(var i = 0; i < this.state.dependents.length; ++i){
-        // console.log("length", this.state.dependents.length, this)
         this.props.addDependentMember(this.props.member, this.state.dependents[i]);
       }
       this.setState({dependents: []});
+    }
+    else{ 
+      this.setIsNewMember(false); 
+      this.props.member.Dependents = [...this.state.dependents];
+      this.props.onSave(this.props.member); 
     }
   }
   
@@ -102,6 +110,34 @@ class MemberEdit extends Component {
     let index = depArr.findIndex((element) => element === dep)
     depArr.splice(index, 1);
     this.setState({dependents: depArr});
+  }
+
+  checkErrors = () => {
+    if(!this.props.member.Firstname || this.props.member.Firstname.length < 1){
+      this.state.errors.Firstname = "PUT FIRST NAME";
+    }
+    if(!this.props.member.Lastname || this.props.member.Lastname.length < 1){
+      this.state.errors.Lastname = "PUT LAST NAME";
+    }
+    if(!this.props.member.PhoneNum || this.props.member.PhoneNum.length < 1 || this.props.PhoneNum.length > 10){
+      this.state.errors.PhoneNum = "PUT PHONE NUMBER";
+    }
+    if(!this.props.member.Email || this.props.member.Email.length < 1){
+      this.state.errors.Email = "PUT Email";
+    }
+    if(!this.props.member.HouseNo || this.props.member.HouseNo.length < 1){
+      this.state.errors.HouseNo = "PUT House Number";
+    }
+    if(!this.props.member.Street || this.props.member.Street.length < 1){
+      this.state.errors.Street = "PUT STREET";
+    }
+    if(!this.props.member.Country || this.props.member.Country.length < 1){
+      this.state.errors.Country = "PUT Country";
+    }
+    if(!this.props.member.Postcode || this.props.member.Postcode.length < 1 || this.props.member.Postcode.length > 5){
+      this.state.errors.Postcode = "PUT POSTCODE";
+    }
+    console.log(this.state.errors)
   }
 
   render() {
@@ -377,7 +413,7 @@ class MemberEdit extends Component {
           <React.Fragment>
             <Button variant="link" className="depButton" onClick={this.showDependentEditDialog}>Add Dependent</Button>
             <Button variant="secondary" onClick={this.handleCancel}>Cancel</Button>
-            <Button variant="primary" onClick={this.handleSave}>Save</Button>
+            <Button variant="primary" onClick={this.checkErrors}>Save</Button>
           </React.Fragment>
         }
       </Modal.Footer>

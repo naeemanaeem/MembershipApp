@@ -57,6 +57,10 @@ hr.solid {
   border-top: 1px solid rgb(27, 27, 27);
 }
 
+hr.dsolid {
+  border: 1px solid black;
+}
+
 .detailSelWid {
   width: 250px;
 }
@@ -86,3 +90,6 @@ td {
   color: white;
 }
 
+.hidden {
+  display: none;
+}
