@@ -604,17 +604,11 @@ const ActivityForm = (props) => {
                       .put(`/activities/${eventToBeEdited._id}`, data)
                       .then((res) => {
                         alert(
-                          `The Event "${eventToBeEdited.title}" has been updated!`,
-                          JSON.stringify(res)
+                          `The Event "${
+                            eventToBeEdited.title
+                          }" has been updated! \n ${JSON.stringify(res.data)}`
                         );
-                        axios
-                          .get("/activities")
-                          .then((res) => {
-                            props.addActivity(res.data);
-                          })
-                          .catch((error) => {
-                            console.log(error);
-                          });
+                        props.editActivity(res.data._id, res.data);
 
                         props.onCancel();
                       })
@@ -628,15 +622,8 @@ const ActivityForm = (props) => {
                         alert(
                           `The Event "${res.data.title}" has been created successively!`
                         );
-                        axios
-                          .get("/activities")
-                          .then((res) => {
-                            props.addActivity(res.data);
-                          })
-                          .catch((error) => {
-                            console.log(error);
-                          });
 
+                        props.addActivity(res.data);
                         props.onCancel();
                       })
                       .catch((error) => {

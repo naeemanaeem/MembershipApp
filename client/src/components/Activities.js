@@ -25,12 +25,11 @@ const Activities = () => {
       }
     }
     fetchData();
-  }, [error]);
+  }, []);
   // Adds new activity to activities array
   const addActivityHandler = (data) => {
-    setActivities(data);
+    setActivities([...activities, data]);
   };
-  //
 
   // closes event detail page and brings to landing page.
   const hideEventDetailHandler = () => {
@@ -48,6 +47,7 @@ const Activities = () => {
   };
   // deletes activity from database
   // and updates the activites array in the component's state
+
   const deleteActivityHandler = (id, title, imageSrc) => {
     const imageIds = [];
     imageSrc.forEach((src) => {
@@ -70,15 +70,10 @@ const Activities = () => {
           .catch((error) => {
             console.log("ERROR:", error.message);
           });
-        axios
-          .get("/activities")
-          .then((response) => {
-            setActivities(response.data);
-            // Remove images associated with this event from /upload
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+        let newActivities = activities.filter(
+          (activity) => activity._id !== id
+        );
+        setActivities(newActivities);
       })
       .catch((error) => {
         console.log(error);
@@ -86,10 +81,11 @@ const Activities = () => {
 
     setEventDetail((state) => !state);
   };
-  //
+  // Sets the selectedEvent value equals to the event you want to edit
+  // and passes that event as prop in create activity form.
   const editActivityHandler = (id) => {
     // first find the event to be updated by _id from the activities array
-    const editedEvent = activities.reduce((acc, activity) => {
+    const eventToBeEdited = activities.reduce((acc, activity) => {
       if (activity._id === id) {
         acc = { ...activity };
       }
@@ -97,11 +93,18 @@ const Activities = () => {
     }, {});
     // set selectedEvent to the event to be edited, it will be used by the activity form
     // to fill out the form fields with the selected event values
-    setSelectedEvent(editedEvent);
+    setSelectedEvent(eventToBeEdited);
     // To close eventDetail page
     setEventDetail((prevState) => !prevState);
     // show event create/edit form
     showFormHandler();
+  };
+  // Updates the event in the activities state.
+  const editActivity = (id, data) => {
+    let newActivities = activities.map((activity) =>
+      activity._id === id ? data : activity
+    );
+    setActivities(newActivities);
   };
   // If Error Fetching Data from Server
   if (error) {
@@ -120,6 +123,7 @@ const Activities = () => {
           addActivity={addActivityHandler}
           onCancel={hideFormHandler}
           selectedEvent={selectedEvent}
+          editActivity={editActivity}
         />
         <div
           style={{
