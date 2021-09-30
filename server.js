@@ -3,7 +3,6 @@ const fs = require("fs");
 const express = require("express");
 const mongoose = require("mongoose");
 const methodOverride = require("method-override");
-//const passport = require('passport');
 const session = require("express-session");
 const MongoStore = require("connect-mongo")(session);
 const dotevn = require("dotenv");
@@ -12,16 +11,68 @@ const morganBody = require("morgan-body");
 const connectDB = require("./config/db");
 const bodyParser = require("body-parser");
 const cors = require("cors");
-// a middleware that allows us to create temporary files on the server
+// a middleware that allows us to parse files from request on the server
 const multiparty = require("connect-multiparty");
-const MultipartyMiddleware = multiparty({ uploadDir: "./uploads" });
-
+const MultipartyMiddleware = multiparty();
+// To upload image from CKEditor to google drive using google drive API
+const configs = require("./config/google-dr-config");
+const { google } = require("googleapis");
+const oauth2Client = new google.auth.OAuth2(
+  configs.CLIENT_ID,
+  configs.CLIENT_SECRET,
+  configs.REDIRECT_URI
+);
+oauth2Client.setCredentials({ refresh_token: configs.REFRESH_TOKEN });
+const drive = google.drive({
+  version: "v3",
+  auth: oauth2Client,
+});
+const uploadFile = async (file) => {
+  try {
+    const response = await drive.files.create({
+      requestBody: {
+        name: file.name,
+        mimeType: file.type,
+      },
+      media: {
+        mimeType: file.type,
+        body: fs.createReadStream(file.path),
+      },
+    });
+    return response.data.id;
+  } catch (e) {
+    console.log(e.message);
+  }
+};
+const deleteFile = async (fileId) => {
+  try {
+    const response = await drive.files.delete({
+      fileId: fileId,
+    });
+  } catch (e) {
+    console.log(e.message);
+  }
+};
+const generatePublicUrl = async (fileId) => {
+  try {
+    await drive.permissions.create({
+      fileId: fileId,
+      requestBody: {
+        role: "reader",
+        type: "anyone",
+      },
+    });
+    const result = await drive.files.get({
+      fileId: fileId,
+      fields: "webViewLink, webContentLink",
+    });
+    return result.data;
+  } catch (e) {
+    console.log("e.message");
+  }
+};
 // Load config
 dotevn.config({ path: "./config/config.env" });
-
-// Passport config
-//require('./config/passport')(passport);
-
 if (
   process.env.NODE_ENV === "production" ||
   process.env.NODE_ENV === "staging"
@@ -34,12 +85,6 @@ if (
 // Create a new express application named 'app'
 const app = express();
 
-// Logging
-//if (process.env.NODE_ENV === 'development') {
-//    console.log('Running in development mode. Using morgan for logging');
-//    app.use(morgan('dev'));
-//}
-// log only 4xx and 5xx responses to console
 app.use(
   morgan("dev", {
     skip: function (req, res) {
@@ -52,22 +97,6 @@ const logsDir = "logs";
 if (!fs.existsSync(logsDir)) {
   fs.mkdirSync(logsDir);
 }
-
-// log all requests to access.log
-/*app.use(morgan('common', {
-    stream: fs.createWriteStream(path.join(__dirname, "logs", 'access.log'), { flags: 'a' })
-}));
-
-const log = fs.createWriteStream(
-    path.join(__dirname, "logs", "express.log"), { flags: "a" }
-);
-
-morganBody(app, {
-    // .. other settings
-    noColors: true,
-    stream: log,
-  });
-*/
 
 // Configure the CORs middleware
 app.use(cors());
@@ -97,10 +126,6 @@ app.use(
   })
 );
 
-// Passport middleware
-//app.use(passport.initialize());
-//app.use(passport.session());
-
 // Set global var
 app.use(function (req, res, next) {
   res.locals.user = req.user | null;
@@ -110,12 +135,11 @@ app.use(function (req, res, next) {
 // Static
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static("uploads"));
+
 // Routes
 app.use("/auth", require("./routes/auth"));
 app.use("/members", require("./routes/members"));
 app.use("/activities", require("./routes/activities"));
-
-//app.use('/newmembers', require('./routes/newmembers'));
 
 // This middleware informs the express application to serve our compiled React files
 if (
@@ -135,45 +159,37 @@ app.get("*", (req, res) => {
     msg: "Catch All. Not running in production or staging?",
   });
 });
-// app.post("/upload", MultipartyMiddleware, (req, res) => {
-//   console.log(req.files);
-// });
+
 app.post("/upload", MultipartyMiddleware, (req, res) => {
-  var imageFile = req.files.upload;
-  var imagePath = imageFile.path;
+  const imageFile = req.files.upload;
 
-  const targetPathUrl = path.join(__dirname, "/uploads/" + imageFile.name);
-  if (
-    path.extname(imageFile.originalFilename).toLowerCase() === ".png" ||
-    "jpg" ||
-    "tiff" ||
-    "giff"
-  ) {
-    fs.rename(imagePath, targetPathUrl, (err) => {
-      res.status(200).json({
-        uploaded: true,
-        url: `${imageFile.originalFilename}`,
+  uploadFile(imageFile)
+    .then((id) => {
+      generatePublicUrl(id).then((url) => {
+        res.status(200).json({
+          uploaded: true,
+          url: `https://drive.google.com/uc?export=view&id=${id}`,
+        });
       });
-
-      if (err) return console.log(err);
+    })
+    .catch((e) => {
+      console.log(e.message);
+      // res.status(400).json({
+      //   message: "Error uploading image",
+      // });
     });
-  }
-  // console.log(imageFile);
 });
+
 // delete the images of the event from /upload folder when the event is deleted
 
-app.delete("/upload/:imageSrc", (req, res) => {
-  let imageSrc = req.params.imageSrc.split(",");
-  imageSrc.forEach((src) => {
-    try {
-      fs.unlinkSync(path.join(__dirname, "/uploads/" + src));
-    } catch (err) {
-      console.error(err);
-    }
+app.delete("/upload/:imageIds", (req, res) => {
+  let imageIds = req.params.imageIds.split(",");
+  imageIds.forEach((Ids) => {
+    deleteFile(Ids);
   });
 });
 // Set our backend port to be either an environment variable or port 5000
 const PORT = process.env.PORT || 5000;
 
-// Configure our server to listen on the port defiend by our port variable
+// Configure our server to listen on the port defined by our port variable
 app.listen(PORT, () => console.log(`BACK_END_SERVICE_PORT: ${PORT}`));

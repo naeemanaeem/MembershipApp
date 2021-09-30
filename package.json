@@ -32,6 +32,7 @@
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "google-auth-library": "^6.1.4",
+    "googleapis": "^87.0.0",
     "joi": "^17.3.0",
     "jspdf": "^2.2.0",
     "lodash": "^4.17.20",
