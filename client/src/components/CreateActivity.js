@@ -16,6 +16,8 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import moment from "moment";
 import axios from "axios";
 import PropTypes from "prop-types";
+import classes from "./CreateActivity.module.css";
+
 const ActivityForm = (props) => {
   /* State and constants
    *************************** */
@@ -133,10 +135,7 @@ const ActivityForm = (props) => {
                     >
                       <Dropdown.Item
                         as="button"
-                        style={{
-                          fontSize: "16px",
-                          margin: "0",
-                        }}
+                        className={classes.dropdown}
                         defaultValue={eventToBeEdited.registration}
                         value="Open"
                         onClick={(e) => {
@@ -151,10 +150,7 @@ const ActivityForm = (props) => {
                       </Dropdown.Item>
                       <Dropdown.Item
                         as="button"
-                        style={{
-                          fontSize: "16px",
-                          margin: "0",
-                        }}
+                        className={classes.dropdown}
                         value="Close"
                         defaultValue={eventToBeEdited.registration}
                         onClick={(e) => {
@@ -222,7 +218,7 @@ const ActivityForm = (props) => {
                 </Form.Text>
                 <Form.Control
                   isInvalid={!!formErrors.description}
-                  style={{ border: "none" }}
+                  className={classes.invalidInput}
                 />
                 <Form.Control.Feedback type="invalid">
                   {formErrors.description}
@@ -529,9 +525,8 @@ const ActivityForm = (props) => {
                   />
 
                   <label
-                    className="form-check-label"
+                    className={`form-check-label ${classes.formCheckLabel}`}
                     htmlFor="onlineEvent"
-                    style={{ fontFamily: "robo", fontWeight: "bold" }}
                   >
                     Online Event
                   </label>
@@ -570,9 +565,8 @@ const ActivityForm = (props) => {
                   />
 
                   <label
-                    className="form-check-label"
+                    className={`form-check-label ${classes.formCheckLabel}`}
                     htmlFor="recurringEvent"
-                    style={{ fontFamily: "robo", fontWeight: "bold" }}
                   >
                     Recurring Event
                   </label>

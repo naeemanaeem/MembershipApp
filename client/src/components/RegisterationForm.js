@@ -4,6 +4,7 @@ import Card from "react-bootstrap/Card";
 import Checkbox from "./Views/Checkbox";
 import Button from "react-bootstrap/Button";
 import PropTypes from "prop-types";
+import classes from "./RegistrationForm.module.css";
 
 const RegistrationForm = (props) => {
   const [members, setMembers] = useState([]);
@@ -27,21 +28,15 @@ const RegistrationForm = (props) => {
   if (error) {
     return (
       <center>
-        <h1 style={{ color: "red" }}>{error}</h1>
+        <h1 className={classes.errorMsg}>{error}</h1>
       </center>
     );
   } else {
     return (
       <React.Fragment>
-        <Card style={{ width: "70vw" }}>
+        <Card className={classes.card}>
           <Card.Header>
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-              }}
-            >
+            <div className={classes.cardHeader}>
               <span>
                 <i>
                   Registering For:{"  "}
@@ -52,9 +47,7 @@ const RegistrationForm = (props) => {
             </div>
           </Card.Header>
           <Card.Body>
-            <h5
-              style={{ color: "grey", paddingTop: "3%", paddingBottom: "3%" }}
-            >
+            <h5 className={classes.cardHeading}>
               Add Family / Child To the Program
             </h5>
 
@@ -74,15 +67,7 @@ const RegistrationForm = (props) => {
                   />
                 ))
               : null}
-            <div
-              style={{
-                display: "flex",
-                marginTop: "100px",
-                flexDirection: "row",
-                fontSize: "1.2em",
-                fontFamily: "robo",
-              }}
-            >
+            <div className={classes.transactionFee}>
               <Card.Text>Transaction Fee: </Card.Text>
 
               <Card.Text>

@@ -6,6 +6,7 @@ import Container from "react-bootstrap/Container";
 import { Row, Col } from "react-bootstrap";
 import axios from "axios";
 import PropTypes from "prop-types";
+import classes from "./Activities.module.css";
 
 const Activities = () => {
   const [activities, setActivities] = useState([]);
@@ -110,7 +111,7 @@ const Activities = () => {
   if (error) {
     return (
       <center>
-        <h1 style={{ color: "red", marginTop: "5%" }}>{error}</h1>
+        <h1 className={classes.errorMsg}>{error}</h1>
       </center>
     );
     // If eventDetail is false, render activities landing page
@@ -125,31 +126,9 @@ const Activities = () => {
           selectedEvent={selectedEvent}
           editActivity={editActivity}
         />
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            flexFlow: "nowrap",
-            justifyContent: "space-between",
-            margin: "0 auto",
-          }}
-        >
-          <h1
-            style={{
-              padding: "2%",
-              color: "black",
-              fontFamily: "robo",
-            }}
-          >
-            MHMA Activites &amp; Events
-          </h1>
-          <span
-            style={{
-              hover: { opacity: "0.2" },
-              marginTop: "3%",
-              cursor: "pointer",
-            }}
-          >
+        <div className={classes.header}>
+          <h1 className={classes.title}>MHMA Activites &amp; Events</h1>
+          <span className={classes.btnPlus}>
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="42"
@@ -181,7 +160,7 @@ const Activities = () => {
             </Row>
           ) : (
             <center>
-              <h1 style={{ color: "red", marginTop: "20px" }}>
+              <h1 className={classes.emptyActivities}>
                 Activites coming soon!
               </h1>
             </center>

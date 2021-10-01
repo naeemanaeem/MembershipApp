@@ -1,21 +1,20 @@
 import React from "react";
 import Card from "react-bootstrap/Card";
 import PropTypes from "prop-types";
+import classes from "./Activity.module.css";
 
 const Activity = (props) => {
   const tags = props.data.tags ? props.data.tags.split(",").slice(0, 4) : "";
-  const colors = ["orange", "green", "blue", "red"];
+
+  const backgroundColors = [
+    classes.orangeTag,
+    classes.greenTag,
+    classes.blueTag,
+    classes.redTag,
+  ];
   return (
     <Card
-      className="card text-center"
-      style={{
-        width: "22rem",
-        padding: "2%",
-        margin: "1%",
-        height: "30rem",
-        fontFamily: "robo",
-        cursor: "pointer",
-      }}
+      className={`card text-center ${classes.card}`}
       onClick={() => {
         props.onCardClick(props.data);
         props.onEventDetail(true);
@@ -25,49 +24,23 @@ const Activity = (props) => {
         variant="top"
         src={props.data.imageUrl}
         alt={props.data.name}
-        style={{ height: "65%", width: "100%" }}
+        className={classes.cardImg}
       />
 
-      <Card.Title style={{ paddingTop: "5%", fontSize: "2rem" }}>
+      <Card.Title className={classes.cardTitle}>
         {props.data.title}{" "}
         {props.data.isRecurring ? (
-          <span
-            style={{
-              color: "black",
-              backgroundColor: "yellow",
-              fontSize: "0.5em",
-              fontFamily: "robo",
-              margin: "0 auto",
-              width: "5rem",
-              padding: "2%",
-              borderRadius: "5px",
-            }}
-          >
-            Recurring
-          </span>
+          <span className={classes.recurringEventTag}>Recurring</span>
         ) : null}
       </Card.Title>
 
       <Card.Body>
         {props.data.tags ? (
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-evenly",
-            }}
-          >
+          <div className={classes.cardTags}>
             {tags.map((tag, i) => (
               <div
                 key={i}
-                style={{
-                  color: "white",
-                  width: "8rem",
-                  padding: "2%",
-                  margin: "1%",
-                  borderRadius: "5px",
-                  backgroundColor: `${colors[i]}`,
-                }}
+                className={classes.cardTag + " " + backgroundColors[i]}
               >
                 {tag}
               </div>

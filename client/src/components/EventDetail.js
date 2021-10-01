@@ -5,6 +5,7 @@ import Button from "react-bootstrap/Button";
 import RegisterationForm from "./RegisterationForm";
 import parser from "html-react-parser";
 import PropTypes from "prop-types";
+import classes from "./EventDetail.module.css";
 
 const EventDetail = (props) => {
   const [showRegisterForm, setShowRegisterForm] = useState(false);
@@ -33,28 +34,14 @@ const EventDetail = (props) => {
           eventCost={(props.data.cost / 100).toFixed(2)}
         />
       ) : (
-        <Card
-          style={{
-            margin: "5% auto",
-            width: "40rem",
-            padding: "4%",
-            fontFamily: "robo",
-          }}
-        >
+        <Card className={classes.card}>
           <Card.Header>
             <Card.Img variant="top" src={props.data.imageUrl} />
-            <div
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-around",
-                margin: "2%",
-              }}
-            >
+            <div className={classes.btnsContainer}>
               <Button
                 variant="warning"
                 size="small"
-                style={{ width: "16vw" }}
+                className={classes.btn}
                 onClick={() => {
                   props.onEdit(props.data._id);
                 }}
@@ -63,7 +50,7 @@ const EventDetail = (props) => {
               </Button>
               <Button
                 variant="danger"
-                style={{ width: "16vw" }}
+                className={classes.btn}
                 size="small"
                 onClick={() => {
                   window.confirm(
@@ -82,25 +69,19 @@ const EventDetail = (props) => {
           </Card.Header>
 
           <Card.Body>
-            <Card.Title style={{ margin: "1.5% auto", fontSize: "2rem" }}>
+            <Card.Title className={classes.title}>
               {props.data.title}
             </Card.Title>
             <Card.Text></Card.Text>
             <Card.Text>
               <b>Registration: </b>
               <span
-                style={
-                  props.data.registration === "Open"
-                    ? {
-                        backgroundColor: "lightgreen",
-                        padding: "1%",
-                        fontWeight: "bold",
-                      }
-                    : {
-                        backgroundColor: "red",
-                        padding: "1%",
-                        fontWeight: "bold",
-                      }
+                className={
+                  classes.registrationStatus +
+                  " " +
+                  (props.data.registration === "Open"
+                    ? classes.registrationOpen
+                    : classes.registrationClose)
                 }
               >
                 <em>{props.data.registration}</em>
@@ -165,7 +146,7 @@ const EventDetail = (props) => {
           </Card.Body>
           <Card.Footer>
             *If you need help registering please send an email to: {"  "}
-            <em style={{ color: "#007bff" }}>
+            <em className={classes.contactEmail}>
               <a href={`mailto:${props.data.contactEmail}`}>
                 {props.data.contactEmail}
               </a>
