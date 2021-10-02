@@ -24,14 +24,16 @@ const EventDetail = (props) => {
 
   const eventStartTime = formatTime(props.data.startDateTime);
   const eventEndTime = formatTime(props.data.endDateTime);
-
+  // cost is stored in the database as integer
+  // so decimal number is multiplied by 100 to convert into integer before storing.
+  const cost = (props.data.cost / 100).toFixed(2);
   return (
     <Container>
       {showRegisterForm ? (
         <RegisterationForm
           onClose={setShowRegisterForm}
           eventTitle={props.data.title}
-          eventCost={(props.data.cost / 100).toFixed(2)}
+          eventCost={cost}
         />
       ) : (
         <Card className={classes.card}>
@@ -95,12 +97,11 @@ const EventDetail = (props) => {
             </Card.Text>
             <Card.Text>
               <b>Time: </b>
-              {/* {props.data.startTime} - {props.data.endTime} */}
               {eventStartTime} - {eventEndTime}
             </Card.Text>
             <Card.Text>
               <b>Cost: $</b>
-              {(props.data.cost / 100).toFixed(2)}
+              {cost}
             </Card.Text>
             <Card.Text>
               <b>Program Information: </b>
