@@ -1,32 +1,20 @@
 import React, { Component, useEffect, useState } from "react";
-import { CardElement, Elements, useElements, useStripe} from "@stripe/react-stripe-js";
+import { CardElement, Elements, useElements, useStripe } from "@stripe/react-stripe-js";
 import styled from "styled-components";
 import axios from "axios";
+import { Button } from "react-bootstrap";
+import "./table.css";
 
-import {
-    Button,
-    Form,
-    Col,
-    Row,
-    Card,
-    ToggleButton,
-    ToggleButtonGroup,
-    ButtonGroup,
-    Modal,
-    Container,
-    ButtonToolbar,
-  } from "react-bootstrap";
-  
 
 
 const CardElementContainer = styled.div`
   height: 50px;
   display: flex;
-  margin-left: 65%;
-  align-items: center;
-  justify-content center:
-  margin-top: 10px;
-  margin-bottom: 20px;
+  margin-left:0px;
+  align-items: left;
+  justify-content left:
+  margin-top: 20px;
+  margin-bottom: 15px;
   background-color: lightblue;
   border-radius: 5px;
   width: 400px;
@@ -54,52 +42,69 @@ const cardElementOptions = {
   hidePostalCode: true,
 };
 
-function Stripe() {
+function Stripe(props) {
 
-    // const handleSubmitStripe = async (e) => {
-    //     e.preventDefault();
-    //     const { data: clientSecret } = await axios.post("/payment_intents", {
-    //       ammount: 50000,
-    //     });
-    
-    //     console.log(clientSecret);
-    // }
-    const [success, setSuccess] = useState(false)
-    const stripe = useStripe()
-    const elements = useElements()
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState(null);
+  const [processing, setProcessing] = useState('');
+  const [disabled, setDisabled] = useState(true);
 
-    const handleSubmit = async (e) => {
-        e.preventDefault()
-        const {error, paymentMethod} = await stripe.createPaymentMethod({
-            type: "card",
-            card: elements.getElement(CardElement)
-        })
+  const stripe = useStripe()
+  const elements = useElements()
 
+  const handleSubmit = async ev => {
+    ev.preventDefault();
+    setProcessing(true);
 
-    if(!error) {
-        try {
-            const {id} = paymentMethod
-            const response = await axios.post("http://localhost:4000/payment", {
-                amount: 1000,
-                id
-            })
+    const cardElement = elements.getElement(CardElement);
 
-            if(response.data.success) {
-                console.log("Successful payment")
-                setSuccess(true)
-            }
+    const { data: cS } = await axios.post("/stripe", {
+      amount: props.profile.Amount * 100,
+      currency: "usd",
+      description: props.profile.PaymentReason,
+    });
 
-        } catch (error) {
-            console.log("Error", error)
-        }
+    const paymentMethodReq = await stripe.createPaymentMethod({
+      type: "card",
+      card: cardElement
+    });
+
+    const payload = await stripe.confirmCardPayment(cS.clientSecret, {
+      payment_method: paymentMethodReq.paymentMethod.id
+    });
+
+    if (payload.error) {
+      setError(`payment failed ${payload.error.message}`);
+      setProcessing(false);
     } else {
-        console.log(error.message)
+      setError(null);
+      setProcessing(false);
+      setSuccess(true);
+      alert("Success stripe")
+      props.handleSubmitData()
     }
-}
+  }
 
-    return (
-    <CardElementContainer>
-      <CardElement options={cardElementOptions} />
-    </CardElementContainer>
-    )
-}export default Stripe
+  const handleChange = async (event) => {
+    setDisabled(event.empty);
+    setError(event.error ? event.error.message : "");
+  }
+
+  return (
+    <form id="payment-form" onSubmit={handleSubmit}>
+      <CardElementContainer>
+        <CardElement id="card-element" options={cardElementOptions} onChange={handleChange} />
+      </CardElementContainer>
+      <div className="stripepaybutton">
+        <Button disabled={processing || disabled || success} type="submit" id="submit" onClick={handleSubmit}>
+          Pay now
+        </Button>
+        {error && (
+          <div className="card-error" role="alert">
+            {error}
+          </div>
+        )}
+      </div>
+    </form>
+  )
+} export default Stripe

@@ -14,7 +14,7 @@ const bodyParser = require('body-parser');
 const cors = require('cors');
 
 // Load config
-dotevn.config({path: './config/config.env'});
+dotevn.config({ path: './config/config.env' });
 
 // Passport config
 //require('./config/passport')(passport);
@@ -37,9 +37,9 @@ const app = express();
 app.use(morgan('dev', {
     skip: function (req, res) { return res.statusCode < 400 }
 }));
-   
+
 const logsDir = "logs";
-if (!fs.existsSync(logsDir)){
+if (!fs.existsSync(logsDir)) {
     fs.mkdirSync(logsDir);
 }
 
@@ -66,7 +66,7 @@ app.use(cors());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-app.use(methodOverride(function(req, res) {
+app.use(methodOverride(function (req, res) {
     if (req.body && typeof req.body === 'object' && '_method' in req.body) {
         // look in urlencoded POST bodies and delete it
         let method = req.body._method;
@@ -80,7 +80,7 @@ app.use(session({
     secret: 'keyboard cat',
     resave: false,
     saveUninitialized: false,
-    store: new MongoStore({mongooseConnection: mongoose.connection})
+    store: new MongoStore({ mongooseConnection: mongoose.connection })
 }));
 
 // Passport middleware
@@ -88,7 +88,7 @@ app.use(session({
 //app.use(passport.session());
 
 // Set global var
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     res.locals.user = req.user | null;
     next();
 });
@@ -100,6 +100,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use('/auth', require('./routes/auth'));
 app.use('/members', require('./routes/members'));
 app.use('/payments', require('./routes/payments'));
+app.use('/stripe', require('./routes/stripe'));
 //app.use('/newmembers', require('./routes/newmembers'));
 
 // This middleware informs the express application to serve our compiled React files

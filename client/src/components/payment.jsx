@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { Component, Profiler, useEffect, useState } from "react";
 import {
   Button,
   InputGroup,
@@ -9,17 +9,10 @@ import {
   Card,
   ToggleButton,
   ToggleButtonGroup,
-  ButtonGroup,
-  label,
-  Modal,
-  Container,
-  ButtonToolbar,
 } from "react-bootstrap";
-//import Table from "./table.jsx";
 import PayPal from "./paypal";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
-import styled from "styled-components";
 import Stripe from "./stripe";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
@@ -30,7 +23,7 @@ const PUBLIC_KEY =
 const stripePromise = loadStripe(PUBLIC_KEY);
 
 const buttonlist1 = ["Membership Fee", "Donation", "Sadaqah", "Zakat"];
-const buttonlist2 = ["PayPal", "Bank Deposit", "Zelle", "Venmo"];
+const buttonlist2 = ["PayPal", "Stripe", "Zelle", "Venmo"];
 
 function Payment({ addTextLog }) {
   const [profile, setProfile] = useState({
@@ -39,24 +32,24 @@ function Payment({ addTextLog }) {
     Firstname: "",
     Lastname: "",
     Email: "",
-    Amount: "",
+    Amount: 10,
     Comments: "",
     Status: "Processing",
     Type: "Outgoing",
   });
+  const [clientSecret, setClientSecret] = useState("");
 
   const [payments, setPayments] = useState([]);
+
   useEffect(() => {
     const getAllPayments = async () => {
       try {
         const res = await axios.get("/payments");
         setPayments(res.data);
-        console.log("refreshed");
       } catch (e) {
         console.log(e);
       }
     };
-    getAllPayments();
   }, []);
 
   const saveNewPayment = async (p) => {
@@ -72,13 +65,14 @@ function Payment({ addTextLog }) {
       [name]: value,
     });
   };
+
   const handleSubmit = (e) => {
     saveNewPayment(profile);
   };
 
   return (
     <React.Fragment>
-      <h2 className="ml-5 mt-3">Payment</h2>
+      <h2 className="ml-5 mt-3">New Payment</h2>
       <Form onSubmit={handleSubmit}>
         <div className="ml-3 mt-3 mb-5 middle">
           <Card style={{ width: "60%", height: "100%" }}>
@@ -196,25 +190,24 @@ function Payment({ addTextLog }) {
                 </InputGroup>
               </Col>
             </Row>
-            <Row className="ml-2">
-              <Col className="mt-3 ml-3 mr-2 mb-3">
-                <div className="paypal">
-                  <PayPal />
+            <Row className="ml-4 mb-2">
+              <div className="paypal">
+                <PayPal profile={profile} handleSubmit={handleSubmit} />
+                <div className="clear">
+                  <Button variant="danger" id="clear3" type="refresh" size="lg">
+                    Clear
+                  </Button>
                 </div>
-                <Elements stripe={stripePromise}>
-                  <Stripe />
-                </Elements>
-                <Button variant="danger" id="clear3" type="refresh">
-                  Clear
-                </Button>
-                <Button
-                  variant="primary"
-                  type="submit"
-                  onClick={() => alert(JSON.stringify(profile, "", 2))}
-                >
-                  Make Payment
-                </Button>
-              </Col>
+              </div>
+            </Row>
+            <Row className="mt-2 ml-4">
+              <Elements stripe={stripePromise}>
+                <Stripe
+                  profile={profile}
+                  handleSubmitData={handleSubmit}
+                  clientSecret={clientSecret}
+                />
+              </Elements>
             </Row>
           </Card>
         </div>
@@ -222,5 +215,4 @@ function Payment({ addTextLog }) {
     </React.Fragment>
   );
 }
-
 export default Payment;

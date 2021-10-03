@@ -51,14 +51,21 @@
 
 .paypal {
   display: flex;
-  justify-content: right;
-  align-items: right;
-  margin-right: 40px;
+  column-gap: 15px;
+  align-items: left;
+  min-height: 45px;
+  max-width: 500px;
 }
 
-.stripe {
+.stripepaybutton {
   display: flex;
-  justify-content: right;
-  align-items: right;
-  width: ;
+  column-gap: 15px;
+  align-items: left;
+  min-height: 45px;
+  max-width: 500px;
+  margin-bottom: 20px;
+}
+
+.clear {
+  height: 45px;
 }
