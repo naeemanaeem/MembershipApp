@@ -76,13 +76,14 @@ hr.dsolid {
 
 table {
   border: 1px solid black;
+  padding: 0%;
 }
 
-td {
+.tablebody {
   text-align: center;
-  height: 10px;
-  width: 20px;
-  margin-top: auto;
+  height: 5px;
+  width: 30%;
+  /* margin-top: auto; */
 }
 
 .depTableHead {
@@ -92,4 +93,8 @@ td {
 
 .hidden {
   display: none;
+}
+
+.table {
+  width: 90%;
 }

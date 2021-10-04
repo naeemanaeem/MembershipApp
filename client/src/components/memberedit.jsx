@@ -22,10 +22,8 @@ class MemberEdit extends Component {
     tempmember: {},
     replacemember: {},
     dependents: [],
-    errors: {
-      Firstname: "", Lastname: "", PhoneNum: "", Email: "", HouseNo: "", Street: "", City: "", 
-      State: "", Country: "", Postcode: "", DoB: "", Gender: "", Voter: "", Spouse: ""
-    },
+    errors: {},
+    validated: false,
     isEdit: false
   };
 
@@ -45,6 +43,12 @@ class MemberEdit extends Component {
       this.props.member.Dependents = [...this.state.dependents];
       this.props.onSave(this.props.member); 
     }
+    // const form = e.currentTarget;
+    // console.log("SAVE", form,form.checkValidity(), e)
+    // // if(!this.state.validated){this.setState({validated: true})}
+    // this.resetErrors(); 
+    // this.checkErrors();
+    // console.log(Object.keys(this.state.errors).length)
   }
   
   handleCancel = () => {
@@ -112,31 +116,40 @@ class MemberEdit extends Component {
     this.setState({dependents: depArr});
   }
 
+  resetErrors = () => {
+    console.log("RESET")
+    this.setState({errors: {}})
+  }
+
   checkErrors = () => {
-    if(!this.props.member.Firstname || this.props.member.Firstname.length < 1){
+    console.log("MEMBER", this.props.member, this.props.member.Firstname.length)
+    if(!this.props.member.Firstname){
       this.state.errors.Firstname = "PUT FIRST NAME";
-    }
-    if(!this.props.member.Lastname || this.props.member.Lastname.length < 1){
+    }else if(this.props.member.Firstname.length < 1){this.state.errors.Firstname = "PUT FIRST NAME";}
+
+    if(!this.props.member.Lastname){
       this.state.errors.Lastname = "PUT LAST NAME";
-    }
-    if(!this.props.member.PhoneNum || this.props.member.PhoneNum.length < 1 || this.props.PhoneNum.length > 10){
+    } else if(this.props.member.Lastname.length < 1){this.state.errors.Lastname = "PUT LAST NAME";}
+
+    if(!this.props.member.PhoneNum){
       this.state.errors.PhoneNum = "PUT PHONE NUMBER";
-    }
-    if(!this.props.member.Email || this.props.member.Email.length < 1){
+    } else if(this.props.member.PhoneNum.length < 1 || this.props.member.PhoneNum.length > 10){this.state.errors.PhoneNum = "PUT PHONE NUMBER";}
+    
+    if(!this.props.member.Email){
       this.state.errors.Email = "PUT Email";
-    }
-    if(!this.props.member.HouseNo || this.props.member.HouseNo.length < 1){
+    } else if(this.props.member.Email.length < 1){this.state.errors.Email = "PUT Email";}
+    if(!this.props.member.HouseNo){
       this.state.errors.HouseNo = "PUT House Number";
-    }
-    if(!this.props.member.Street || this.props.member.Street.length < 1){
+    } else if(this.props.member.HouseNo.length < 1) {this.state.errors.HouseNo = "PUT House Number";}
+    if(!this.props.member.Street){
       this.state.errors.Street = "PUT STREET";
-    }
-    if(!this.props.member.Country || this.props.member.Country.length < 1){
+    } else if(this.props.member.Street.length < 1){this.state.errors.Street = "PUT STREET";}
+    if(!this.props.member.Country){
       this.state.errors.Country = "PUT Country";
-    }
-    if(!this.props.member.Postcode || this.props.member.Postcode.length < 1 || this.props.member.Postcode.length > 5){
+    } else if(this.props.member.Country.length < 1){this.state.errors.Country = "PUT Country";}
+    if(!this.props.member.Postcode){
       this.state.errors.Postcode = "PUT POSTCODE";
-    }
+    } else if(this.props.member.Postcode.length < 1 || this.props.member.Postcode.length > 5){this.state.errors.Postcode = "PUT POSTCODE";}
     console.log(this.state.errors)
   }
 
@@ -163,7 +176,7 @@ class MemberEdit extends Component {
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
-          <Form>
+          <Form noValidate validated={this.state.validated}>
             <InputGroup>
               <Form.Group as={Col} md="6">
                 <Form.Label id="Firstname">First Name</Form.Label>
@@ -174,8 +187,12 @@ class MemberEdit extends Component {
                   onChange={e => this.props.member.Firstname = e.target.value.toLocaleUpperCase() }
                   defaultValue={this.props.member.Firstname}
                   className="mr-2"
+                  required
                 />
-              </Form.Group>            
+              </Form.Group>
+              <Form.Control.Feedback type="invalid">
+                   Please provide a valid first name.
+               </Form.Control.Feedback>            
 
               <Form.Group as={Col} md="6">
                 <Form.Label id="Lastname">Last Name</Form.Label>
@@ -185,6 +202,7 @@ class MemberEdit extends Component {
                   aria-describedby="lastname"
                   onChange={e => this.props.member.Lastname = e.target.value.toLocaleUpperCase() }
                   defaultValue={this.props.member.Lastname}
+                  required
                 />
               </Form.Group>
             </InputGroup>
@@ -199,6 +217,7 @@ class MemberEdit extends Component {
                   onChange={e => this.props.member.PhoneNum = e.target.value.toLocaleUpperCase() }
                   defaultValue={this.props.member.PhoneNum}
                   className="mr-3"
+                  required
                 />
               </Form.Group>
 
@@ -210,6 +229,7 @@ class MemberEdit extends Component {
                   aria-describedby="email"
                   onChange={e => this.props.member.Email = e.target.value }
                   defaultValue={this.props.member.Email}
+                  required
                 />
               </Form.Group>
             </InputGroup>
@@ -224,6 +244,7 @@ class MemberEdit extends Component {
                   onChange={e => this.props.member.HouseNo = e.target.value.toLocaleUpperCase() }
                   defaultValue={this.props.member.HouseNo}
                   className="mr-2"
+                  required
                 />
               </Form.Group>
 
@@ -236,6 +257,7 @@ class MemberEdit extends Component {
                   onChange={e => this.props.member.Village = e.target.value.toLocaleUpperCase() }
                   defaultValue={this.props.member.Village}
                   className="mr-2"
+                  required
                 />
               </Form.Group>
             </InputGroup>
@@ -250,6 +272,7 @@ class MemberEdit extends Component {
                   onChange={e => this.props.member.Street = e.target.value.toLocaleUpperCase() }
                   defaultValue={this.props.member.Street}
                   className="w-125"
+                  required
                 />
               </Form.Group>
 
@@ -262,6 +285,7 @@ class MemberEdit extends Component {
                   onChange={e => this.props.member.City = e.target.value.toLocaleUpperCase() }
                   defaultValue={this.props.member.City}
                   className="w-100"
+                  required
                 />
               </Form.Group>
             </InputGroup>
@@ -275,7 +299,8 @@ class MemberEdit extends Component {
                   aria-describedby="state"
                   as="select"
                   onChange={e => this.props.member.State = e.target.value.toLocaleUpperCase() }
-                  defaultValue={this.props.member.State}
+                  defaultValue={this.props.member.State = "CA"}
+                  required
                 >
                   <StateSelector />
                 </FormControl>   
@@ -290,7 +315,8 @@ class MemberEdit extends Component {
                   as="select"
                   onChange={e => this.props.member.Country = e.target.value.toLocaleUpperCase() }
                   className=""
-                  defaultValue={this.props.member.Country}
+                  defaultValue={this.props.member.Country = "US"}
+                  required
                 >
                   <CountrySelector/>
                 </FormControl>
@@ -304,6 +330,7 @@ class MemberEdit extends Component {
                   aria-describedby="zipcode"
                   onChange={e => this.props.member.Postcode = e.target.value.toLocaleUpperCase() }
                   defaultValue={this.props.member.Postcode}
+                  required
                 />
               </Form.Group>
             </InputGroup>
@@ -318,6 +345,7 @@ class MemberEdit extends Component {
                   onChange={e => this.props.member.DateOfBirth = e.target.value.toLocaleUpperCase() }
                   defaultValue={this.props.member.DateOfBirth}
                   className="mr-2"
+                  required
                 />
               </Form.Group>
 
@@ -331,6 +359,7 @@ class MemberEdit extends Component {
                   onChange={e => this.props.member.Gender = e.target.value.toLocaleUpperCase() }
                   defaultValue={this.props.member.Gender}
                   className="mr-2"
+                  required
                 >
                   <option>n/a</option>
                   <option value="FEMALE">Female</option>
@@ -350,6 +379,7 @@ class MemberEdit extends Component {
                   onChange={e => this.props.member.Voter = e.target.value.toLocaleUpperCase() }
                   defaultValue={this.props.member.Voter}
                   className="mr-3"
+                  required
                 >
                   <option>n/a</option>
                   <option value="No">No</option>
@@ -413,7 +443,20 @@ class MemberEdit extends Component {
           <React.Fragment>
             <Button variant="link" className="depButton" onClick={this.showDependentEditDialog}>Add Dependent</Button>
             <Button variant="secondary" onClick={this.handleCancel}>Cancel</Button>
-            <Button variant="primary" onClick={this.checkErrors}>Save</Button>
+            <Button 
+              type="submit"
+              variant="primary" 
+              onClick={this.handleSave
+              //   () => {
+              //   if(!this.state.validated){this.setState({validated: true})}
+              //   this.resetErrors(); 
+              //   this.checkErrors();
+              //   console.log(Object.keys(this.state.errors).length)
+              // }
+            }
+              >
+              Save
+            </Button>
           </React.Fragment>
         }
       </Modal.Footer>

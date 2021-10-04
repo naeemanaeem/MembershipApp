@@ -89,6 +89,11 @@ class Members extends Component {
 
   async saveUpdatedMember(m) {
     try {
+      if(m.Dependents.length > 0 && typeof m.Dependents[0] !== "string"){
+        let dependents = [];
+        await m.Dependents.forEach(dep => dependents.push(dep._id));
+        m.Dependents = dependents;
+      }
       await axios.put('members/' + m._id, m);
       const newmembers = await axios.get('/members');
       this.setState({members: newmembers.data})
@@ -261,22 +266,8 @@ class Members extends Component {
               <h1 className="ml-5 mt-3">
                 Member 
               </h1>
-              {/* <FormControl as="select" className="w-25">
-                <option value="">--Please choose an option--</option>
-                <option value={console.log("HI")}>Dog</option>
-                <option value="cat">Cat</option>
-                <option value="hamster">Hamster</option>
-              </FormControl>
-              <DropdownButton id="dropdown-item-button" title="Dropdown button">
-                <Dropdown.ItemText>Dropdown item text</Dropdown.ItemText>
-                <Dropdown.Item as="button">Action</Dropdown.Item>
-                <Dropdown.Item as="button" onClick={alert("HI")}>Another action</Dropdown.Item>
-                <Dropdown.Item as="button">Something else</Dropdown.Item>
-              </DropdownButton> */}
-
-              <Button className="addbutton" onClick={this.handleAddNewMemberButtonClick}>Add Member</Button>
+              <Button className="addbutton" variant="dark" onClick={this.handleAddNewMemberButtonClick}>Add Member</Button>
               </div>
-
               <PaginationTable id="AdminDataTable" data={memData} updateMember={this.updateMember}/>
             </div>
             </React.Fragment>

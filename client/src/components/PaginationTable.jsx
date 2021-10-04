@@ -19,8 +19,8 @@ import "jspdf-autotable";
 import Form from 'react-bootstrap/Form'
 import Button from 'react-bootstrap/Button';
 import Member from './member.jsx';
-import icon from './imgs/ViewInfoIcon.jpg'
 import './css_stuff/paginationtable.css'
+import FormControl from 'react-bootstrap/FormControl'
 
 
 const PaginationTable = (props) => {
@@ -141,6 +141,24 @@ const PaginationTable = (props) => {
 
   return (
     <React.Fragment>
+      <div>
+      <FormControl as="select" value="EXPORT" className="export" onChange={(e) => {
+                if(e.target.value === "allcsv"){exportData("csv", true);}
+                else if(e.target.value === "curcsv"){exportData("csv", false);}
+                else if(e.target.value === "allxlsx"){exportData("xlsx", true);}
+                else if(e.target.value === "curxlsx"){exportData("xlsx", false);}
+                else if(e.target.value === "allpdf"){exportData("pdf", true);}
+                else if(e.target.value === "curpdf"){exportData("pdf", false);}
+              }}>
+                <option value="EXPORT">EXPORT</option>
+                <option value="allcsv">Export All as CSV</option>
+                <option value="curcsv">Export Current View as CSV</option>
+                <option value="allxlsx">Export All as xlsx</option>
+                <option value="curxlsx">Export Current View as xlsx</option>
+                <option value="allpdf">Export All as PDF</option>
+                <option value="curpdf">Export Current View as PDF</option>
+      </FormControl>
+      </div>
       <div id="inline">
         <div
           style={{
@@ -195,7 +213,7 @@ const PaginationTable = (props) => {
                   <tr {...row.getRowProps()}>
                     {row.cells.map((cell) => (
                       (cell.column.checked && cell.column.Header != "View Member") ?
-                      <td className="td" {...cell.getCellProps}>{cell.render("Cell")}</td>
+                      <td className="td center" {...cell.getCellProps}>{cell.render("Cell")}</td>
                       : 
                       (cell.column.Header == "View Member") ?
                       <Member 
@@ -214,7 +232,7 @@ const PaginationTable = (props) => {
         </table>
       </div>
 
-      <div
+      {/* <div
         style={{
           display: "flex",
           justifyContent: "space-around",
@@ -296,7 +314,7 @@ const PaginationTable = (props) => {
         >
           Export Current View as PDF
         </Button>
-      </div>
+      </div> */}
 
       <div
         style={{

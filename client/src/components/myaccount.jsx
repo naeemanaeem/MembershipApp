@@ -9,6 +9,7 @@ import Nav from 'react-bootstrap/Nav'
 import {Row, Col } from 'reactstrap';
 import Form from 'react-bootstrap/Form'
 import DependentEdit from './dependentedit';
+import MemberEdit from './memberedit'
 import CountrySelector from './helper/countryselector.jsx'
 import StateSelector from './helper/stateselector.jsx'
 
@@ -18,6 +19,7 @@ class MyAccount extends Component {
 
   state = {
     modalShow: false,
+    memberShow: false,
     myaccount: {Dependents: []},
     tempdependent: {},
     dependents: [],
@@ -32,6 +34,7 @@ class MyAccount extends Component {
       const id = localStorage.getItem("googleId"); //TRY TO USE THIS TO GET MEMBER
       const res = await axios.get('members/614915b63d1e5066b0675a94');{/*members/id syntax for id*/}
       this.setState({myaccount: res.data, error: ""});
+      console.log("RETURN FROM BACKEND", res.data)
     } catch (e) {
       this.setState({error: e.message});
       console.error(e);
@@ -49,27 +52,31 @@ class MyAccount extends Component {
         const newmembers = [...this.state.dependents, res.data];
 
         let account = this.state.myaccount;
-        account.Dependents.push(res.data._id);
-        console.log("RES", res, this)
+        account.Dependents.push(res.data);
         this.setState({dependents: newmembers}, this.handleEditSave(account, true));
     }
   }
 
   //GETS DEPENDENTS BY ID AND ADDS THEM TO dependents ARRAY
-  async getDependent(id) {
-    try {
-      const res = await axios.get('members/' + id);
-      const newdependents = [...this.state.dependents, res.data];
-      this.setState({dependents: newdependents});
-    } catch (e) {
-      this.setState({error: e.message});
-      console.error(e);
-    } 
-  }
+  // async getDependent(id) {
+  //   try {
+  //     const res = await axios.get('members/' + id);
+  //     const newdependents = [...this.state.dependents, res.data];
+  //     this.setState({dependents: newdependents});
+  //   } catch (e) {
+  //     this.setState({error: e.message});
+  //     console.error(e);
+  //   } 
+  // }
 
   //SAVED UPDATED MEMBERS/DEPENDENTS
   async saveUpdatedMember(m) {
     try {
+      if(m.Dependents.length > 0 && typeof m.Dependents[0] !== "string"){
+        let dependents = [];
+        await m.Dependents.forEach(dep => dependents.push(dep._id));
+        m.Dependents = dependents;
+      }
       await axios.put('members/' + m._id, m);
       const member = await axios.get('members/' + m._id)
       this.setState({myaccount: member.data})
@@ -85,7 +92,7 @@ class MyAccount extends Component {
       let member;
       if (isOwner) {
         member = this.state.myaccount; //SET MEMBER TO MYACCOUNT
-        console.log("IN OWNER", member)
+        // console.log("IN OWNER", member)
       } else {
         member = this.state.dependents.find(el => el._id === m._id); //SET MEMBER TO DEPENDENT
       }
@@ -132,33 +139,33 @@ class MyAccount extends Component {
   }
   
   //REMOVES COPIES FROM dependents ARRAY BUT NEEDS WORK
-  removeCopies(){
-    let newArr = [], retest = [], doOver = [];
-    let i = 0;
-    while(i < this.state.depArrSize){
-      if(newArr.length === 0){newArr.push(this.state.dependents[i])}
-      else if(!newArr.find(dep => dep === this.state.dependents[i])){newArr.push(this.state.dependents[i])}
-      i++;
-    }
-    newArr.forEach(dep => retest.push(dep.Firstname));
-    doOver = retest.filter((c, index) => {
-        return retest.indexOf(c) !== index;
-    });
-    if(doOver.length > 0){
-      console.log(doOver);
-      this.fillDependentArray();
-      // this.setState({dependents: newArr});
-    } else{
-      this.setState({dependents: newArr});
-    }
-  }
+  // removeCopies(){
+  //   let newArr = [], retest = [], doOver = [];
+  //   let i = 0;
+  //   while(i < this.state.depArrSize){
+  //     if(newArr.length === 0){newArr.push(this.state.dependents[i])}
+  //     else if(!newArr.find(dep => dep === this.state.dependents[i])){newArr.push(this.state.dependents[i])}
+  //     i++;
+  //   }
+  //   newArr.forEach(dep => retest.push(dep.Firstname));
+  //   doOver = retest.filter((c, index) => {
+  //       return retest.indexOf(c) !== index;
+  //   });
+  //   if(doOver.length > 0){
+  //     console.log(doOver);
+  //     this.fillDependentArray();
+  //     // this.setState({dependents: newArr});
+  //   } else{
+  //     this.setState({dependents: newArr});
+  //   }
+  // }
   
   //RESETS dependents ARRAY AND THEN CALLS getDependent FOR EACH DEPENDENT ID IN MYACCOUNT.DEPENDENTS
-  fillDependentArray() {
-    this.setState({dependents: []},
-      this.state.myaccount.Dependents.forEach(dep => this.getDependent(dep))
-    );
-  }
+  // fillDependentArray() {
+  //   this.setState({dependents: []},
+  //     this.state.myaccount.Dependents.forEach(dep => this.getDependent(dep))
+  //   );
+  // }
 
   //SETS DEPENDENTEDIT MODAL
   setModalShow = (e) => { //true or false
@@ -177,6 +184,18 @@ class MyAccount extends Component {
     this.setModalShow(false);
   }
 
+  setMemberShow = (e) => { //true or false
+    this.setState({memberShow: e});
+  }
+
+  showMemberEditDialog = () => {
+    this.setMemberShow(true);
+  }
+
+  hideMemberEditDialog = () => {
+    this.setMemberShow(false);
+  }
+
   //PREPARES FOR NEW DEPENDENT AND OPENS DEPENDENT MODAL
   addNewDependent = () => {
     let m = {...this.state.myaccount};
@@ -192,36 +211,39 @@ class MyAccount extends Component {
 
   //CANCELS MEMBER EDIT
   editMemberOnCancel = () => {
-    this.editMember();
+    // this.editMember();
+    this.hideMemberEditDialog();
   }
 
   //SAVES EDITED MEMBER
   editMemberOnSave = (m) => {
-    this.editMember();
+    // this.editMember();
+    this.hideMemberEditDialog();
     console.log("Update member - ", m);
     this.saveUpdatedMember(m, true);
   }
 
   editMember = () => {
+    this.showMemberEditDialog();
     //FOR HIDING AND SHOWING SAVE AND CANCEL
-    var x = document.getElementById("editing");
-    if(x.style.display === 'none'){
-      x.style.display = 'block';
-      document.getElementById('editMemButton').style.display = 'none';
-    } else {
-      x.style.display = 'none';
-      document.getElementById('editMemButton').style.display = 'block';
-    }
+    // var x = document.getElementById("editing");
+    // if(x.style.display === 'none'){
+    //   x.style.display = 'block';
+    //   document.getElementById('editMemButton').style.display = 'none';
+    // } else {
+    //   x.style.display = 'none';
+    //   document.getElementById('editMemButton').style.display = 'block';
+    // }
 
-    //FOR DISABLING AND ENABLING FORM
-    var y = document.getElementById("target").elements;
-    for(var i = 0; i < y.length; i++){
-      if(y[i].disabled){
-        y[i].disabled = false;
-      } else{
-        y[i].disabled = true;
-      }
-    }
+    // //FOR DISABLING AND ENABLING FORM
+    // var y = document.getElementById("target").elements;
+    // for(var i = 0; i < y.length; i++){
+    //   if(y[i].disabled){
+    //     y[i].disabled = false;
+    //   } else{
+    //     y[i].disabled = true;
+    //   }
+    // }
   }
 
   //CALULATES AGE OF DEPENDENT
@@ -252,9 +274,19 @@ class MyAccount extends Component {
     // console.log("LOCAL", localStorage.getItem("user_displayName"), localStorage.getItem("user_email"),localStorage.getItem("test") );
     const thisaccount = this.state.myaccount;
     var editaccount = {...thisaccount};
-    const dependent = this.state.dependents;
-    console.log(thisaccount, editaccount, this.state.myaccount)
+    const dependent = this.state.myaccount.Dependents;
+
     // console.log("LOCALstorage", localStorage);
+    // localStorage.id = null;
+    // if(!localStorage.id || localStorage.id === null){
+    //   console.log("in if")
+    //   localStorage.id = this.state.myaccount._id;
+    // }
+    // else{
+    //   console.log("in else", localStorage.id, this.state.myaccount._id)
+    // }
+
+    console.log("MYACCOUNT", thisaccount);
     
     if(editaccount.Firstname && editaccount.Firstname === this.state.myaccount.Firstname){
       detailPage  = 
@@ -263,7 +295,7 @@ class MyAccount extends Component {
         {/* Personal Information Below */}
         <h4 className="ml-3">
           Personal Information 
-          <Button id="editMemButton" onClick={/*this.showEditMember*/ this.editMember}>Edit Member</Button>
+          <Button id="editMemButton" variant="dark" onClick={/*this.showEditMember*/ this.editMember}>Edit Member</Button>
           </h4>
         <hr class="solid mr-2" />
 
@@ -468,44 +500,45 @@ class MyAccount extends Component {
     }
 
     if(thisaccount.Dependents.length > 0){
-      if(this.state.depArrSize !== thisaccount.Dependents.length){
-        this.setState({depArrSize: thisaccount.Dependents.length}, this.fillDependentArray());
-      }
-      if(this.state.dependents.length > this.state.depArrSize){
-        this.removeCopies();
-      }
+      // if(this.state.depArrSize !== thisaccount.Dependents.length){
+      //   this.setState({depArrSize: thisaccount.Dependents.length}, this.fillDependentArray());
+      // }
+      // if(this.state.dependents.length > this.state.depArrSize){
+      //   this.removeCopies();
+      // }
 
 
       dependentPage =
         <React.Fragment>
           <h4 className="ml-3">
           Dependents 
-          <Button variant="warning" className="mb-3" onClick={this.addNewDependent}>Add Dependent</Button>
+          <Button variant="success" className="mb-3" onClick={this.addNewDependent}>Add Dependent</Button>
           </h4>
           <hr class="solid mr-2" />
-          <Table className="mr-4">
-            <thead className="depTableHead">
+          <Table className="mr-4 table">
+            <thead>
               <tr>
-                <th>First Name</th>
-                <th>Last Name</th>
-                <th>Relationship</th>
-                <th>Age</th>
-                <th>View/Edit Info</th>
+                <th className="depTableHead">First Name</th>
+                <th className="depTableHead">Last Name</th>
+                <th className="depTableHead">Relationship</th>
+                <th className="depTableHead">Age</th>
+                <th className="depTableHead">View/Edit Info</th>
               </tr>
             </thead>
             <tbody>
             {dependent.map((dep) => {
                 return (
                   <tr>
-                    <td>{dep.Firstname}</td>
-                    <td>{dep.Lastname}</td>
-                    <td>{(dep.Relationship) ? dep.Relationship : "Relationship"}</td>
-                    <td>{this.calulateAge(dep.DateOfBirth)}</td>
+                    <td className="tablebody">{dep.Firstname}</td>
+                    <td className="tablebody">{dep.Lastname}</td>
+                    <td className="tablebody">{(dep.Relationship) ? dep.Relationship : "Relationship"}</td>
+                    <td className="tablebody">{this.calulateAge(dep.DateOfBirth)}</td>
                     <Member 
                       isNewDep={false} 
                       isDep={true}
                       handleMemberEdit={this.showDependentEditDialog}
                       member={dep}
+                      className="tablebody"
                     />
                   </tr>
                 ); 
@@ -536,6 +569,15 @@ class MyAccount extends Component {
           myAccount={true}
         />
 
+        <MemberEdit
+          member={this.state.myaccount}
+          show={this.state.memberShow}
+          onDependentShow={this.hideMemberEditDialog}
+          onDependentHide={this.showMemberEditDialog}
+          onCancel={this.editMemberOnCancel}
+          onSave={this.editMemberOnSave}
+          myAccount={true}
+        />
         
         <div>
           <h1 class="header"> 

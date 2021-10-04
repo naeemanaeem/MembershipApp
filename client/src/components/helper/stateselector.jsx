@@ -2,6 +2,7 @@ import React from 'react';
 
 function StateSelector(){
     return <React.Fragment>
+        <option value="CA">California</option>
         <option>select state</option>
         <option value="AL">Alabama</option>
         <option value="AK">Alaska</option>

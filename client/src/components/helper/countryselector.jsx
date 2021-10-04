@@ -4,6 +4,7 @@ import 'react-dropdown/style.css';
 
 function CountrySelector(){
     return <React.Fragment>
+      <option value="US">United States</option>
       <option>select country</option>
     <option value="AF">Afghanistan</option>
     <option value="AX">Aland Islands</option>
