@@ -1,45 +1,71 @@
 #title {
-    text-align: center;
-    font-family: arial, sans-serif;
-  }
-  
-  #students {
-    text-align: center;
-    font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
-    border-collapse: collapse;
-    border: 3px solid #ddd;
-    width: 100%;
-  }
-  
-  #students td, #students th {
-    border: 1px solid #ddd;
-    padding: 8px;
-  }
-  
-  #students tr:nth-child(even){background-color: #f2f2f2;}
-  
-  #students tr:hover {background-color: #ddd;}
-  
-  #students th {
-    padding-top: 12px;
-    padding-bottom: 12px;
-    text-align: center;
-    background-color: #006eff;
-    color: white;
-  }
-  .center {
-    margin: 0 auto;
-    align-self: center;
-  }
+  text-align: center;
+  font-family: arial, sans-serif;
+}
+
+#students {
+  text-align: center;
+  font-family: "Trebuchet MS", Arial, Helvetica, sans-serif;
+  border-collapse: collapse;
+  border: 3px solid #ddd;
+  width: 100%;
+}
+
+#students td,
+#students th {
+  border: 1px solid #ddd;
+  padding: 8px;
+}
+
+#students tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+#students tr:hover {
+  background-color: #ddd;
+}
+
+#students th {
+  padding-top: 12px;
+  padding-bottom: 12px;
+  text-align: center;
+  background-color: #006eff;
+  color: white;
+}
+.center {
+  margin: 0 auto;
+  align-self: center;
+}
 
 .middle {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
-.bg_image{
-  background-image: url('./fmasjid.jpeg');
+.bg_image {
+  background-image: url("./fmasjid.jpeg");
   background-size: cover;
   height: 100vh;
   color: #f5f5f5;
+}
+
+.paypal {
+  display: flex;
+  column-gap: 15px;
+  align-items: left;
+  min-height: 45px;
+  max-width: 500px;
+}
+
+.stripepaybutton {
+  display: flex;
+  column-gap: 15px;
+  align-items: left;
+  min-height: 45px;
+  max-width: 500px;
+  margin-bottom: 20px;
+}
+
+.clear {
+  height: 45px;
 }
