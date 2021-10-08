@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
-import RegisterationForm from "./registeration";
+import RegisterationForm from "./registration";
 import parser from "html-react-parser";
 import PropTypes from "prop-types";
 import classes from "./eventDetail.module.css";
