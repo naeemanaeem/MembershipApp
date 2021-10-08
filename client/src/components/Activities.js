@@ -26,7 +26,7 @@ const Activities = () => {
       }
     }
     fetchData();
-  }, []);
+  }, [error]);
   // Adds new activity to activities array
   const addActivityHandler = (data) => {
     setActivities([...activities, data]);
@@ -50,11 +50,6 @@ const Activities = () => {
   // and updates the activites array in the component's state
 
   const deleteActivityHandler = (id, title, imageSrc) => {
-    const imageIds = [];
-    imageSrc.forEach((src) => {
-      let imageId = src.split("=")[2];
-      imageIds.push(imageId);
-    });
     axios
       .delete(`/activities/${id}`)
       .then((res) => {
@@ -62,15 +57,25 @@ const Activities = () => {
         setSelectedEvent(() => {
           return {};
         });
-        // update your component state
-        axios
-          .delete(`/upload/${imageIds.join(",")}`)
-          .then((response) => {
-            console.log(response);
-          })
-          .catch((error) => {
-            console.log("ERROR:", error.message);
+        // if there is an image associated with event
+        // delete it from the google drive
+        if (imageSrc.length) {
+          const imageIds = [];
+          imageSrc.forEach((src) => {
+            let imageId = src.split("=")[2];
+            imageIds.push(imageId);
           });
+
+          axios
+            .delete(`/upload/${imageIds.join(",")}`)
+            .then((response) => {
+              console.log(response);
+            })
+            .catch((error) => {
+              console.log("ERROR:", error.message);
+            });
+        }
+        // update your component state
         let newActivities = activities.filter(
           (activity) => activity._id !== id
         );
