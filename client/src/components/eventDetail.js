@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import Card from "react-bootstrap/Card";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
-import RegisterationForm from "./RegisterationForm";
+import RegisterationForm from "./registeration";
 import parser from "html-react-parser";
 import PropTypes from "prop-types";
-import classes from "./EventDetail.module.css";
+import classes from "./eventDetail.module.css";
 
 const EventDetail = (props) => {
   const [showRegisterForm, setShowRegisterForm] = useState(false);

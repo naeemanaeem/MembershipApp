@@ -10,7 +10,7 @@ import PrintOut from "./components/printout";
 import Login from "./components/login";
 import ExportCSV from "./components/exportcsv";
 import SearchTextProvider from "./components/searchtextprovider";
-import Activities from "./components/Activities";
+import Activities from "./components/activities";
 
 class App extends Component {
   render() {

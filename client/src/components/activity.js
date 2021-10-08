@@ -1,7 +1,7 @@
 import React from "react";
 import Card from "react-bootstrap/Card";
 import PropTypes from "prop-types";
-import classes from "./Activity.module.css";
+import classes from "./activity.module.css";
 
 const Activity = (props) => {
   const tags = props.data.tags ? props.data.tags.split(",").slice(0, 4) : "";

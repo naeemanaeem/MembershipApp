@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import Activity from "./Activity";
-import ActivityForm from "./CreateActivity";
-import EventDetail from "./EventDetail";
+import Activity from "./activity";
+import ActivityForm from "./createActivity";
+import EventDetail from "./eventDetail";
 import Container from "react-bootstrap/Container";
 import { Row, Col } from "react-bootstrap";
 import axios from "axios";
 import PropTypes from "prop-types";
-import classes from "./Activities.module.css";
+import classes from "./activities.module.css";
 
 const Activities = () => {
   const [activities, setActivities] = useState([]);

@@ -16,7 +16,7 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import moment from "moment";
 import axios from "axios";
 import PropTypes from "prop-types";
-import classes from "./CreateActivity.module.css";
+import classes from "./createActivity.module.css";
 
 const ActivityForm = (props) => {
   /* State and constants

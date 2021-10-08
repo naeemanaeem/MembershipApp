@@ -4,7 +4,7 @@ import Card from "react-bootstrap/Card";
 import Checkbox from "./Views/Checkbox";
 import Button from "react-bootstrap/Button";
 import PropTypes from "prop-types";
-import classes from "./RegistrationForm.module.css";
+import classes from "./registration.module.css";
 
 const RegistrationForm = (props) => {
   const [members, setMembers] = useState([]);
