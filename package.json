@@ -23,6 +23,8 @@
   "dependencies": {
     "@material-ui/core": "^4.12.3",
     "@material-ui/icons": "^4.11.2",
+    "@stripe/react-stripe-js": "^1.5.0",
+    "@stripe/stripe-js": "^1.19.0",
     "body-parser": "^1.19.0",
     "bootstrap": "^4.5.3",
     "concurrently": "^5.3.0",
@@ -51,6 +53,7 @@
     "react-router": "^5.2.0",
     "react-router-bootstrap": "^0.25.0",
     "react-router-dom": "^5.2.0",
+    "styled-components": "^5.3.1",
     "yarn": "^1.22.10"
   }
 }
