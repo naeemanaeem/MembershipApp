@@ -598,9 +598,7 @@ const ActivityForm = (props) => {
                       .put(`/activities/${eventToBeEdited._id}`, data)
                       .then((res) => {
                         alert(
-                          `The Event "${
-                            eventToBeEdited.title
-                          }" has been updated! \n ${JSON.stringify(res.data)}`
+                          `The Event "${eventToBeEdited.title}" has been updated!`
                         );
                         props.editActivity(res.data._id, res.data);
 

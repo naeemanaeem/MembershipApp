@@ -1,96 +1,93 @@
 const path = require("path");
 const fs = require("fs");
 const cors = require("cors");
+const bodyParser = require("body-parser");
 const express = require("express");
 const router = express.Router();
-const bodyParser = require("body-parser");
+const readline = require("readline");
 const multiparty = require("connect-multiparty");
 const MultipartyMiddleware = multiparty();
-
-// To upload image from CKEditor to google drive using google drive API
+/*************** START HERE  **********************/
 const { google } = require("googleapis");
+// Service account key file from google cloud console
+const KEYFILEPATH = path.join(__dirname, "serviceAccountCred.json");
 
-const oauth2Client = new google.auth.OAuth2(
-  process.env.GOOGLE_CLIENT_ID,
-  process.env.GOOGLE_CLIENT_SECRET,
-  process.env.GOOGLE_REDIRECT_URI
-);
+// Adding drive scope will give us full access to Google drive account
+const SCOPES = ["https://www.googleapis.com/auth/drive"];
 
-oauth2Client.setCredentials({
-  refresh_token: process.env.GOOGLE_REFRESH_TOKEN,
+// init the auth with the needed keyfile and scopes
+const auth = new google.auth.GoogleAuth({
+  keyFile: KEYFILEPATH,
+  scopes: SCOPES,
 });
-const drive = google.drive({
+
+// init drive service, it will handle all authorization and add authorization header.
+const driveService = google.drive({
   version: "v3",
-  auth: oauth2Client,
+  auth: auth,
 });
-const uploadFile = async (file) => {
+
+const createAndUploadFile = async (file) => {
+  // metadata for the new file on Google drive
+  const fileMetaData = {
+    name: file.name,
+    parents: ["1rcraDl3fBlKocWLXzVFyBvqkdl4glWl1"], // ID of the folder which you have granted access to your app
+  };
+
+  const media = {
+    mimeType: file.type,
+    body: fs.createReadStream(file.path),
+  };
+
   try {
-    const response = await drive.files.create({
-      requestBody: {
-        name: file.name,
-        mimeType: file.type,
-      },
-      media: {
-        mimeType: file.type,
-        body: fs.createReadStream(file.path),
-      },
+    const response = await driveService.files.create({
+      resource: fileMetaData,
+      media: media,
+      fields: "id",
     });
     return response.data.id;
   } catch (e) {
     console.log(e.message);
   }
 };
+
 const deleteFile = async (fileId) => {
   try {
-    const response = await drive.files.delete({
+    const response = await driveService.files.delete({
       fileId: fileId,
     });
+    console.log(`Image deleted successfully!`, response.status);
+    return response.status;
   } catch (e) {
-    console.log(e.message);
-  }
-};
-const generatePublicUrl = async (fileId) => {
-  try {
-    await drive.permissions.create({
-      fileId: fileId,
-      requestBody: {
-        role: "reader",
-        type: "anyone",
-      },
-    });
-    const result = await drive.files.get({
-      fileId: fileId,
-      fields: "webViewLink, webContentLink",
-    });
-    return result.data;
-  } catch (e) {
-    console.log(e.message);
+    console.log("Error deleting file: ", e.message);
   }
 };
 
 // endpoint that gets image from ckeditor
-router.post("/", MultipartyMiddleware, async (req, res) => {
+router.post("/", MultipartyMiddleware, (req, res) => {
   const imageFile = req.files.upload;
-
-  uploadFile(imageFile)
+  createAndUploadFile(imageFile)
     .then((id) => {
-      generatePublicUrl(id).then((url) => {
-        res.status(200).json({
-          uploaded: true,
-          url: `https://drive.google.com/uc?export=view&id=${id}`,
-        });
+      res.status(200).json({
+        uploaded: true,
+        url: `https://drive.google.com/uc?export=view&id=${id}`,
       });
     })
     .catch((e) => {
-      console.log(e.message);
+      console.error(e);
+      res.status(400).json({
+        message: "Error uploading image",
+      });
     });
 });
 
-// end-point to delete the images from google drive when the event is deleted
+// end-point to delete the images from drive when the event is deleted
+
 router.delete("/:imageIds", (req, res) => {
   let imageIds = req.params.imageIds.split(",");
-  imageIds.forEach((Ids) => {
-    deleteFile(Ids);
+  imageIds.forEach((imageId) => {
+    deleteFile(imageId);
   });
 });
+
 module.exports = router;
