@@ -96,7 +96,7 @@ function Stripe(props) {
             </CardElementContainer>
             <div className="stripepaybutton">
                 <Button disabled={processing || disabled || success} type="submit" id="submit" onClick={handleSubmit}>
-                    Pay now
+                    Pay Now
                 </Button>
                 {error && (
                     <div className="card-error" role="alert">

@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import ReactDOM from "react-dom"
 
 let style = {
-  'label':'pay', 
-  'tagline': false, 
-  'size':'medium', 
-  'shape':'pill', 
-  'color':'black'
+  'label': 'pay',
+  'tagline': false,
+  'size': 'large',
+  'shape': 'pill',
+  'color': 'blue'
 };
 
 const PayPalButton = window.paypal.Buttons.driver("react", { React, ReactDOM });
@@ -19,7 +19,7 @@ function PayPal() {
       purchase_units: [
         {
           amount: {
-          value: price,
+            value: price,
           },
 
         },
@@ -30,17 +30,18 @@ function PayPal() {
   const onApprove = (data, actions) => {
     return actions.order.capture();
   };
-  
+
   const fields = (data, actions) => {
     return actions.order.capture();
   };
 
   return (
-        <PayPalButton
-          createOrder={(data, actions) => createOrder(data, actions)}
-          onApprove={(data, actions) => this.onApprove(data, actions)}
-          style={style}
-        />
+    <PayPalButton
+      createOrder={(data, actions) => createOrder(data, actions)}
+      onApprove={(data, actions) => this.onApprove(data, actions)}
+      style={style}
+    />
+
   );
 }
 

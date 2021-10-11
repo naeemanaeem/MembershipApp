@@ -14,22 +14,22 @@ import {
   Container,
   ButtonToolbar,
 } from "react-bootstrap";
-//import Table from "./table.jsx";
+import Table from "./table.jsx";
 import PayPal from "./paypal";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import "./table.css";
 import PropTypes from "prop-types";
-// import Stripe from "./stripe";
-// import { Elements } from "@stripe/react-stripe-js";
-// import { loadStripe } from "@stripe/stripe-js";
+import Stripe from "./stripe";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 
 const buttonlist1 = ["Membership Fee", "Donation", "Sadaqah", "Zakat"];
 const buttonlist2 = ["PayPal", "Card (Stripe)"];
 
-// const PUBLIC_KEY =
-//   "pk_test_51JR4m9CMdg35S26EAT3K6nPEVlxPHubEwzlQ4c2VetzslZmjts2FNQKWxkwZAiQdIgA1kWbCbvmQBGWBrbRONn7a00BSJqSyYd";
-// const stripePromise = loadStripe(PUBLIC_KEY);
+const PUBLIC_KEY =
+  "pk_test_51JR4m9CMdg35S26EAT3K6nPEVlxPHubEwzlQ4c2VetzslZmjts2FNQKWxkwZAiQdIgA1kWbCbvmQBGWBrbRONn7a00BSJqSyYd";
+const stripePromise = loadStripe(PUBLIC_KEY);
 function Payment({ addTextLog }) {
   const [profile, setProfile] = useState({
     Description: "",
@@ -42,6 +42,10 @@ function Payment({ addTextLog }) {
     Type: "Outgoing",
   });
 
+
+  const [clientSecret, setClientSecret] = useState("");
+
+  const [selectedMethod, setSelectedMethod] = useState(false);
 
   const [paypal, setPayPal] = useState(false);
 
@@ -111,13 +115,13 @@ function Payment({ addTextLog }) {
                   className="ml-5 mr-5">
                   <ToggleButton id="radio1" value={1}
                     variant="outline-primary"
-                  //onClick={setPayPal(true)}
+                    onClick={() => setPayPal(true) & setSelectedMethod(true)}
                   >
                     PayPal
                   </ToggleButton>
                   <ToggleButton id="radio2" value={2}
                     variant="outline-primary"
-                  //onClick={setPayPal(false)}
+                    onClick={() => setPayPal(false) & setSelectedMethod(true)}
                   >
                     Card (Stripe)
                   </ToggleButton>
@@ -191,35 +195,42 @@ function Payment({ addTextLog }) {
               </Row>
               <Row className="ml-2">
                 <Col className="mt-3 ml-3 mr-2 mb-3">
-                  <Button variant="danger" id="clear3" type="refresh">
+                  <Button variant="danger" id="clear3" type="reset" value="Reset">
                     Clear
                   </Button>
                 </Col>
               </Row>
-              <Row className="middle mb-3">
+              <Row className="center mb-3">
                 <div className="mt-3">
-                  {paypal ? (
-                    <PayPal />
-                  ) : (
-                    <Button>Stripe</Button>
-                  )}
-
-                  {/* <Elements stripe={stripePromise}>
-                    <Stripe
-                      profile={profile}
-                      handleSubmitData={handleSubmit}
-                      clientSecret={clientSecret}
-                    />
-                  </Elements> */}
-
+                  {selectedMethod ?
+                    (paypal ?
+                      (
+                        <PayPal />
+                      ) : (
+                        <Elements stripe={stripePromise}>
+                          <Stripe
+                            profile={profile}
+                            handleSubmitData={handleSubmit}
+                            clientSecret={clientSecret}
+                          />
+                        </Elements>
+                      )) : (
+                      () => setSelectedMethod(false)
+                    )}
+                </div>
+              </Row>
+              <Row
+                className="center mb-3">
+                {paypal ? (
                   <Button
                     variant="primary"
                     type="submit"
                     onClick={() => alert(JSON.stringify(profile, "", 2))}>
-                    Make Payment
+                    Pay Now
                   </Button>
-                  {/* <Button onClick={() => console.log(payments)}>hello</Button> */}
-                </div>
+                ) : (
+                  () => setPayPal(false)
+                )}
               </Row>
             </Card>
           </div>
@@ -230,19 +241,3 @@ function Payment({ addTextLog }) {
 }
 
 export default Payment;
-
-{/* <ToggleButtonGroup type="radio" name="PaymentMethod"
-style={{ height: "100%", width: "100%" }}
-className="ml-5 mr-5">
-{buttonlist2.map((buttonLabel, i) => (
-  <ToggleButton
-    id={"radio" + i}
-    value={buttonLabel}
-    variant="outline-primary"
-    className="mb-3"
-    onChange={handleChange}
-  >
-    {buttonLabel}
-  </ToggleButton>
-))}
-</ToggleButtonGroup> */}
