@@ -75,13 +75,13 @@ app.use(function (req, res, next) {
 
 // Static
 app.use(express.static(path.join(__dirname, "public")));
-// app.use(express.static("uploads"));
+
 
 // Routes
 app.use("/auth", require("./routes/auth"));
 app.use("/members", require("./routes/members"));
 app.use("/activities", require("./routes/activities"));
-app.use("/upload", require("./routes/attachment"));
+// app.use("/upload", require("./routes/attachment"));
 // This middleware informs the express application to serve our compiled React files
 if (
   process.env.NODE_ENV === "production" ||
