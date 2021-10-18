@@ -15,7 +15,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
-import "./table.css";
+import "./paymentStyling.css";
 import PropTypes from "prop-types";
 import Stripe from "./stripe";
 
@@ -25,6 +25,7 @@ const buttonlist2 = ["PayPal", "Card (Stripe)"];
 const PUBLIC_KEY =
   "pk_test_51JR4m9CMdg35S26EAT3K6nPEVlxPHubEwzlQ4c2VetzslZmjts2FNQKWxkwZAiQdIgA1kWbCbvmQBGWBrbRONn7a00BSJqSyYd";
 const stripePromise = loadStripe(PUBLIC_KEY);
+
 function Payment({ addTextLog }) {
   const [profile, setProfile] = useState({
     PaymentReason: "",
