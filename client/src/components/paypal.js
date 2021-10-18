@@ -18,10 +18,10 @@ import {
 } from "react-bootstrap";
 
 let style = {
-  label:'paypal', 
+  label: 'paypal',
   tagline: false,
-  shape:'rect', 
-  color:'blue',
+  shape: 'rect',
+  color: 'blue',
   height: 45,
 };
 
@@ -43,24 +43,24 @@ function PayPal(props) {
       ],
     });
   };
-  
+
 
   const onApprove = async (data, actions) => {
     const order = await actions.order.capture();
     alert("Thank you for your payment");
     //props.handleSubmit();
   };
-  
+
   const fields = (data, actions) => {
     return actions.order.capture();
   };
 
   return (
-          <PayPalButton
-          createOrder={(data, actions) => createOrder(data, actions)}
-          onApprove={(data, actions) => onApprove(data, actions)}
-          style={style}
-        />
+    <PayPalButton
+      createOrder={(data, actions) => createOrder(data, actions)}
+      onApprove={(data, actions) => onApprove(data, actions)}
+      style={style}
+    />
   );
 }
 
