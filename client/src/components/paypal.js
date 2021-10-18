@@ -1,21 +1,5 @@
 import React, { useState } from "react";
 import ReactDOM from "react-dom"
-import {
-  Button,
-  InputGroup,
-  FormControl,
-  Form,
-  Col,
-  Row,
-  Card,
-  ToggleButton,
-  ToggleButtonGroup,
-  ButtonGroup,
-  label,
-  Modal,
-  Container,
-  ButtonToolbar,
-} from "react-bootstrap";
 
 let style = {
   label: 'paypal',
