@@ -10,22 +10,14 @@ import {
   ToggleButton,
   ToggleButtonGroup,
 } from "react-bootstrap";
-import Table from "./table.jsx";
 import PayPal from "./paypal";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
-import Stripe from "./stripe";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import "./table.css";
 import PropTypes from "prop-types";
 import Stripe from "./stripe";
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
-
-const PUBLIC_KEY =
-  "pk_test_51JR4m9CMdg35S26EAT3K6nPEVlxPHubEwzlQ4c2VetzslZmjts2FNQKWxkwZAiQdIgA1kWbCbvmQBGWBrbRONn7a00BSJqSyYd";
-const stripePromise = loadStripe(PUBLIC_KEY);
 
 const buttonlist1 = ["Membership Fee", "Donation", "Sadaqah", "Zakat"];
 const buttonlist2 = ["PayPal", "Card (Stripe)"];
@@ -45,7 +37,6 @@ function Payment({ addTextLog }) {
     Status: "Processing",
     Type: "Outgoing",
   });
-  const [clientSecret, setClientSecret] = useState("");
 
   const [clientSecret, setClientSecret] = useState("");
 
