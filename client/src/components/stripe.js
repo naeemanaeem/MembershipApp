@@ -3,7 +3,7 @@ import { CardElement, Elements, useElements, useStripe } from "@stripe/react-str
 import styled from "styled-components";
 import axios from "axios";
 import { Button } from "react-bootstrap";
-import "./table.css";
+import "./paymentStyling.css";
 
 
 

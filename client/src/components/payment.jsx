@@ -1,4 +1,4 @@
-import React, { Component, Profiler, useEffect, useState } from "react";
+import React, { Component, useEffect, useState } from "react";
 import {
   Button,
   InputGroup,
@@ -9,15 +9,19 @@ import {
   Card,
   ToggleButton,
   ToggleButtonGroup,
+  ButtonGroup,
+  Modal,
+  Container,
+  ButtonToolbar,
 } from "react-bootstrap";
 import PayPal from "./paypal";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
-import { Elements } from "@stripe/react-stripe-js";
-import { loadStripe } from "@stripe/stripe-js";
 import "./paymentStyling.css";
 import PropTypes from "prop-types";
 import Stripe from "./stripe";
+import { Elements } from "@stripe/react-stripe-js";
+import { loadStripe } from "@stripe/stripe-js";
 
 const buttonlist1 = ["Membership Fee", "Donation", "Sadaqah", "Zakat"];
 const buttonlist2 = ["PayPal", "Card (Stripe)"];
@@ -25,16 +29,14 @@ const buttonlist2 = ["PayPal", "Card (Stripe)"];
 const PUBLIC_KEY =
   "pk_test_51JR4m9CMdg35S26EAT3K6nPEVlxPHubEwzlQ4c2VetzslZmjts2FNQKWxkwZAiQdIgA1kWbCbvmQBGWBrbRONn7a00BSJqSyYd";
 const stripePromise = loadStripe(PUBLIC_KEY);
-
 function Payment({ addTextLog }) {
   const [profile, setProfile] = useState({
-    PaymentReason: "",
+    Description: "",
     PaymentMethod: "",
     Firstname: "",
     Lastname: "",
     Email: "",
-    Amount: 10,
-    Comments: "",
+    Amount: "",
     Status: "Processing",
     Type: "Outgoing",
   });
@@ -46,16 +48,17 @@ function Payment({ addTextLog }) {
   const [paypal, setPayPal] = useState(false);
 
   const [payments, setPayments] = useState([]);
-
   useEffect(() => {
     const getAllPayments = async () => {
       try {
         const res = await axios.get("/payments");
         setPayments(res.data);
+        console.log("refreshed");
       } catch (e) {
         console.log(e);
       }
     };
+    getAllPayments();
   }, []);
 
   const saveNewPayment = async (p) => {
@@ -71,7 +74,6 @@ function Payment({ addTextLog }) {
       [name]: value,
     });
   };
-
   const handleSubmit = (e) => {
     saveNewPayment(profile);
   };
@@ -114,17 +116,19 @@ function Payment({ addTextLog }) {
                 >
                   <ToggleButton
                     id="radio1"
-                    value={1}
+                    value="PayPal"
                     variant="outline-primary"
                     onClick={() => setPayPal(true) & setSelectedMethod(true)}
+                    onChange={handleChange}
                   >
                     PayPal
                   </ToggleButton>
                   <ToggleButton
                     id="radio2"
-                    value={2}
+                    value="Stripe"
                     variant="outline-primary"
                     onClick={() => setPayPal(false) & setSelectedMethod(true)}
+                    onChange={handleChange}
                   >
                     Card (Stripe)
                   </ToggleButton>
@@ -164,27 +168,28 @@ function Payment({ addTextLog }) {
                 <Col className="mt-3 ml-3 mr-3">
                   <text className="mt-3 ml-2 mr-3">Email</text>
                   <Form.Control
-                    placeholder="First Name"
-                    value={profile.Firstname}
-                    name="Firstname"
-                    aria-label="firstname"
-                    aria-describedby="firstname"
+                    placeholder="Email"
+                    value={profile.Email}
+                    name="Email"
+                    type="text"
+                    aria-label="email"
+                    aria-describedby="email"
                     onChange={handleChange}
                   />
                 </Col>
-                <Col>
-                  <div className="mr-4 ml-1">
-                    <text>Last Name</text>
-                    <Form.Control
-                      placeholder="Last Name"
-                      value={profile.Lastname}
-                      name="Lastname"
-                      aria-label="lastname"
-                      type="text"
-                      aria-describedby="lastname"
-                      onChange={handleChange}
-                    />
-                  </div>
+              </Row>
+              <Row className="ml-2 mr-2">
+                <Col className="mt-3 ml-3 mr-3">
+                  <text className="mt-3">Amount</text>
+                  <Form.Control
+                    placeholder="$"
+                    value={profile.Amount}
+                    name="Amount"
+                    aria-label="Amount"
+                    aria-describedby="Amount"
+                    onChange={handleChange}
+                    type="decimal"
+                  />
                 </Col>
               </Row>
               <Row className="ml-2 mr-2">
