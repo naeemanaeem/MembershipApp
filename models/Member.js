@@ -82,11 +82,6 @@ const MemberSchema = new mongoose.Schema({
         required: false,
         trim: true
     },
-    GoogleId: {
-        type: String,
-        required: false,
-        trim: true
-    },
     Guardians: {
         type: [],
         required: false,

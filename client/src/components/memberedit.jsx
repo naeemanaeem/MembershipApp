@@ -22,8 +22,8 @@ class MemberEdit extends Component {
     tempmember: {},
     replacemember: {},
     dependents: [],
-    errors: {},
     validated: false,
+    errors: [],
     isEdit: false
   };
 
@@ -31,6 +31,11 @@ class MemberEdit extends Component {
     if(this.props.myAccount){
       this.props.onSave(this.props.member);
     } 
+    else if(this.props.registerMember){
+      this.props.member.Dependents = [...this.state.dependents];
+      console.log("mem2", this.props.member, this.state.dependents)
+      this.props.onSave(this.props.member);
+    }
     else if(!this.state.isNewMember) {
       this.props.onSave(this.props.member);
       for(var i = 0; i < this.state.dependents.length; ++i){
@@ -43,12 +48,6 @@ class MemberEdit extends Component {
       this.props.member.Dependents = [...this.state.dependents];
       this.props.onSave(this.props.member); 
     }
-    // const form = e.currentTarget;
-    // console.log("SAVE", form,form.checkValidity(), e)
-    // // if(!this.state.validated){this.setState({validated: true})}
-    // this.resetErrors(); 
-    // this.checkErrors();
-    // console.log(Object.keys(this.state.errors).length)
   }
   
   handleCancel = () => {
@@ -117,40 +116,53 @@ class MemberEdit extends Component {
   }
 
   resetErrors = () => {
-    console.log("RESET")
-    this.setState({errors: {}})
+    this.setState({errors: []}, this.checkErrors())
   }
 
   checkErrors = () => {
-    console.log("MEMBER", this.props.member, this.props.member.Firstname.length)
+    let errorArr = [];
     if(!this.props.member.Firstname){
-      this.state.errors.Firstname = "PUT FIRST NAME";
-    }else if(this.props.member.Firstname.length < 1){this.state.errors.Firstname = "PUT FIRST NAME";}
+      errorArr.push("Enter First Name!");
+    }
 
     if(!this.props.member.Lastname){
-      this.state.errors.Lastname = "PUT LAST NAME";
-    } else if(this.props.member.Lastname.length < 1){this.state.errors.Lastname = "PUT LAST NAME";}
+      errorArr.push("Enter Last Name!");
+    }
 
     if(!this.props.member.PhoneNum){
-      this.state.errors.PhoneNum = "PUT PHONE NUMBER";
-    } else if(this.props.member.PhoneNum.length < 1 || this.props.member.PhoneNum.length > 10){this.state.errors.PhoneNum = "PUT PHONE NUMBER";}
+      errorArr.push("Enter Phone Number!");
+    } else if(this.props.member.PhoneNum.length < 10 || this.props.member.PhoneNum.length > 11){errorArr.push("Invalid Phone Number!");}
     
     if(!this.props.member.Email){
-      this.state.errors.Email = "PUT Email";
-    } else if(this.props.member.Email.length < 1){this.state.errors.Email = "PUT Email";}
+      errorArr.push("Enter Email!");
+    } else if(!this.props.member.Email.includes('@')){errorArr.push("Invalid Email!");}
+
     if(!this.props.member.HouseNo){
-      this.state.errors.HouseNo = "PUT House Number";
-    } else if(this.props.member.HouseNo.length < 1) {this.state.errors.HouseNo = "PUT House Number";}
+      errorArr.push("Enter House Number!");
+    }
+
     if(!this.props.member.Street){
-      this.state.errors.Street = "PUT STREET";
-    } else if(this.props.member.Street.length < 1){this.state.errors.Street = "PUT STREET";}
+      errorArr.push("Enter Street Name!");
+    }
+
+    if(!this.props.member.City){
+      errorArr.push("Enter City Name!");
+    }
+    
     if(!this.props.member.Country){
-      this.state.errors.Country = "PUT Country";
-    } else if(this.props.member.Country.length < 1){this.state.errors.Country = "PUT Country";}
+      errorArr.push("Select Country!");
+    }
+    
     if(!this.props.member.Postcode){
-      this.state.errors.Postcode = "PUT POSTCODE";
-    } else if(this.props.member.Postcode.length < 1 || this.props.member.Postcode.length > 5){this.state.errors.Postcode = "PUT POSTCODE";}
-    console.log(this.state.errors)
+      errorArr.push("Enter Zipcode!");
+    } else if(this.props.member.Postcode.length !== 5){errorArr.push("Invalid Zipcode!");}
+
+    if(!this.props.member.DateOfBirth){
+      errorArr.push("Enter Date of Birth!");
+    } else if(this.props.member.DateOfBirth.indexOf('/') !== 2 || this.props.member.DateOfBirth.lastIndexOf('/') !== 5){errorArr.push("Invalid Date of Birth! Use format mm/dd/yyyy")}
+
+    this.state.errors = errorArr;
+    this.setState({errors: errorArr});
   }
 
   render() {
@@ -342,7 +354,15 @@ class MemberEdit extends Component {
                   placeholder="mm/dd/yyyy"
                   aria-label="DoB"
                   aria-describedby="DoB"
-                  onChange={e => this.props.member.DateOfBirth = e.target.value.toLocaleUpperCase() }
+                  onChange={e => {
+                    if(e.target.value.length > 1){
+                      if(e.target.value.indexOf('/') === -1 || e.target.value.length > 4 && !e.target.value.substr(4).includes('/')){
+                        e.target.value += "/"
+                      }
+                    }
+                    this.props.member.DateOfBirth = e.target.value;
+                  }
+                  }
                   defaultValue={this.props.member.DateOfBirth}
                   className="mr-2"
                   required
@@ -437,7 +457,26 @@ class MemberEdit extends Component {
           (this.props.myAccount) ?   
           <React.Fragment>
             <Button variant="secondary" onClick={this.handleCancel}>Cancel</Button>
-            <Button variant="primary" onClick={this.handleSave}>Save</Button>
+            <Button variant="primary" onClick={
+              () => {
+                this.resetErrors(); 
+                // this.checkErrors();
+                if(this.state.errors.length > 0){
+                  let allErrors = "";
+                  let error = this.state.errors;
+                  for(var i = 0; i < this.state.errors.length; ++i){
+                    allErrors += error[i];
+                    if(i + 1 !== this.state.errors.length){
+                      allErrors += '\n'
+                    }
+                  }
+                  alert(allErrors);
+                }
+                else{
+                  this.handleSave();
+                }
+              }
+            }>Save</Button>
           </React.Fragment>
           :
           <React.Fragment>
@@ -446,13 +485,25 @@ class MemberEdit extends Component {
             <Button 
               type="submit"
               variant="primary" 
-              onClick={this.handleSave
-              //   () => {
-              //   if(!this.state.validated){this.setState({validated: true})}
-              //   this.resetErrors(); 
-              //   this.checkErrors();
-              //   console.log(Object.keys(this.state.errors).length)
-              // }
+              onClick={
+                () => {
+                this.resetErrors(); 
+                // this.checkErrors();
+                if(this.state.errors.length > 0){
+                  let allErrors = "";
+                  let error = this.state.errors;
+                  for(var i = 0; i < this.state.errors.length; ++i){
+                    allErrors += error[i];
+                    if(i + 1 !== this.state.errors.length){
+                      allErrors += '\n'
+                    }
+                  }
+                  alert(allErrors);
+                }
+                else{
+                  this.handleSave();
+                }
+              }
             }
               >
               Save
