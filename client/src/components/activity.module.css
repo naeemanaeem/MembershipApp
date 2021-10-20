@@ -1,0 +1,59 @@
+/*Makes all activity boxes uniform in size*/
+.card {
+  width: 22rem;
+  padding: 2%;
+  margin: 1%;
+  height: 30rem;
+  font-family: "robo, Arial, Helvetica, sans-serif";
+  cursor: pointer;
+}
+
+.cardImg {
+  height: 65%;
+  width: 100%;
+}
+
+.cardTitle {
+  padding-top: 5%;
+  font-size: 2rem;
+}
+
+/*Formats the "Recurring" tag*/
+.recurringEventTag {
+  color: black;
+  background-color: yellow;
+  font-size: 0.5em;
+  font-family: "robo, Arial, Helvetica, sans-serif";
+  margin: "0 auto";
+  width: 5rem;
+  padding: 2%;
+  border-radius: 5px;
+}
+/*Lays tags horizontally across each activity*/
+.cardTags {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.cardTag {
+  color: white;
+  width: 8rem;
+  padding: 2%;
+  margin: 1%;
+  border-radius: 5px;
+  text-align: center;
+}
+.orangeTag {
+  background-color: orange;
+}
+.blueTag {
+  background-color: blue;
+}
+.greenTag {
+  background-color: green;
+}
+
+.redTag {
+  background-color: red;
+}

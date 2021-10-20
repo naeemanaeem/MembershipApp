@@ -1,0 +1,32 @@
+/* Display Server Error message */
+.errorMsg {
+  color: red;
+  margin-top: 5%;
+}
+/* Header that includes page title and green plus button */
+.header {
+  display: flex;
+  flex-direction: row;
+  flex-flow: nowrap;
+  justify-content: space-between;
+  margin: "0 auto";
+}
+
+.title {
+  padding: 2%;
+  color: black;
+  font-family: "robo, Arial, Helvetica, sans-serif";
+}
+/* add activities btn */
+.btnPlus {
+  margin-top: 3%;
+  cursor: pointer;
+}
+.btnPlus:hover {
+  opacity: 0.2;
+}
+/*Shows a message when no activities are ongoing or when no activities found on loading the page*/
+.emptyActivities {
+  color: red;
+  margin-top: 20px;
+}
