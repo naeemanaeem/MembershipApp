@@ -27,12 +27,25 @@ router.get('/', ensureAuth, async (req, res) => {
 // Get a member
 router.get('/:id', ensureAuth, async (req, res) => {
     try {
-        let member = await Member.findById(req.params.id)
+        let member = await Member.findById(req.params.id) //use this function call to get dependents
             .populate('user')
-            .lean();
+            .lean(); //try removing this and look at data
 
         if (!member) {
             return res.status(404).send('Not found.');
+        }
+
+        if(member.Dependents.length > 0){
+            let dependents = [];
+            // member.Dependents.forEach((dep) => {
+            //     let temp = await Member.findById(dep);
+            //     dependents.push(temp);
+            // });
+            for (let index = 0; index < member.Dependents.length; index++) {
+                let temp = await Member.findById(member.Dependents[index]);
+                dependents.push(temp);
+            }
+            member.Dependents = dependents;
         }
 
         return res.send(member);
@@ -43,6 +56,10 @@ router.get('/:id', ensureAuth, async (req, res) => {
         return res.status(500);
     }
 });
+//returns member
+//want to return member object + array of dependent objects in member.dependents
+
+
 
 // Create a new member
 router.post('/', ensureAuth, async (req, res) => {
@@ -75,6 +92,14 @@ router.put('/:id', ensureAuth, async (req, res) => {
     try {
 
         const m = req.body;
+
+        // if(m.Dependents.length > 0 && typeof m.Dependents[0] !== "string"){
+        //     let dependents = [];
+        //     for (let index = 0; index < m.Dependents.length; index++) {
+        //         dependents.push(m.Dependents._id);
+        //     }
+        //     m.Dependents = dependents;
+        // }
 
         const member = await Member.findOneAndUpdate({_id: req.params.id}, m, {
             new: true,

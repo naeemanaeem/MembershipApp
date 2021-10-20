@@ -1,0 +1,23 @@
+.td {
+    padding: 0px;
+  }
+
+  .tableHead {
+    background-color:darkcyan;
+  }
+
+  .table {
+    padding: 0%;
+    text-align: center;
+    width: 75%;
+  }
+
+.export {
+  width: 10%;
+  margin-left: 2%;
+  float: left;
+}
+
+.center {
+  text-align: center;
+}
