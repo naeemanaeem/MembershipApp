@@ -20,6 +20,11 @@ const NewMemberSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
+    town: {
+        type: String,
+        required: false,
+        trim: true
+    },
     city: {
         type: String,
         required: true,
@@ -30,6 +35,7 @@ const NewMemberSchema = new mongoose.Schema({
         required: true,
         trim: true
     },
+
     DateOfBirth: {
         type: String,
         required: false,

@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
-import Table from 'react-bootstrap/Table';
-import Button from 'react-bootstrap/Button';
-import Alert from 'react-bootstrap/Alert';
-import axios from 'axios';
+import React, { Component } from "react";
+import Table from "react-bootstrap/Table";
+import Button from "react-bootstrap/Button";
+import Alert from "react-bootstrap/Alert";
+import axios from "axios";
 
 import Street from './street';
 import MemberEdit from './memberedit';
@@ -14,8 +14,8 @@ import './css_stuff/member.css';
 import PaginationTable from "./PaginationTable.jsx";
 import DropdownButton from 'react-bootstrap/DropdownButton'
 
-class Members extends Component {
 
+class Members extends Component {
   state = {
     modalShow: false,
     tempmember:  {Firstname: "FIRSTNAME", Lastname: "LASTNAME", HouseNo: "1", Street: "STREET 1", Town: "LUTON"},
@@ -23,7 +23,7 @@ class Members extends Component {
     isAddNewMember: false,
     isAddDependentMember: false,
     members: [],
-    error: ""
+    error: "",
   };
 
   async componentDidMount() {
@@ -31,26 +31,26 @@ class Members extends Component {
       const res = await axios.get('/members');{/*/members?_id=124124 syntax for id*/}
       this.setState({members: res.data, error: ""});
     } catch (e) {
-      this.setState({error: e.message});
+      this.setState({ error: e.message });
       console.error(e);
     } 
   }
 
   setModalShow = (e) => {
-    this.setState({modalShow: e});
-  }
+    this.setState({ modalShow: e });
+  };
 
   showMemberEditDialog = () => {
     this.setModalShow(true);
-  }
+  };
 
   hideMemberEditDialog = () => {
     this.setModalShow(false);
-  }
+  };
 
   handleMemberEditCancel = (m) => {
     this.hideMemberEditDialog();
-  }
+  };
 
   async saveNewMember(m) {
     if (m.Firstname && m.Firstname.length > 0 &&
@@ -105,16 +105,16 @@ class Members extends Component {
 
   async saveDelete(m) {
     try {
-      const res = await axios.delete('members/' + m._id, m);
+      const res = await axios.delete("members/" + m._id, m);
 
-      const index = this.state.members.findIndex(function(o) {
+      const index = this.state.members.findIndex(function (o) {
         return o._id === res.data._id;
       });
 
       if (index !== -1) {
         this.state.members.splice(index, 1);
-        this.setState({members: this.state.members});
-      } 
+        this.setState({ members: this.state.members });
+      }
     } catch (error) {
       console.error(error);
     }
@@ -158,19 +158,21 @@ class Members extends Component {
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   removeMember = (m) => {
-    const response = window.confirm(`Are you sure you want to delete ${m.Firstname} ${m.Lastname}`);
-    if(response) {
+    const response = window.confirm(
+      `Are you sure you want to delete ${m.Firstname} ${m.Lastname}`
+    );
+    if (response) {
       this.saveDelete(m);
     }
-  }
-  
+  };
+
   handleAddNewMemberButtonClick = (e) => {
-    const street = {name: ""};
+    const street = { name: "" };
     this.addNewMember(street);
-  }
+  };
 
   addNewMember = (street) => {
     this.setState({ 
@@ -182,7 +184,8 @@ class Members extends Component {
 
   updateMember = (m) => {
     console.log("Update member - ", m);
-    this.setState({ 
+    this.setState(
+      {
         tempmember: m,
         isAddNewMember: false,
         isAddDependentMember: false
@@ -214,16 +217,11 @@ class Members extends Component {
     this.setState({isAddNewMember: e})
   }
 
-  render () {
-    if(this.state.error.length > 0) {
-      const variant = 'danger'
-      return (
-        <Alert variant={variant}>
-          {this.state.error}
-        </Alert>
-      );
+  render() {
+    if (this.state.error.length > 0) {
+      const variant = "danger";
+      return <Alert variant={variant}>{this.state.error}</Alert>;
     }
-
       let i = this.state.members.length + 1000;
       // const streets = getStreets(this.state.members, 
       //   this.context.state.searchText.toLocaleUpperCase()

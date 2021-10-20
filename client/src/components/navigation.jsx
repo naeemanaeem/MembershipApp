@@ -1,21 +1,21 @@
 // Navigation.jsx
-import React, { Component } from 'react';
-import Button from 'react-bootstrap/Button';
-import Nav from 'react-bootstrap/Nav';
-import Navbar from 'react-bootstrap/Navbar';
-import Form from 'react-bootstrap/Form';
-import {LinkContainer} from 'react-router-bootstrap'
-import FormControl from 'react-bootstrap/FormControl';
-import {SearchTextContext} from './searchtextprovider';
+import React, { Component } from "react";
+import Button from "react-bootstrap/Button";
+import Nav from "react-bootstrap/Nav";
+import Navbar from "react-bootstrap/Navbar";
+import Form from "react-bootstrap/Form";
+import { LinkContainer } from "react-router-bootstrap";
+import FormControl from "react-bootstrap/FormControl";
+import { SearchTextContext } from "./searchtextprovider";
 
 class Navigation extends Component {
-    state = {
-        searchText: ""
-    }
+  state = {
+    searchText: "",
+  };
 
-    render () {
-        const email = localStorage.user_email;
-        const loginStr = email ? "logout" : "login";
+  render() {
+    const email = localStorage.user_email;
+    const loginStr = email ? "logout" : "login";
 
         return (
             <Navbar bg="light" expand="lg" sticky="top" className="mt-3 ml-3 mr-3">
@@ -27,6 +27,7 @@ class Navigation extends Component {
                         <LinkContainer to="/myaccount"><Nav.Link href="/myaccount">my account</Nav.Link></LinkContainer>
                         <LinkContainer to="/printout"><Nav.Link href="/printout">printout</Nav.Link></LinkContainer>  
                         <LinkContainer to="/export"><Nav.Link href="/export">export</Nav.Link></LinkContainer>  
+                        <LinkContainer to="/activities"><Nav.Link href="/activities">Activities</Nav.Link></LinkContainer>
                         <LinkContainer to="/members"><Nav.Link href="/members">members</Nav.Link></LinkContainer>  
                         <LinkContainer to="/login"><Nav.Link href="/login">{loginStr}</Nav.Link></LinkContainer>  
                     </Nav>

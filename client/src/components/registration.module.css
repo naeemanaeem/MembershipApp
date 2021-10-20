@@ -1,0 +1,28 @@
+.errorMsg {
+  color: red;
+}
+
+.card {
+  width: 70vw;
+}
+
+.cardHeader {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.cardHeading {
+  color: grey;
+  padding-top: 3%;
+  padding-bottom: 3%;
+}
+
+.transactionFee {
+  display: flex;
+  margin-top: 100px;
+  flex-direction: row;
+  font-size: 1.2em;
+
+  font-family: "robo, Arial, Helvetica, sans-serif";
+}
