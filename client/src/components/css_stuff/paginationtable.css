@@ -7,7 +7,6 @@
   }
 
   .table {
-    padding: 0%;
     text-align: center;
     width: 75%;
   }
@@ -20,4 +19,5 @@
 
 .center {
   text-align: center;
+  padding: auto;
 }

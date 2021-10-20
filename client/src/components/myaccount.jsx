@@ -21,62 +21,74 @@ class MyAccount extends Component {
     modalShow: false,
     memberShow: false,
     myaccount: {Dependents: []},
+    register: {},
     tempdependent: {},
     dependents: [],
     depArrSize: 0,
     changeDepArr: false,
-    error: ""
+    error: "",
+    errors: []
   };
 
   //LOADS DATA INTO MYACCOUNT
   async componentDidMount() {
     try {
-      const id = localStorage.getItem("googleId"); //TRY TO USE THIS TO GET MEMBER
-      const res = await axios.get('members/614915b63d1e5066b0675a94');{/*members/id syntax for id*/}
+      const res = await axios.get('members/' + localStorage.idOfMember);{/*members/id syntax for id 614915b63d1e5066b0675a94*/}
       this.setState({myaccount: res.data, error: ""});
-      console.log("RETURN FROM BACKEND", res.data)
     } catch (e) {
       this.setState({error: e.message});
       console.error(e);
     } 
   }
 
+  //REGISTER NEW MEMBER
+  async saveNewMember(m) {
+    console.log("Save new member - ", m);
+    if (m.Firstname && m.Firstname.length > 0 &&
+        m.Lastname && m.Lastname.length > 0 &&
+        m.HouseNo && m.HouseNo.length > 0 &&
+        m.Street && m.Street.length > 0) {
+
+        let dependents = [...m.Dependents];
+        m.Dependents = [];
+        const res = await axios.post('/members', m);
+        const member = await axios.get('/members' + res.data._id);  
+        
+        if(!localStorage.idOfMember){
+          localStorage.idOfMember = res.data._id;
+        }
+
+        if(dependents.length > 0){
+          for(var i = 0; i < dependents.length; ++i){
+            dependents[i].Guardians.push(member._id);
+            this.saveNewDependent(dependents[i], member);
+          }
+        } else{
+          this.setState({myaccount: res.data});
+        }
+    }
+  }
+
   //SAVES NEW DEPENDENTS
-  async saveNewDependent(m) {
+  async saveNewDependent(m, account) {
     if (m.Firstname && m.Firstname.length > 0 &&
         m.Lastname && m.Lastname.length > 0 &&
         m.HouseNo && m.HouseNo.length > 0 &&
         m.Street && m.Street.length > 0) {
 
         const res = await axios.post('/members', m);  
-        const newmembers = [...this.state.dependents, res.data];
-
-        let account = this.state.myaccount;
-        account.Dependents.push(res.data);
-        this.setState({dependents: newmembers}, this.handleEditSave(account, true));
+        
+        let myAccount;
+        if(account){myAccount = account;}
+        else{myAccount = this.state.myaccount;}
+        myAccount.Dependents.push(res.data);
+        this.handleEditSave(myAccount, true);
     }
   }
-
-  //GETS DEPENDENTS BY ID AND ADDS THEM TO dependents ARRAY
-  // async getDependent(id) {
-  //   try {
-  //     const res = await axios.get('members/' + id);
-  //     const newdependents = [...this.state.dependents, res.data];
-  //     this.setState({dependents: newdependents});
-  //   } catch (e) {
-  //     this.setState({error: e.message});
-  //     console.error(e);
-  //   } 
-  // }
 
   //SAVED UPDATED MEMBERS/DEPENDENTS
   async saveUpdatedMember(m) {
     try {
-      if(m.Dependents.length > 0 && typeof m.Dependents[0] !== "string"){
-        let dependents = [];
-        await m.Dependents.forEach(dep => dependents.push(dep._id));
-        m.Dependents = dependents;
-      }
       await axios.put('members/' + m._id, m);
       const member = await axios.get('members/' + m._id)
       this.setState({myaccount: member.data})
@@ -92,7 +104,6 @@ class MyAccount extends Component {
       let member;
       if (isOwner) {
         member = this.state.myaccount; //SET MEMBER TO MYACCOUNT
-        // console.log("IN OWNER", member)
       } else {
         member = this.state.dependents.find(el => el._id === m._id); //SET MEMBER TO DEPENDENT
       }
@@ -137,35 +148,12 @@ class MyAccount extends Component {
       console.error(error);
     }
   }
-  
-  //REMOVES COPIES FROM dependents ARRAY BUT NEEDS WORK
-  // removeCopies(){
-  //   let newArr = [], retest = [], doOver = [];
-  //   let i = 0;
-  //   while(i < this.state.depArrSize){
-  //     if(newArr.length === 0){newArr.push(this.state.dependents[i])}
-  //     else if(!newArr.find(dep => dep === this.state.dependents[i])){newArr.push(this.state.dependents[i])}
-  //     i++;
-  //   }
-  //   newArr.forEach(dep => retest.push(dep.Firstname));
-  //   doOver = retest.filter((c, index) => {
-  //       return retest.indexOf(c) !== index;
-  //   });
-  //   if(doOver.length > 0){
-  //     console.log(doOver);
-  //     this.fillDependentArray();
-  //     // this.setState({dependents: newArr});
-  //   } else{
-  //     this.setState({dependents: newArr});
-  //   }
-  // }
-  
-  //RESETS dependents ARRAY AND THEN CALLS getDependent FOR EACH DEPENDENT ID IN MYACCOUNT.DEPENDENTS
-  // fillDependentArray() {
-  //   this.setState({dependents: []},
-  //     this.state.myaccount.Dependents.forEach(dep => this.getDependent(dep))
-  //   );
-  // }
+
+  addNewMember = () => {
+    this.setState({ 
+        register:  {Firstname: "", Lastname: "", HouseNo: "", Guardians: [], Dependents: []}
+      }, this.showMemberEditDialog);
+  }
 
   //SETS DEPENDENTEDIT MODAL
   setModalShow = (e) => { //true or false
@@ -210,40 +198,94 @@ class MyAccount extends Component {
   }
 
   //CANCELS MEMBER EDIT
-  editMemberOnCancel = () => {
-    // this.editMember();
-    this.hideMemberEditDialog();
+  editMemberOnCancel = (m) => {
+    console.log(m);
+    this.setState(
+      {myaccount: m},
+      this.editMember(),
+      // this.hideMemberEditDialog()
+      );
   }
 
   //SAVES EDITED MEMBER
   editMemberOnSave = (m) => {
-    // this.editMember();
-    this.hideMemberEditDialog();
+    this.editMember();
+    // this.hideMemberEditDialog();
     console.log("Update member - ", m);
     this.saveUpdatedMember(m, true);
   }
 
   editMember = () => {
-    this.showMemberEditDialog();
+    // this.showMemberEditDialog();
     //FOR HIDING AND SHOWING SAVE AND CANCEL
-    // var x = document.getElementById("editing");
-    // if(x.style.display === 'none'){
-    //   x.style.display = 'block';
-    //   document.getElementById('editMemButton').style.display = 'none';
-    // } else {
-    //   x.style.display = 'none';
-    //   document.getElementById('editMemButton').style.display = 'block';
-    // }
+    var x = document.getElementById("editing");
+    if(x.style.display === 'none'){
+      x.style.display = 'block';
+      document.getElementById('editMemButton').style.display = 'none';
+    } else {
+      x.style.display = 'none';
+      document.getElementById('editMemButton').style.display = 'block';
+    }
 
-    // //FOR DISABLING AND ENABLING FORM
-    // var y = document.getElementById("target").elements;
-    // for(var i = 0; i < y.length; i++){
-    //   if(y[i].disabled){
-    //     y[i].disabled = false;
-    //   } else{
-    //     y[i].disabled = true;
-    //   }
-    // }
+    //FOR DISABLING AND ENABLING FORM
+    var y = document.getElementById("target").elements;
+    for(var i = 0; i < y.length; i++){
+      if(y[i].disabled){
+        y[i].disabled = false;
+      } else{
+        y[i].disabled = true;
+      }
+    }
+  }
+
+  resetErrors = (m) => {
+    this.setState({errors: []}, this.checkErrors(m))
+  }
+
+  checkErrors = (m) => {
+    let errorArr = [];
+    if(!m.Firstname){
+      errorArr.push("Enter First Name!");
+    }
+
+    if(!m.Lastname){
+      errorArr.push("Enter Last Name!");
+    }
+
+    if(!m.PhoneNum){
+      errorArr.push("Enter Phone Number!");
+    } else if(m.PhoneNum.length < 10 || m.PhoneNum.length > 11){errorArr.push("Invalid Phone Number!");}
+    
+    if(!m.Email){
+      errorArr.push("Enter Email!");
+    } else if(!m.Email.includes('@')){errorArr.push("Invalid Email!");}
+
+    if(!m.HouseNo){
+      errorArr.push("Enter House Number!");
+    }
+
+    if(!m.Street){
+      errorArr.push("Enter Street Name!");
+    }
+
+    if(!m.City){
+      errorArr.push("Enter City Name!");
+    }
+    
+    if(!m.Country){
+      errorArr.push("Select Country!");
+    }
+    
+    if(!m.Postcode){
+      errorArr.push("Enter Zipcode!");
+    } else if(m.Postcode.length !== 5){errorArr.push("Invalid Zipcode!");}
+
+    if(!m.DateOfBirth){
+      errorArr.push("Enter Date of Birth!");
+    } else if(m.DateOfBirth.indexOf('/') !== 2 || m.DateOfBirth.lastIndexOf('/') !== 5){errorArr.push("Invalid Date of Birth! Use format mm/dd/yyyy")}
+
+    this.state.errors = errorArr;
+    this.setState({errors: errorArr});
   }
 
   //CALULATES AGE OF DEPENDENT
@@ -271,22 +313,13 @@ class MyAccount extends Component {
 
   render () {
     let detailPage, dependentPage;
-    // console.log("LOCAL", localStorage.getItem("user_displayName"), localStorage.getItem("user_email"),localStorage.getItem("test") );
-    const thisaccount = this.state.myaccount;
+
+    let thisaccount = this.state.myaccount;
     var editaccount = {...thisaccount};
     const dependent = this.state.myaccount.Dependents;
 
     // console.log("LOCALstorage", localStorage);
     // localStorage.id = null;
-    // if(!localStorage.id || localStorage.id === null){
-    //   console.log("in if")
-    //   localStorage.id = this.state.myaccount._id;
-    // }
-    // else{
-    //   console.log("in else", localStorage.id, this.state.myaccount._id)
-    // }
-
-    console.log("MYACCOUNT", thisaccount);
     
     if(editaccount.Firstname && editaccount.Firstname === this.state.myaccount.Firstname){
       detailPage  = 
@@ -295,7 +328,7 @@ class MyAccount extends Component {
         {/* Personal Information Below */}
         <h4 className="ml-3">
           Personal Information 
-          <Button id="editMemButton" variant="dark" onClick={/*this.showEditMember*/ this.editMember}>Edit Member</Button>
+          <Button id="editMemButton" variant="dark" onClick={this.editMember}>Edit Member</Button>
           </h4>
         <hr class="solid mr-2" />
 
@@ -305,9 +338,9 @@ class MyAccount extends Component {
             <Form.Group className="mb-4" >
               <Form.Label>First Name</Form.Label>
               <Form.Control 
-                defaultValue={editaccount.Firstname} 
+                defaultValue={thisaccount.Firstname} 
                 onChange={(e) => {
-                  editaccount.Firstname = e.target.value.toLocaleUpperCase();
+                  thisaccount.Firstname = e.target.value.toLocaleUpperCase();
                 }} 
                 className="detailSelWid" 
                 disabled/>  
@@ -315,9 +348,14 @@ class MyAccount extends Component {
             <Form.Group className="mb-4">
               <Form.Label>Date of Birth</Form.Label>
               <Form.Control 
-                defaultValue={editaccount.DateOfBirth} 
+                defaultValue={thisaccount.DateOfBirth} 
                 onChange={(e) => {
-                  editaccount.DateOfBirth = e.target.value.toLocaleUpperCase();
+                  if(e.target.value.length > 1){
+                    if(e.target.value.indexOf('/') === -1 || e.target.value.length > 4 && !e.target.value.substr(4).includes('/')){
+                      e.target.value += "/"
+                    }
+                  }
+                  thisaccount.DateOfBirth = e.target.value.toLocaleUpperCase();
                 }} 
                 className="detailSelWid" 
                 disabled/>  
@@ -328,9 +366,9 @@ class MyAccount extends Component {
               <Form.Group className="mb-4">
                 <Form.Label>Last Name</Form.Label>
                 <Form.Control 
-                  defaultValue={editaccount.Lastname} 
+                  defaultValue={thisaccount.Lastname} 
                   onChange={(e) => {
-                    editaccount.Lastname = e.target.value.toLocaleUpperCase();
+                    thisaccount.Lastname = e.target.value.toLocaleUpperCase();
                   }} 
                   className="detailSelWid" 
                   disabled/>  
@@ -338,9 +376,9 @@ class MyAccount extends Component {
               <Form.Group className="mb-4">
                 <Form.Label>Gender</Form.Label>
                 <Form.Control            
-                  defaultValue={editaccount.Gender} 
+                  defaultValue={thisaccount.Gender} 
                   onChange={(e) => {
-                    editaccount.Gender = e.target.value.toLocaleUpperCase();
+                    thisaccount.Gender = e.target.value.toLocaleUpperCase();
                   }}             
                   className="detailSelWid" 
                   as="select"
@@ -355,10 +393,10 @@ class MyAccount extends Component {
             <Form.Group className="mb-4">
               <Form.Label>Spouse</Form.Label>
               <Form.Control  
-                defaultValue={editaccount.Spouse}
+                defaultValue={thisaccount.Spouse}
                 className="detailSelWid"
                 onChange={(e) => {
-                  editaccount.Spouse = e.target.value.toLocaleUpperCase();
+                  thisaccount.Spouse = e.target.value.toLocaleUpperCase();
                 }}  
                 as="select"
                 disabled>
@@ -379,7 +417,7 @@ class MyAccount extends Component {
               <Form.Control
                 defaultValue={this.state.myaccount.HouseNo}
                 onChange={(e) => {
-                  editaccount.HouseNo = e.target.value.toLocaleUpperCase();
+                  thisaccount.HouseNo = e.target.value.toLocaleUpperCase();
                 }}
                 className="detailSelWid" 
                 disabled/>  
@@ -387,9 +425,9 @@ class MyAccount extends Component {
             <Form.Group className="mb-4">
                 <Form.Label>City</Form.Label>
                 <Form.Control 
-                  defaultValue={editaccount.City} 
+                  defaultValue={thisaccount.City} 
                   onChange={(e) => {
-                    editaccount.City = e.target.value.toLocaleUpperCase();
+                    thisaccount.City = e.target.value.toLocaleUpperCase();
                   }} 
                   className="detailSelWid" 
                   disabled/>   
@@ -401,7 +439,7 @@ class MyAccount extends Component {
               <Form.Control
                 defaultValue={this.state.myaccount.Street}
                 onChange={(e) => {
-                  editaccount.Street = e.target.value.toLocaleUpperCase();
+                  thisaccount.Street = e.target.value.toLocaleUpperCase();
                 }}
                 className="detailSelWid" 
                 disabled/>  
@@ -409,9 +447,9 @@ class MyAccount extends Component {
             <Form.Group className="mb-4">
               <Form.Label>State</Form.Label>
               <Form.Control 
-                defaultValue={editaccount.State} 
+                defaultValue={thisaccount.State} 
                 onChange={(e) => {
-                  editaccount.State = e.target.value.toLocaleUpperCase();
+                  thisaccount.State = e.target.value.toLocaleUpperCase();
                 }} 
                 className="detailSelWid" 
                 as="select"
@@ -424,9 +462,9 @@ class MyAccount extends Component {
             <Form.Group className="mb-4">
               <Form.Label>Village</Form.Label>
               <Form.Control 
-                defaultValue={editaccount.Village} 
+                defaultValue={thisaccount.Village} 
                 onChange={(e) => {
-                  editaccount.Village = e.target.value.toLocaleUpperCase();
+                  thisaccount.Village = e.target.value.toLocaleUpperCase();
                 }} 
                 className="detailSelWid" 
                 disabled/>    
@@ -434,9 +472,9 @@ class MyAccount extends Component {
             <Form.Group className="mb-4">
                 <Form.Label>Country</Form.Label>
                 <Form.Control 
-                  defaultValue={editaccount.Country} 
+                  defaultValue={thisaccount.Country} 
                   onChange={(e) => {
-                    editaccount.Country = e.target.value.toLocaleUpperCase();
+                    thisaccount.Country = e.target.value.toLocaleUpperCase();
                   }} 
                   className="detailSelWid" 
                   as="select"
@@ -454,9 +492,9 @@ class MyAccount extends Component {
            <Form.Group className="detailSpace mb-4">
                 <Form.Label>Email</Form.Label>
                 <Form.Control 
-                  defaultValue={editaccount.Email} 
+                  defaultValue={thisaccount.Email} 
                   onChange={(e) => {
-                    editaccount.Email = e.target.value.toLocaleUpperCase();
+                    thisaccount.Email = e.target.value.toLocaleUpperCase();
                   }} 
                   className="detailSelWid" 
                   disabled/>    
@@ -465,9 +503,9 @@ class MyAccount extends Component {
               <Form.Group className="mb-4">
                 <Form.Label>Phone Number</Form.Label>
                 <Form.Control 
-                  defaultValue={editaccount.PhoneNum} 
+                  defaultValue={thisaccount.PhoneNum} 
                   onChange={(e) => {
-                    editaccount.PhoneNum = e.target.value.toLocaleUpperCase();
+                    thisaccount.PhoneNum = e.target.value.toLocaleUpperCase();
                   }} 
                   className="detailSelWid" 
                   disabled/>    
@@ -493,21 +531,45 @@ class MyAccount extends Component {
 
         <div id="editing" style={{display: 'none'}}>
           <hr class="dsolid mr-2" />
-          <Button variant="dark" onClick={() => {this.editMemberOnSave(editaccount)}} style={{float:'left'}}>Save</Button>
-          <Button variant="dark" onClick={() => {editaccount = {...thisaccount}; this.editMemberOnCancel()}}style={{float:'left'}}>Cancel</Button>
+          <Button variant="dark" onClick={() => {
+              this.resetErrors(thisaccount);
+              if(this.state.errors.length > 0){
+                let allErrors = "";
+                let error = this.state.errors;
+                for(var i = 0; i < this.state.errors.length; ++i){
+                  allErrors += error[i];
+                  if(i + 1 !== this.state.errors.length){
+                    allErrors += '\n'
+                  }
+                }
+                alert(allErrors);
+              }
+              else{
+                this.editMemberOnSave(thisaccount);
+              }
+            }} 
+            style={{float:'left'}}>Save</Button>
+          <Button variant="dark" onClick={() => {
+             this.editMemberOnCancel(editaccount);
+            }}
+            style={{float:'left'}}>Cancel</Button>
         </div>
       </React.Fragment>;
+    } else {
+      detailPage =
+      <React.Fragment>
+        <div style={{}}>
+          <h4 className="ml-3">
+            NO ACCOUNT FOUND 
+            {/* <Button id="regMemButton" variant="dark" onClick={this.editMember}>REGISTER AS MEMBER</Button> */}
+            </h4>
+          <hr class="solid mr-2" />
+          <Button id="regMemButton" variant="dark" style={{position: 'fixed', left:"50%"}}onClick={this.addNewMember}>REGISTER AS MEMBER</Button>
+        </div>
+      </React.Fragment>
     }
 
     if(thisaccount.Dependents.length > 0){
-      // if(this.state.depArrSize !== thisaccount.Dependents.length){
-      //   this.setState({depArrSize: thisaccount.Dependents.length}, this.fillDependentArray());
-      // }
-      // if(this.state.dependents.length > this.state.depArrSize){
-      //   this.removeCopies();
-      // }
-
-
       dependentPage =
         <React.Fragment>
           <h4 className="ml-3">
@@ -555,7 +617,8 @@ class MyAccount extends Component {
           </h4>
           <hr class="solid mr-2" />
           <h2>NO DEPENDENTS</h2>
-        </React.Fragment>}
+        </React.Fragment>
+        }
 
 
     return (
@@ -570,13 +633,14 @@ class MyAccount extends Component {
         />
 
         <MemberEdit
-          member={this.state.myaccount}
+          member={this.state.register}
           show={this.state.memberShow}
           onDependentShow={this.hideMemberEditDialog}
           onDependentHide={this.showMemberEditDialog}
-          onCancel={this.editMemberOnCancel}
-          onSave={this.editMemberOnSave}
-          myAccount={true}
+          onCancel={this.hideMemberEditDialog}
+          onSave={this.saveNewMember}
+          myAccount={false}
+          registerMember={true}
         />
         
         <div>
