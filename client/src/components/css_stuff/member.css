@@ -1,0 +1,80 @@
+.centerimg {
+    /* display: block; */
+    margin-left: 0px;
+    margin-right: 35%;
+    /* width: 0%; */
+  }
+  
+.center {
+    text-align: center;
+}
+
+.addbutton {
+    margin-bottom: 0.5%;
+    float: right
+
+}
+   
+#inline{
+    width:100%;
+    height:auto;
+    display:flex;
+} 
+.AdminTable{
+    width:80%;
+    height:100px;
+    margin:10px;
+}
+
+.backwhite{
+    background-color: white;
+}
+.FilterTable{
+    width:20%;
+    height:auto;
+    margin-left: 3%;
+    margin-right: 2%;
+    background-color: ghostwhite;
+}
+
+.fsearch{
+    width: 90%;
+    margin:auto;
+}
+
+.checks{
+    margin:auto;
+}
+
+.pointer{
+    cursor: pointer;
+}
+
+.image{
+    width: 25%;
+}
+
+.tableheader{
+    background-color: snow;
+}
+
+
+/* tbody tr:nth-child(even){
+    background: rgb(240,240,240);
+  }   */
+
+tr:hover {background-color: rgb(235, 235, 235);}
+
+#table{
+    border: 1px solid black;
+    background-color: white;
+}
+
+.dependentButtons{
+    float: right;
+    margin-left: auto;
+}
+
+
+
+
