@@ -1,0 +1,53 @@
+.label {
+  position: relative;
+
+  cursor: pointer;
+}
+/* hide default checkbox  */
+
+.label input[type="checkbox"] {
+  position: absolute; /* prevent taking any space */
+  /* cross-browser hiding */
+  opacity: 0;
+  width: 0px;
+  height: 0px;
+}
+/* custom checkbox */
+.label span {
+  position: absolute;
+  /* position to the free space in <label> */
+  top: 5px;
+  left: 20px;
+  border-radius: 5px;
+  width: 30px;
+  height: 30px;
+  background-color: rgb(240, 238, 238);
+  transition: 0.3s background-color; /* slight transition */
+}
+
+/* the check icon */
+.label span:after {
+  font-size: 18px;
+  content: "";
+  position: absolute;
+  display: none;
+
+  /* check icon */
+  left: 11px;
+  top: 4px;
+  width: 8px;
+  height: 20px;
+  border: solid blue;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+.label:hover span {
+  background-color: #ccc;
+}
+
+.label input:checked ~ span {
+  background-color: white;
+}
+.label input:checked ~ span:after {
+  display: block;
+}
