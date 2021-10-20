@@ -37,10 +37,6 @@ router.get('/:id', ensureAuth, async (req, res) => {
 
         if(member.Dependents.length > 0){
             let dependents = [];
-            // member.Dependents.forEach((dep) => {
-            //     let temp = await Member.findById(dep);
-            //     dependents.push(temp);
-            // });
             for (let index = 0; index < member.Dependents.length; index++) {
                 let temp = await Member.findById(member.Dependents[index]);
                 dependents.push(temp);
@@ -93,13 +89,11 @@ router.put('/:id', ensureAuth, async (req, res) => {
 
         const m = req.body;
 
-        // if(m.Dependents.length > 0 && typeof m.Dependents[0] !== "string"){
-        //     let dependents = [];
-        //     for (let index = 0; index < m.Dependents.length; index++) {
-        //         dependents.push(m.Dependents._id);
-        //     }
-        //     m.Dependents = dependents;
-        // }
+        if(m.Dependents.length > 0 && typeof m.Dependents[0] !== "string"){
+            let dependents = [];
+            await m.Dependents.forEach(dep => dependents.push(dep._id));
+            m.Dependents = dependents;
+        }
 
         const member = await Member.findOneAndUpdate({_id: req.params.id}, m, {
             new: true,

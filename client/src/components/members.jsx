@@ -60,8 +60,11 @@ class Members extends Component {
 
         const dependents = [...m.Dependents];
         m.Dependents = [];
-        m.GoogleId = localStorage.getItem("googleId");
         const res = await axios.post('/members', m);  
+        
+        if(!localStorage.idOfMember){
+          localStorage.idOfMember = res.data._id;
+        }
 
         if(dependents.length > 0){
           for(var i = 0; i < dependents.length; ++i){
@@ -89,11 +92,6 @@ class Members extends Component {
 
   async saveUpdatedMember(m) {
     try {
-      if(m.Dependents.length > 0 && typeof m.Dependents[0] !== "string"){
-        let dependents = [];
-        await m.Dependents.forEach(dep => dependents.push(dep._id));
-        m.Dependents = dependents;
-      }
       await axios.put('members/' + m._id, m);
       const newmembers = await axios.get('/members');
       this.setState({members: newmembers.data})
