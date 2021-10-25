@@ -10,8 +10,8 @@ import PrintOut from "./components/printout";
 import Login from "./components/login";
 import ExportCSV from "./components/exportcsv";
 import SearchTextProvider from "./components/searchtextprovider";
-import Activities from "./components/activities";
-
+import InternalActivities from "./components/activities";
+import ExternalActivities from "./components/externalActivities";
 class App extends Component {
   render() {
     return (
@@ -19,11 +19,16 @@ class App extends Component {
         <SearchTextProvider>
           <Navigation />
           <Switch>
-            <Route exact path="/" component={Home} />\
+            <Route exact path="/" component={Home} />
             <Route exact path="/members" component={Members} />
             <Route exact path="/PrintOut" component={PrintOut} />
             <Route exact path="/export" component={ExportCSV} />
-            <Route exact path="/activities" component={Activities} />
+            <Route exact path="/activities" component={InternalActivities} />
+            <Route
+              exact
+              path="/activities/external"
+              component={ExternalActivities}
+            />
             <Route exact path="/login" component={Login} />
           </Switch>
         </SearchTextProvider>

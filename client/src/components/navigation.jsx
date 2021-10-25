@@ -7,6 +7,7 @@ import Form from "react-bootstrap/Form";
 import { LinkContainer } from "react-router-bootstrap";
 import FormControl from "react-bootstrap/FormControl";
 import { SearchTextContext } from "./searchtextprovider";
+import { NavDropdown } from "react-bootstrap";
 
 class Navigation extends Component {
   state = {
@@ -38,9 +39,12 @@ class Navigation extends Component {
             <LinkContainer to="/login">
               <Nav.Link href="/login">{loginStr}</Nav.Link>
             </LinkContainer>
-            <LinkContainer to="/activities">
-              <Nav.Link href="/activities">Activities</Nav.Link>
-            </LinkContainer>
+            <NavDropdown title="activities" id="activities">
+              <NavDropdown.Item href="/activities">internal</NavDropdown.Item>
+              <NavDropdown.Item href="/activities/external">
+                external
+              </NavDropdown.Item>
+            </NavDropdown>
           </Nav>
           <SearchTextContext.Consumer>
             {(context) => (
