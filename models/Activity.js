@@ -53,7 +53,7 @@ const ActivitySchema = new mongoose.Schema(
     registration: {
       type: String,
       trim: true,
-      default: "Open",
+      default: "Close",
     },
     isRecurring: {
       type: Boolean,
