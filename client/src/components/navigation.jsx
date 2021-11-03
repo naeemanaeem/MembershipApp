@@ -18,15 +18,18 @@ class Navigation extends Component {
     const email = localStorage.user_email;
     const loginStr = email ? "logout" : "login";
 
+
     return (
       <Navbar bg="light" expand="lg" sticky="top">
         <Navbar.Brand href="/">Masjid Membership</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
+      
           <Nav className="mr-auto">
             <LinkContainer to="/">
               <Nav.Link>home</Nav.Link>
             </LinkContainer>
+            <LinkContainer to="/myaccount"><Nav.Link href="/myaccount">my account</Nav.Link></LinkContainer>
             <LinkContainer to="/members">
               <Nav.Link href="/members">members</Nav.Link>
             </LinkContainer>
@@ -46,6 +49,7 @@ class Navigation extends Component {
               </NavDropdown.Item>
             </NavDropdown>
           </Nav>
+           
           <SearchTextContext.Consumer>
             {(context) => (
               <Form inline>
@@ -78,6 +82,8 @@ class Navigation extends Component {
       </Navbar>
     );
   }
+
+       
 }
 
 export default Navigation;
