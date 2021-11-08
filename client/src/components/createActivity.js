@@ -213,6 +213,7 @@ const ActivityForm = (props) => {
                     },
                   }}
                 />
+
                 <Form.Text className="text-muted">
                   Images might need resizing for proper display in the event
                   detail page.
@@ -220,6 +221,7 @@ const ActivityForm = (props) => {
                 <Form.Control
                   isInvalid={!!formErrors.description}
                   className={classes.invalidInput}
+                  disabled
                 />
                 <Form.Control.Feedback type="invalid">
                   {formErrors.description}

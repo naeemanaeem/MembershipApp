@@ -1,0 +1,77 @@
+.formContainer {
+  margin: 0 auto;
+  margin-top: 10%;
+  width: 60%;
+}
+.FormGroup {
+  margin: 0 15px 20px;
+  padding: 0;
+  border-style: none;
+  background-color: #7795f8;
+  will-change: opacity, transform;
+  box-shadow: 0 6px 9px rgba(50, 50, 93, 0.06), 0 2px 5px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 #829fff;
+  border-radius: 4px;
+}
+
+.FormRow {
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-align: center;
+  align-items: center;
+  margin-left: 15px;
+  border-top: 1px solid #819efc;
+}
+.button {
+  display: block;
+  font-size: 16px;
+  width: calc(100% - 30px);
+  height: 40px;
+  margin: 40px 15px 0;
+  background-color: #f6a4eb;
+  /* background-color: orange; */
+  box-shadow: 0 6px 9px rgba(50, 50, 93, 0.06), 0 2px 5px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 #ffb9f6;
+  border-radius: 4px;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 100ms ease-in-out;
+  will-change: transform, background-color, box-shadow;
+  border: none;
+}
+.button:active {
+  background-color: #d782d9;
+  /* color: #819efc; */
+  box-shadow: 0 6px 9px rgba(50, 50, 93, 0.06), 0 2px 5px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 #e298d8;
+  transform: scale(0.99);
+}
+
+h1,
+h3 {
+  text-align: center;
+}
+.heading {
+  color: blue;
+  margin: 50px 0;
+}
+.btnContainer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+.link {
+  color: white;
+  padding: 9px;
+  padding-left: 80px;
+  padding-right: 80px;
+}
+.link:hover {
+  text-decoration: none;
+  color: white;
+}
+.payBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

@@ -167,15 +167,17 @@ router.get("/registration/:id", ensureAuth, async (req, res) => {
     if (!response) {
       return res.status(404).send("Not found.");
     }
-    let newResponse = response.dependentsId.map(
+    let newResponse = response.registeredMembersIds.map(
       async (id) => await Member.findById(id)
     );
     // if the dependents are found in the database:
     if (newResponse) {
       Promise.all(newResponse)
         .then((result) => {
-          response.dependentsId = result;
-          return res.status(200).send({ ...response, dependentsId: result });
+          response.registeredMembersIds = result;
+          return res
+            .status(200)
+            .send({ ...response, registeredMembersIds: result });
         })
         .catch((error) => console.error(error));
     }
@@ -192,6 +194,7 @@ router.post("/registration", ensureAuth, async (req, res) => {
     const info = req.body;
     const response = await ActivityRegister.create(info);
     if (response) {
+      console.log("response from server:", response._message);
       return res.status(200).send(response);
     } else {
       return res.status(500);
@@ -266,6 +269,26 @@ router.patch("/registration/:id", ensureAuth, async (req, res) => {
 router.delete("/registration/:id", ensureAuth, async (req, res) => {
   try {
     const response = await ActivityRegister.findByIdAndDelete(req.params.id);
+
+    if (!response) {
+      return res
+        .status(404)
+        .send("The registration info was not found for this activity!");
+    }
+
+    return res.send(response);
+  } catch (error) {
+    console.error(error);
+    // return server error
+    return res.status(500);
+  }
+});
+// api to use for development mode only (for self use only)
+router.delete("/registration/many/bymemberid", ensureAuth, async (req, res) => {
+  try {
+    const response = await ActivityRegister.deleteMany({
+      memberId: "618095549e08676d7364d7b0",
+    });
 
     if (!response) {
       return res

@@ -7,6 +7,9 @@
 .invalidInput {
   border: none;
 }
+.invalidInput:disabled {
+  background-color: white;
+}
 
 .formCheckLabel {
   font-family: "robo, Arial, Helvetica, sans-serif";
