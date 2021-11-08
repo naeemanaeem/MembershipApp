@@ -7,10 +7,11 @@
   margin: 0 15px 20px;
   padding: 0;
   border-style: none;
-  background-color: #7795f8;
+  color: "black";
+  background-color: blue;
   will-change: opacity, transform;
   box-shadow: 0 6px 9px rgba(50, 50, 93, 0.06), 0 2px 5px rgba(0, 0, 0, 0.08),
-    inset 0 1px 0 #829fff;
+    inset 0 1px 0 rgb(130, 128, 133);
   border-radius: 4px;
 }
 
@@ -20,7 +21,7 @@
   -ms-flex-align: center;
   align-items: center;
   margin-left: 15px;
-  border-top: 1px solid #819efc;
+  border-top: 1px solid #839ccf;
 }
 .button {
   display: block;
@@ -28,12 +29,12 @@
   width: calc(100% - 30px);
   height: 40px;
   margin: 40px 15px 0;
-  background-color: #f6a4eb;
-  /* background-color: orange; */
+  background-color: rgb(247, 177, 48);
   box-shadow: 0 6px 9px rgba(50, 50, 93, 0.06), 0 2px 5px rgba(0, 0, 0, 0.08),
-    inset 0 1px 0 #ffb9f6;
+    inset 0 1px 0 #f19c56;
   border-radius: 4px;
   color: #fff;
+
   font-weight: 600;
   cursor: pointer;
   transition: all 100ms ease-in-out;
@@ -41,19 +42,23 @@
   border: none;
 }
 .button:active {
-  background-color: #d782d9;
-  /* color: #819efc; */
+  background-color: orange;
   box-shadow: 0 6px 9px rgba(50, 50, 93, 0.06), 0 2px 5px rgba(0, 0, 0, 0.08),
-    inset 0 1px 0 #e298d8;
+    inset 0 1px 0 rgb(241, 171, 41);
   transform: scale(0.99);
 }
-
+.button:hover {
+  background-color: rgb(245, 106, 82);
+  box-shadow: 0 6px 9px rgba(50, 50, 93, 0.06), 0 2px 5px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgb(241, 171, 41);
+}
 h1,
 h3 {
   text-align: center;
 }
 .heading {
-  color: blue;
+  color: black;
+  font-family: "robo, Arial, Helvetica, sans-serif";
   margin: 50px 0;
 }
 .btnContainer {
