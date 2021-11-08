@@ -4,6 +4,7 @@
 
 .card {
   width: 70vw;
+  margin: 30px;
 }
 
 .cardHeader {
@@ -14,15 +15,73 @@
 
 .cardHeading {
   color: grey;
-  padding-top: 3%;
-  padding-bottom: 3%;
+  padding-top: 4%;
+  padding-bottom: 4%;
 }
-
+.subTotal {
+  display: flex;
+  flex-direction: row;
+  margin-top: 40px;
+  margin-bottom: 0px;
+  font-size: 1.2em;
+  font-family: "robo, Arial, Helvetica, sans-serif";
+}
 .transactionFee {
   display: flex;
-  margin-top: 100px;
   flex-direction: row;
-  font-size: 1.2em;
-
+  font-weight: normal;
+  font-size: 16px;
+  color: tomato;
   font-family: "robo, Arial, Helvetica, sans-serif";
+  margin-top: 0px;
+  margin-bottom: 10px;
+}
+.total {
+  display: flex;
+  flex-direction: row;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-size: 1.2em;
+  font-family: "robo, Arial, Helvetica, sans-serif";
+}
+.couponContainer {
+  display: flex;
+  justify-content: space-between;
+  width: 62vw;
+}
+.couponInput {
+  border: 2px solid grey;
+  padding: 10px;
+  width: 78vw;
+  font-size: 1.2em;
+  align-self: center;
+  height: 40px;
+  margin-bottom: 10px;
+  color: blue;
+  font-family: robo;
+  border-radius: 0;
+  margin-right: 5px;
+}
+.couponBtn {
+  height: 42px;
+}
+.radioBtn {
+  height: 80px;
+  width: 40px;
+  transform: scale(1.5);
+  margin-left: 10px;
+  margin-top: 10px;
+}
+
+.link:hover {
+  color: white;
+  text-decoration: none;
+}
+.cancelBtn {
+  background-color: white;
+  color: tomato;
+}
+.cancelBtn:hover {
+  background-color: tomato;
+  color: white;
 }

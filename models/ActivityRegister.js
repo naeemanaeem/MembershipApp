@@ -14,20 +14,23 @@ const ActivityRegisterSchema = new mongoose.Schema(
       required: true,
     },
 
-    dependentsId: [
+    registeredMembersIds: [
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Member",
+        required: true,
       },
     ],
 
-    paymentIntegrationId: {
+    paymentIntentId: {
       type: String,
       required: true,
+      trim: true,
     },
-    paymentMethod: {
+    paymentMethodId: {
       type: String,
       required: true,
+      trim: true,
     },
     paymentAmount: {
       type: mongoose.Types.Currency,
@@ -35,6 +38,15 @@ const ActivityRegisterSchema = new mongoose.Schema(
       trim: true,
       default: 0,
       min: 0,
+    },
+    paymentType: {
+      type: String,
+      required: true,
+      trim: true,
+    },
+    description: {
+      type: String,
+      trim: true,
     },
   },
   { timestamps: true }
