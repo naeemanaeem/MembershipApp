@@ -8,18 +8,19 @@ const CARD_OPTIONS = {
   iconStyle: "solid",
   style: {
     base: {
-      iconColor: "#c4f0ff",
+      iconColor: "white",
       color: "#fff",
+
       fontWeight: 500,
       fontFamily: "Roboto, Open Sans, Segoe UI, sans-serif",
       fontSize: "16px",
       fontSmoothing: "antialiased",
-      ":-webkit-autofill": { color: "#fce883" },
-      "::placeholder": { color: "#87bbfd" },
+      ":-webkit-autofill": { color: "grey" },
+      "::placeholder": { color: "grey" },
     },
     invalid: {
-      iconColor: "#ffc7ee",
-      color: "#ffc7ee",
+      iconColor: "tomato",
+      color: "tomato",
     },
   },
 };
@@ -32,11 +33,9 @@ const PaymentForm = (props) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    /********  added new code ******/
     if (!stripe || !elements) {
       return;
     }
-    /*******************************/
     setPaymentInProcess(true);
     const { error, paymentMethod } = await stripe.createPaymentMethod({
       type: "card",
