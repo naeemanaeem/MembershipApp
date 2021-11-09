@@ -197,12 +197,14 @@ router.post("/registration", ensureAuth, async (req, res) => {
       console.log("response from server:", response._message);
       return res.status(200).send(response);
     } else {
-      return res.status(500);
+      return res
+        .status(500)
+        .send("Error saving registration info into database!");
     }
   } catch (error) {
     console.error(error);
     // return server error
-    return res.status(500);
+    return res.status(500).send(error);
   }
 });
 

@@ -48,42 +48,41 @@ const RegistrationForm = (props) => {
       description: "Registration for " + props.eventTitle,
     };
 
-    // try {
-    //   const response = axios.post("/activities/registration", data);
-    //   if (response.status === 500) {
-    //     throw Error("Registration Failed!");
-    //   } else if (response) {
-    //     console.log("success storing data: ", response);
-    //     return response;
-    //     // switch to payment confirmation page
-    //   } else {
-    //     throw Error("Registration Failed!");
-    //   }
-    // } catch (error) {
-    //   console.log("Error: ", error.message);
-    //   setError("Registration Failed!");
+    try {
+      axios
+        .post("/activities/registration", data)
+        .then((res) => {
+          console.log("res in post: ", res.status);
+          if (res && res.status === 200) {
+            setError(null);
+            setSuccessPageShow(true);
+            console.log("success storing data: ", res);
+            // return res;
+          } else {
+            console.log("Error saving registration status in the database!");
 
-    //   // switch to error display page
-    // }
-    return axios
-      .post("/activities/registration", data)
-      .then((res, err) => {
-        console.log("res in post: ", res.status);
-        if (res.status === 200) {
-          console.log("success storing data: ", res);
-          return res;
-        } else {
-          console.log("Error:", err);
-          return err;
-          // throw new Error(err);
-        }
-      })
-      .catch((err) => {
-        console.log("Error: ", err);
-        setError("Registration Failed!");
-        // throw Error(error);
-        // return error;
-      });
+            throw Error({
+              message: "Error saving registration status in the database!",
+            });
+          }
+        })
+        .catch((err) => {
+          console.log("Error: ", err);
+          if (Number(props.eventCost) > 0) {
+            window.alert(
+              "\nYour transaction has been processed but there was an error saving your registration status at our end.\nPlease consult our event organizer as soon as possible or email at: \nabc@xyz.com to update your registration status.\nWe are sorry for inconvenience."
+            );
+            setError(err.message);
+          } else {
+            window.alert(
+              "\nThere was an error saving your registration status at our end.\nPlease consult our event organizer or email at: \nabc@xyz.com for registration.\nWe are sorry for inconvenience."
+            );
+            setError(err.message);
+          }
+        });
+    } catch (err) {
+      setError("Error in registration: " + err);
+    }
   };
   const handlePayment = () => {
     if (registeredMembersIds.length === 0) {
@@ -91,25 +90,8 @@ const RegistrationForm = (props) => {
       return;
     }
     if (Number(props.eventCost) <= 0) {
-      try {
-        handlePostOfPaymentStatus("n/a", "n/a")
-          .then((successStoringData) => {
-            console.log("successStoringData:", successStoringData);
-
-            setSuccessPageShow(true);
-          })
-
-          .catch((e) => console.log(e));
-      } catch (e) {
-        console.log(e);
-        setError("Registration Failed!");
-      }
-      // } catch (e) {
-      //   console.log(e.message);
-      //   setError("Registration Failed!");
-      // }
+      handlePostOfPaymentStatus("n/a", "n/a");
     } else if (paymentType === "card") {
-      // Number(props.eventCost);
       setPaymentFormShow(true);
     }
   };
@@ -132,7 +114,7 @@ const RegistrationForm = (props) => {
       member.Firstname.toLowerCase() + " " + member.Lastname.toLowerCase() ===
       localStorage.user_displayName.toLowerCase()
   );
-  // console.log("currentMember: ", currentMember);
+
   if (!memberId && currentMember) {
     setMemberId(currentMember._id);
   }
@@ -154,6 +136,7 @@ const RegistrationForm = (props) => {
             // cost={totalAmount}
             eventTitle={props.eventTitle}
             handlePostOfPaymentStatus={handlePostOfPaymentStatus}
+            // paymentPostError={error}
           />
         ) : (
           <Card className={classes.card}>

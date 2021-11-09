@@ -15,18 +15,23 @@ router.post("/create-payment-intent", ensureAuth, async (req, res) => {
       confirm: true,
     });
 
-    res.json({
-      message: "Payment successful",
-      success: true,
-      paymentId: paymentIntent.id,
-      paymentMethodId: paymentIntent.payment_method,
-    });
+    if (paymentIntent) {
+      res.json({
+        message: "Payment successful",
+        success: true,
+        paymentId: paymentIntent.id,
+        paymentMethodId: paymentIntent.payment_method,
+      });
+    } else {
+      res.json({
+        message: "Payment failed, please try again!",
+        success: false,
+      });
+    }
   } catch (error) {
     console.log("Error", error);
     res.json({
-      message: `Payment failed, please try again!\n \n ${JSON.stringify(
-        error.raw
-      )}`,
+      message: "Payment failed, please try again!\n" + error.message,
       success: false,
     });
   }
