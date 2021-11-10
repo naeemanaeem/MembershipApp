@@ -2,14 +2,14 @@ import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import axios from "axios";
 import React, { useState } from "react";
 import Classes from "./paymentFormActivities.module.css";
-import uuid from "react-uuid";
+import UUID from "react-uuid";
+
 const CARD_OPTIONS = {
   iconStyle: "solid",
   style: {
     base: {
       iconColor: "white",
       color: "#fff",
-
       fontWeight: 500,
       fontFamily: "Roboto, Open Sans, Segoe UI, sans-serif",
       fontSize: "16px",
@@ -29,8 +29,8 @@ const PaymentForm = (props) => {
   const [paymentInProcess, setPaymentInProcess] = useState(false);
   const stripe = useStripe();
   const elements = useElements();
-  const idempotencyKey = uuid();
-
+  const uuidCustomer = UUID();
+  const uuidPayment = UUID();
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Stripe.js has not yet loaded.
@@ -39,42 +39,70 @@ const PaymentForm = (props) => {
       return;
     }
     // disable the payment processing button to prevent subsequest requests.
-    setPaymentInProcess(true);
-    const { error, paymentMethod } = await stripe.createPaymentMethod({
-      type: "card",
-      // grap the card number cvv and zip from the form
-      card: elements.getElement(CardElement),
-    });
-    if (paymentMethod) {
-      try {
-        const { id } = paymentMethod;
+    // setPaymentInProcess(true);
 
-        const response = await axios.post(
-          "http://localhost:3000/activity/create-payment-intent",
-          {
-            amount: Number(props.cost) * 100,
-            paymentMethodId: id,
-            description: "Registration for " + props.eventTitle,
-          }
-        );
-        if (response.data.success) {
-          props.handlePostOfPaymentStatus(
-            response.data.paymentId,
-            response.data.paymentMethodId
-          );
-        } else {
-          window.alert(response.data.message);
-          setPaymentInProcess(false);
-        }
-      } catch (error) {
-        console.log("Error: ", error.message);
-        window.alert(error.message);
-        setPaymentInProcess(false);
+    try {
+      const paymentMethod = await stripe.createPaymentMethod({
+        type: "card",
+        // grap the card number cvv and zip from the form
+        card: elements.getElement(CardElement),
+      });
+      if (paymentMethod.error) {
+        throw Error(paymentMethod.error.message);
       }
-    } else {
-      console.log("Error: ", error.message);
+      const customer = await axios.post(
+        "http://localhost:3000/activity/create-customer",
+        {
+          // email: localStorage.user_email,
+          email: "taniafali@yahoo.com",
+          payment_method: paymentMethod.paymentMethod.id,
+          idempotencyKey: uuidCustomer,
+        }
+      );
+      console.log("customer: ", customer);
+      if (!customer.data.success) {
+        throw Error(customer.data.message);
+      }
+
+      if (paymentMethod.paymentMethod.id && customer.data.customerId) {
+        try {
+          const { id } = paymentMethod.paymentMethod;
+
+          const response = await axios.post(
+            "http://localhost:3000/activity/create-payment",
+            {
+              amount: Number(props.cost) * 100,
+              paymentMethodId: id,
+              description: "Registration for " + props.eventTitle,
+              // email: localStorage.user_email,
+              email: "taniafali@yahoo.com",
+              customer: customer.data.customerId,
+              idempotencyKey: uuidPayment,
+            }
+          );
+          if (response.data.success) {
+            props.handlePostOfPaymentStatus(
+              response.data.paymentId,
+              response.data.paymentMethodId
+            );
+          } else {
+            // window.alert(response.data.message);
+            // setPaymentInProcess(false);
+            throw Error(response.data.message);
+          }
+        } catch (error) {
+          console.log("Error: ", error.message);
+          window.alert(error.message);
+          // setPaymentInProcess(false);
+        }
+        // } else {
+        //   console.log("Error: ", error.message);
+        //   window.alert(error.message);
+        //   setPaymentInProcess(false);
+      }
+    } catch (error) {
       window.alert(error.message);
-      setPaymentInProcess(false);
+      // setPaymentInProcess(false);
     }
   };
 
