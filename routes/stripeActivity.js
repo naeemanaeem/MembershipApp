@@ -3,17 +3,61 @@ const router = express.Router();
 const { ensureAuth } = require("../middleware/auth");
 require("dotenv").config({ path: "./config/config.env" });
 const stripe = require("stripe")(process.env.STRIPE_SECRET_TEST);
-
-router.post("/create-payment-intent", ensureAuth, async (req, res) => {
-  let { amount, paymentMethodId, description } = req.body;
+router.post("/create-customer", ensureAuth, async (req, res) => {
+  let { email, payment_method, idempotencyKey } = req.body;
   try {
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount: amount,
-      currency: "USD",
-      description: description,
-      payment_method: paymentMethodId,
-      confirm: true,
+    const response = await stripe.customers.create(
+      {
+        email: email,
+        payment_method: payment_method,
+      },
+      { idempotencyKey: idempotencyKey }
+    );
+    if (response) {
+      res.json({
+        message: "Customer created!",
+        success: true,
+        customerId: response.id,
+      });
+    } else {
+      res.json({
+        message: "Attempt to create a customer failed, please try again!",
+        success: false,
+      });
+    }
+  } catch (error) {
+    console.log("Error", error);
+    res.json({
+      message:
+        "Attempt to create a customer failed, please try again!\n" +
+        error.message,
+      success: false,
     });
+  }
+});
+
+router.post("/create-payment", ensureAuth, async (req, res) => {
+  let {
+    amount,
+    paymentMethodId,
+    description,
+    email,
+    customer,
+    idempotencyKey,
+  } = req.body;
+  try {
+    const paymentIntent = await stripe.paymentIntents.create(
+      {
+        amount: amount,
+        currency: "usd",
+        description: description,
+        payment_method: paymentMethodId,
+        receipt_email: email,
+        customer: customer,
+        confirm: true,
+      },
+      { idempotencyKey: idempotencyKey }
+    );
 
     if (paymentIntent) {
       res.json({
