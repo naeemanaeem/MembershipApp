@@ -10,8 +10,8 @@ router.post("/create-customer", ensureAuth, async (req, res) => {
       {
         email: email,
         payment_method: payment_method,
-      },
-      { idempotencyKey: idempotencyKey }
+      }
+      // { idempotencyKey: idempotencyKey }
     );
     if (response) {
       res.json({
