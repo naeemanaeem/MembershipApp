@@ -150,6 +150,7 @@ const ActivityForm = (props) => {
                       </Dropdown.Item>
                       <Dropdown.Item
                         as="button"
+                        selected
                         className={classes.dropdown}
                         value="Close"
                         defaultValue={eventToBeEdited.registration}
@@ -334,7 +335,7 @@ const ActivityForm = (props) => {
                   >
                     <path d="M12.166 8.94c-.524 1.062-1.234 2.12-1.96 3.07A31.493 31.493 0 0 1 8 14.58a31.481 31.481 0 0 1-2.206-2.57c-.726-.95-1.436-2.008-1.96-3.07C3.304 7.867 3 6.862 3 6a5 5 0 0 1 10 0c0 .862-.305 1.867-.834 2.94zM8 16s6-5.686 6-10A6 6 0 0 0 2 6c0 4.314 6 10 6 10z" />
                     <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4zm0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
-                  </svg>{" "}
+                  </svg>
                   Location
                 </Form.Label>
 
@@ -474,7 +475,9 @@ const ActivityForm = (props) => {
                     min="0.00"
                     max="10000.00"
                     step="0.01"
-                    defaultValue={eventToBeEdited ? eventToBeEdited.cost : ""}
+                    defaultValue={
+                      eventToBeEdited ? eventToBeEdited.cost / 100 + ".00" : ""
+                    }
                     onChange={(e) => setData({ ...data, cost: e.target.value })}
                   />
                 </InputGroup>
@@ -595,7 +598,7 @@ const ActivityForm = (props) => {
                 } else {
                   if (Object.keys(eventToBeEdited).length > 0) {
                     axios
-                      .put(`/activities/${eventToBeEdited._id}`, data)
+                      .patch(`/activities/${eventToBeEdited._id}`, data)
                       .then((res) => {
                         alert(
                           `The Event "${eventToBeEdited.title}" has been updated!`
