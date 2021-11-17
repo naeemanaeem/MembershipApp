@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import classes from "./activities.module.css";
 import Card from "react-bootstrap/Card";
 import ExternalActivityForm from "./createExternalActivity";
-import { withRouter } from "react-router";
+
 const ExternalActivities = () => {
   const [activities, setActivities] = useState([]);
   const [error, setError] = useState();
@@ -141,4 +141,5 @@ const ExternalActivities = () => {
 ExternalActivities.propTypes = {
   ExternalActivityForm: PropTypes.node,
 };
-export default withRouter(ExternalActivities);
+
+export default ExternalActivities;

@@ -1,8 +1,9 @@
 .card {
   margin: "5% auto";
-  width: 40rem;
+  width: 70rem;
   padding: 4%;
   font-family: "robo, Arial, Helvetica, sans-serif";
+  align-self: "center";
 }
 
 .btnsContainer {

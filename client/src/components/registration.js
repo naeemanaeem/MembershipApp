@@ -9,9 +9,11 @@ import CreditcardLogo from "../images/creditcard_logos.png";
 import StripeContainer from "./stripeContainerActivities";
 import "./registration.css";
 import SuccessPage from "./SuccessPage";
+import PayPal from "./paypalActivities";
 const RegistrationForm = (props) => {
   const [members, setMembers] = useState([]);
   const [memberId, setMemberId] = useState();
+  const [memberEmail, setMemberEmail] = useState("");
   const [registeredMembersIds, setRegisteredMembersIds] = useState([]);
   const [error, setError] = useState("");
   const [paymentType, setPaymentType] = useState("n/a");
@@ -19,13 +21,14 @@ const RegistrationForm = (props) => {
   const [showSuccessPage, setSuccessPageShow] = useState(false);
   // use setPaymentAmount for adjusting cost after applying coupon
   const [paymentAmount, setPaymentAmount] = useState("0.00");
-  // let transactionFee = (Number(paymentAmount) * 0.029 + 0.3).toFixed(2);
-  // let totalAmount = (Number(transactionFee) + Number(paymentAmount)).toFixed(2);
+  const [paypalButtonShow, setPaypalButtonShow] = useState(false);
   useEffect(() => {
     async function fetchData() {
       try {
         const res = await axios.get("/members");
         setMembers(res.data);
+        const email = await localStorage.user_email;
+        setMemberEmail(email);
       } catch (e) {
         setError(e.message);
       }
@@ -33,9 +36,6 @@ const RegistrationForm = (props) => {
     fetchData();
   }, []);
   const handlePostOfPaymentStatus = (paymentId, paymentMethodId) => {
-    // pass this handler as a prop to the stripeContainer component and paymentForm component
-    // paymentResponse is an object that contains paymentIntegrationId, success message
-
     const data = {
       activityId: props.eventId,
       memberId: memberId,
@@ -43,7 +43,6 @@ const RegistrationForm = (props) => {
       paymentIntentId: paymentId,
       paymentMethodId: paymentMethodId,
       paymentAmount: paymentAmount,
-      // paymentAmount: totalAmount,
       paymentType: paymentType,
       description: "Registration for " + props.eventTitle,
     };
@@ -56,18 +55,14 @@ const RegistrationForm = (props) => {
           if (res && res.status === 200) {
             setError(null);
             setSuccessPageShow(true);
-            console.log("success storing data: ", res);
-            // return res;
           } else {
             console.log("Error saving registration status in the database!");
-
             throw Error({
               message: "Error saving registration status in the database!",
             });
           }
         })
         .catch((err) => {
-          console.log("Error: ", err);
           if (Number(props.eventCost) > 0) {
             window.alert(
               "\nYour transaction has been processed but there was an error saving your registration status at our end.\nPlease consult our event organizer as soon as possible or email at: \nabc@xyz.com to update your registration status.\nWe are sorry for inconvenience."
@@ -93,6 +88,8 @@ const RegistrationForm = (props) => {
       handlePostOfPaymentStatus("n/a", "n/a");
     } else if (paymentType === "card") {
       setPaymentFormShow(true);
+    } else if (paymentType === "paypal") {
+      setPaypalButtonShow(true);
     }
   };
   const handleCheckbox = (e, memberId) => {
@@ -133,10 +130,9 @@ const RegistrationForm = (props) => {
         {showPaymentForm ? (
           <StripeContainer
             cost={paymentAmount}
-            // cost={totalAmount}
             eventTitle={props.eventTitle}
             handlePostOfPaymentStatus={handlePostOfPaymentStatus}
-            // paymentPostError={error}
+            email={memberEmail}
           />
         ) : (
           <Card className={classes.card}>
@@ -187,35 +183,12 @@ const RegistrationForm = (props) => {
                   })
                 : null}
               <div className={classes.subTotal}>
-                {/* <Card.Text>Sub Total:&nbsp; </Card.Text> */}
                 <Card.Text>Transaction Fee:&nbsp; </Card.Text>
 
                 <Card.Text>
                   <b>${paymentAmount}</b>
                 </Card.Text>
               </div>
-              {/* <div className={classes.transactionFee}>
-                <i>
-                  <Card.Text>Transaction Fee:&nbsp; </Card.Text>
-                </i>
-
-                <Card.Text>
-                  <b>${(Number(paymentAmount) * 0.029 + 0.3).toFixed(2)}</b>
-                </Card.Text>
-              </div> */}
-              {/* <div className={classes.total}>
-                <Card.Text>Total:&nbsp;</Card.Text>
-
-                <Card.Text>
-                  <b>
-                    $
-                    {(
-                      Number(paymentAmount) +
-                      (Number(paymentAmount) * 0.029 + 0.3)
-                    ).toFixed(2)}
-                  </b>
-                </Card.Text>
-              </div> */}
 
               <Form.Label className="mt-3 font-weight-bold ">
                 Coupon Code (optional)
@@ -276,23 +249,35 @@ const RegistrationForm = (props) => {
                 onChange={(e) => setPaymentType(e.target.value)}
               />
             </Card.Body>
-            <Card.Footer>
-              <Button
-                size="lg"
-                variant="outline-success"
-                onClick={handlePayment}
-              >
-                Proceed to Checkout
-              </Button>
-              <Button
-                size="lg"
-                variant="outline-danger"
-                className={classes.cancelBtn}
-              >
-                <a href="/activities" className={classes.link}>
+            <Card.Footer className={classes.footer}>
+              <div className={classes.footerBtnContainer}>
+                {paypalButtonShow ? (
+                  <PayPal
+                    eventCost={paymentAmount}
+                    eventTitle={props.eventTitle}
+                    setSuccessPageShow={setSuccessPageShow}
+                    handlePostOfPaymentStatus={handlePostOfPaymentStatus}
+                  />
+                ) : (
+                  <Button
+                    size="lg"
+                    variant="outline-success"
+                    onClick={handlePayment}
+                  >
+                    Proceed to Checkout
+                  </Button>
+                )}
+              </div>
+              <div className={classes.footerBtnContainer}>
+                <Button
+                  size="lg"
+                  variant="outline-danger"
+                  className={classes.cancelBtn}
+                  onClick={() => window.location.reload()}
+                >
                   Cancel
-                </a>
-              </Button>
+                </Button>
+              </div>
             </Card.Footer>
           </Card>
         )}

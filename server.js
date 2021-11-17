@@ -83,8 +83,7 @@ app.use("/activities/external", require("./routes/externalActivities"));
 app.use("/activities", require("./routes/activities"));
 app.use("/upload", require("./routes/attachment"));
 app.use("/activity", require("./routes/stripeActivity"));
-// app.use("/create-payment-intent-activity", require("./routes/stripeActivity"));
-// app.use("/stripe", require("./routes/stripe"));
+
 // This middleware informs the express application to serve our compiled React files
 if (
   process.env.NODE_ENV === "production" ||

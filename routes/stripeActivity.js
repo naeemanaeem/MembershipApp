@@ -4,15 +4,12 @@ const { ensureAuth } = require("../middleware/auth");
 require("dotenv").config({ path: "./config/config.env" });
 const stripe = require("stripe")(process.env.STRIPE_SECRET_TEST);
 router.post("/create-customer", ensureAuth, async (req, res) => {
-  let { email, payment_method, idempotencyKey } = req.body;
+  let { email, payment_method } = req.body;
   try {
-    const response = await stripe.customers.create(
-      {
-        email: email,
-        payment_method: payment_method,
-      }
-      // { idempotencyKey: idempotencyKey }
-    );
+    const response = await stripe.customers.create({
+      email: email,
+      payment_method: payment_method,
+    });
     if (response) {
       res.json({
         message: "Customer created!",

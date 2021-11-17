@@ -285,25 +285,5 @@ router.delete("/registration/:id", ensureAuth, async (req, res) => {
     return res.status(500);
   }
 });
-// api to use for development mode only (for self use only)
-router.delete("/registration/many/bymemberid", ensureAuth, async (req, res) => {
-  try {
-    const response = await ActivityRegister.deleteMany({
-      memberId: "618095549e08676d7364d7b0",
-    });
-
-    if (!response) {
-      return res
-        .status(404)
-        .send("The registration info was not found for this activity!");
-    }
-
-    return res.send(response);
-  } catch (error) {
-    console.error(error);
-    // return server error
-    return res.status(500);
-  }
-});
 
 module.exports = router;
