@@ -73,15 +73,14 @@
   margin-top: 10px;
 }
 
-.link:hover {
-  color: white;
-  text-decoration: none;
+.footer {
+  display: flex;
+  justify-content: space-between;
 }
-.cancelBtn {
-  background-color: white;
-  color: tomato;
-}
-.cancelBtn:hover {
-  background-color: tomato;
-  color: white;
+.footerBtnContainer {
+  width: 40vw;
+  display: flex;
+  flex-flow: nowrap;
+  align-items: center;
+  justify-content: center;
 }

@@ -7,7 +7,7 @@ import { Row, Col } from "react-bootstrap";
 import axios from "axios";
 import PropTypes from "prop-types";
 import classes from "./activities.module.css";
-import { withRouter } from "react-router";
+
 const Activities = () => {
   const [activities, setActivities] = useState([]);
   const [error, setError] = useState();
@@ -191,4 +191,5 @@ Activities.propTypes = {
   EventDetail: PropTypes.node,
   Activity: PropTypes.node,
 };
-export default withRouter(Activities);
+
+export default Activities;

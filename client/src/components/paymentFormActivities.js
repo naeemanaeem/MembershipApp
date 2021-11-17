@@ -1,7 +1,7 @@
+import React, { useState } from "react";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import axios from "axios";
-import React, { useState } from "react";
-import Classes from "./paymentFormActivities.module.css";
+import classes from "./paymentFormActivities.module.css";
 import UUID from "react-uuid";
 
 const CARD_OPTIONS = {
@@ -24,13 +24,12 @@ const CARD_OPTIONS = {
   },
 };
 const PaymentForm = (props) => {
+  console.log(localStorage);
   // access activityTitle, cost and handlePostOfPaymentStatus as props
-
-  const [paymentInProcess, setPaymentInProcess] = useState(false);
   const stripe = useStripe();
   const elements = useElements();
-  const uuidCustomer = UUID();
   const uuidPayment = UUID();
+  const [email, setEmail] = useState("");
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Stripe.js has not yet loaded.
@@ -53,13 +52,10 @@ const PaymentForm = (props) => {
       const customer = await axios.post(
         "http://localhost:3000/activity/create-customer",
         {
-          // email: localStorage.user_email,
-          email: "taniafali@yahoo.com",
+          email: email,
           payment_method: paymentMethod.paymentMethod.id,
-          idempotencyKey: uuidCustomer,
         }
       );
-      console.log("customer: ", customer);
       if (!customer.data.success) {
         throw Error(customer.data.message);
       }
@@ -74,8 +70,7 @@ const PaymentForm = (props) => {
               amount: Number(props.cost) * 100,
               paymentMethodId: id,
               description: "Registration for " + props.eventTitle,
-              // email: localStorage.user_email,
-              email: "taniafali@yahoo.com",
+              email: email,
               customer: customer.data.customerId,
               idempotencyKey: uuidPayment,
             }
@@ -86,23 +81,15 @@ const PaymentForm = (props) => {
               response.data.paymentMethodId
             );
           } else {
-            // window.alert(response.data.message);
-            // setPaymentInProcess(false);
             throw Error(response.data.message);
           }
         } catch (error) {
           console.log("Error: ", error.message);
           window.alert(error.message);
-          // setPaymentInProcess(false);
         }
-        // } else {
-        //   console.log("Error: ", error.message);
-        //   window.alert(error.message);
-        //   setPaymentInProcess(false);
       }
     } catch (error) {
       window.alert(error.message);
-      // setPaymentInProcess(false);
     }
   };
 
@@ -111,28 +98,40 @@ const PaymentForm = (props) => {
       <form
         id="payment-form"
         onSubmit={handleSubmit}
-        className={Classes.formContainer}
+        className={classes.formContainer}
       >
-        <h1 className={Classes.heading}>Enter Card Details</h1>
-        <fieldset className={Classes.FormGroup}>
-          <div className={Classes.FormRow}>
+        <h1 className={classes.heading}>Enter Payment Details</h1>
+        <fieldset>
+          <div className={classes.emailContainer}>
+            <input
+              type="email"
+              className={classes.email}
+              placeHolder="Email address"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+        </fieldset>
+
+        <fieldset className={classes.FormGroup}>
+          <div className={classes.FormRow}>
             <CardElement options={CARD_OPTIONS} />
           </div>
         </fieldset>
-        <div className={Classes.btnContainer}>
+        <div className={classes.btnContainer}>
           <button
             id="payment-request-button"
-            className={Classes.button + " " + Classes.payBtn}
-            disabled={paymentInProcess || !stripe}
+            className={classes.button + " " + classes.payBtn}
+            disabled={!stripe}
           >
             Pay
           </button>
           <button
             disabled
-            className={Classes.button}
+            className={classes.button}
             id="payment-cancel-button"
           >
-            <a href="activities" className={Classes.link}>
+            <a href="activities" className={classes.link}>
               Cancel
             </a>
           </button>

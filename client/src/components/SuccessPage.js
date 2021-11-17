@@ -5,9 +5,7 @@ import imageSrc from "../images/green_circle_checkmark.png";
 const PaymentSuccess = (props) => {
   return (
     <div className={Classes.successPage}>
-      <h4>
-        You have successfully registered for the {props.eventTitle} event{" "}
-      </h4>
+      <h4>You have successfully registered for the {props.eventTitle}.</h4>
       <img
         src={imageSrc}
         alt="green circle with checkmark"
