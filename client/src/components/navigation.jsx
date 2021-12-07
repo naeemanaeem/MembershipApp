@@ -10,15 +10,13 @@ import { SearchTextContext } from "./searchtextprovider";
 import { NavDropdown } from "react-bootstrap";
 
 class Navigation extends Component {
-  state = {
-    searchText: "",
-  };
+    state = {
+        searchText: "",
+    };
 
-  render() {
-    const email = localStorage.user_email;
-    const loginStr = email ? "logout" : "login";
-
-
+    render() {
+        const email = localStorage.user_email;
+        const loginStr = email ? "logout" : "login";
     return (
       <Navbar bg="light" expand="lg" sticky="top">
         <Navbar.Brand href="/">Masjid Membership</Navbar.Brand>
@@ -29,6 +27,7 @@ class Navigation extends Component {
             <LinkContainer to="/">
               <Nav.Link>home</Nav.Link>
             </LinkContainer>
+            <LinkContainer to="/payment"><Nav.Link href="/payment">payment</Nav.Link></LinkContainer>
             <LinkContainer to="/myaccount"><Nav.Link href="/myaccount">my account</Nav.Link></LinkContainer>
             <LinkContainer to="/members">
               <Nav.Link href="/members">members</Nav.Link>
@@ -83,7 +82,6 @@ class Navigation extends Component {
     );
   }
 
-       
 }
 
 export default Navigation;
