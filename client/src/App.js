@@ -3,16 +3,18 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
-import Navigation from "./components/navigation";
-import Home from "./components/home";
-import Members from "./components/members";
-import PrintOut from "./components/printout";
-import Login from "./components/login";
-import ExportCSV from "./components/exportcsv";
-import SearchTextProvider from "./components/searchtextprovider";
+import Navigation from './components/navigation';
+import Home from './components/home';
+import Members from './components/members';
+import PrintOut from './components/printout';
+import payment from './components/payment';
+import Login from './components/login';
+import ExportCSV from './components/exportcsv';
+import SearchTextProvider from './components/searchtextprovider';
+import MyAccount from './components/myaccount';
 import InternalActivities from "./components/activities";
 import ExternalActivities from "./components/externalActivities";
-import MyAccount from "./components/myaccount";
+
 
 class App extends Component {
   render() {
@@ -34,6 +36,7 @@ class App extends Component {
               component={ExternalActivities}
             />
           </Switch>
+
         </SearchTextProvider>
       </Router>
     );
