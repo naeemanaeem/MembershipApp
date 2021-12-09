@@ -167,15 +167,17 @@ router.get("/registration/:id", ensureAuth, async (req, res) => {
     if (!response) {
       return res.status(404).send("Not found.");
     }
-    let newResponse = response.dependentsId.map(
+    let newResponse = response.registeredMembersIds.map(
       async (id) => await Member.findById(id)
     );
     // if the dependents are found in the database:
     if (newResponse) {
       Promise.all(newResponse)
         .then((result) => {
-          response.dependentsId = result;
-          return res.status(200).send({ ...response, dependentsId: result });
+          response.registeredMembersIds = result;
+          return res
+            .status(200)
+            .send({ ...response, registeredMembersIds: result });
         })
         .catch((error) => console.error(error));
     }
@@ -192,14 +194,17 @@ router.post("/registration", ensureAuth, async (req, res) => {
     const info = req.body;
     const response = await ActivityRegister.create(info);
     if (response) {
+      console.log("response from server:", response._message);
       return res.status(200).send(response);
     } else {
-      return res.status(500);
+      return res
+        .status(500)
+        .send("Error saving registration info into database!");
     }
   } catch (error) {
     console.error(error);
     // return server error
-    return res.status(500);
+    return res.status(500).send(error);
   }
 });
 

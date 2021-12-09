@@ -34,6 +34,7 @@ const EventDetail = (props) => {
           onClose={setShowRegisterForm}
           eventTitle={props.data.title}
           eventCost={cost}
+          eventId={props.data._id}
         />
       ) : (
         <Card className={classes.card}>
@@ -141,7 +142,11 @@ const EventDetail = (props) => {
             <Button variant="secondary" onClick={props.onCancel}>
               Cancel
             </Button>
-            <Button variant="primary" onClick={handleRegisteration}>
+            <Button
+              variant="primary"
+              onClick={handleRegisteration}
+              disabled={props.data.registration === "Close" ? true : false}
+            >
               Register Now
             </Button>
           </Card.Body>
