@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
+
 import Navigation from './components/navigation';
 import Home from './components/home';
 import Members from './components/members';
@@ -16,6 +17,8 @@ import InternalActivities from "./components/activities";
 import ExternalActivities from "./components/externalActivities";
 
 
+
+
 class App extends Component {
   render() {
     return (
@@ -26,16 +29,25 @@ class App extends Component {
             <Route exact path="/" component={Home} />
             <Route exact path="/members" component={Members} />
             <Route exact path="/myaccount" component={MyAccount} />
+
             <Route exact path="/PrintOut" component={PrintOut} />
             <Route exact path="/export" component={ExportCSV} />
             <Route exact path="/login" component={Login} />
             <Route exact path="/activities" component={InternalActivities} />
+
+            
+           
+
             <Route
               exact
               path="/activities/external"
               component={ExternalActivities}
+
             />
           </Switch>
+
+
+
 
         </SearchTextProvider>
       </Router>
