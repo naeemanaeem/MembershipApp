@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import Activity from "./activity";
 import ActivityForm from "./createActivity";
 import EventDetail from "./eventDetail";
@@ -15,18 +15,19 @@ const Activities = () => {
   const [eventDetail, setEventDetail] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState({});
 
-  useEffect(() => {
-    async function fetchData() {
-      try {
-        const res = await axios.get("/activities");
-        setActivities(res.data);
-      } catch (e) {
-        setError(e.message);
-        console.error("ERROR: ", error);
-      }
+  const memoizedfetchData = useCallback(async () => {
+    try {
+      const res = await axios.get("/activities/");
+      setActivities(res.data);
+    } catch (e) {
+      setError(e.message);
     }
-    fetchData();
-  }, [error]);
+  }, []);
+
+  useEffect(() => {
+    memoizedfetchData();
+  }, [memoizedfetchData]);
+
   // Adds new activity to activities array
   const addActivityHandler = (data) => {
     setActivities([...activities, data]);
@@ -190,4 +191,5 @@ Activities.propTypes = {
   EventDetail: PropTypes.node,
   Activity: PropTypes.node,
 };
+
 export default Activities;

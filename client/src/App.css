@@ -23,10 +23,10 @@ button {
 }
 
 .links {
-height: 0;
-overflow: hidden;
-list-style-type: none;
-font-weight: bold;
+  height: 0;
+  overflow: hidden;
+  list-style-type: none;
+  font-weight: bold;
 }
 
 .show-nav {
@@ -36,16 +36,16 @@ font-weight: bold;
 /* Media screen size */
 @media screen and (min-width: 768px) {
   button {
-      display: none;
+    display: none;
   }
 
   .links {
-      height: auto;
-      display: flex;
+    height: auto;
+    display: flex;
   }
 
   li {
-      padding: 0 15px;
+    padding: 0 15px;
   }
 
   td {

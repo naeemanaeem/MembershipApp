@@ -84,7 +84,9 @@ app.use('/payments', require('./routes/payments'));
 app.use('/stripe', require('./routes/stripe'));
 //app.use('/newmembers', require('./routes/newmembers'));
 app.use("/activities", require("./routes/activities"));
-//app.use("/upload", require("./routes/attachment"));
+app.use("/upload", require("./routes/attachment"));
+app.use("/activity", require("./routes/stripeActivity"));
+
 
 // This middleware informs the express application to serve our compiled React files
 if (

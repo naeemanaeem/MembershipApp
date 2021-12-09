@@ -7,7 +7,6 @@ const Checkbox = (props) => {
       <label className={styles}>
         <input type="checkbox" {...props} />
         <span></span>
-
         <input
           type="text"
           {...props}
