@@ -78,15 +78,14 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // Routes
 
-app.use('/auth', require('./routes/auth'));
-app.use('/members', require('./routes/members'));
-app.use('/payments', require('./routes/payments'));
-app.use('/stripe', require('./routes/stripe'));
-//app.use('/newmembers', require('./routes/newmembers'));
+app.use("/auth", require("./routes/auth"));
+app.use("/members", require("./routes/members"));
+app.use("/payments", require("./routes/payments"));
+app.use("/stripe", require("./routes/stripe"));
+app.use("/activities/external", require("./routes/externalActivities"));
 app.use("/activities", require("./routes/activities"));
 app.use("/upload", require("./routes/attachment"));
 app.use("/activity", require("./routes/stripeActivity"));
-
 
 // This middleware informs the express application to serve our compiled React files
 if (
