@@ -81,6 +81,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/auth", require("./routes/auth"));
 app.use("/members", require("./routes/members"));
 app.use("/payments", require("./routes/payments"));
+app.use("/volunteer", require("./routes/volunteer"));
 app.use("/stripe", require("./routes/stripe"));
 app.use("/activities/external", require("./routes/externalActivities"));
 app.use("/activities", require("./routes/activities"));
