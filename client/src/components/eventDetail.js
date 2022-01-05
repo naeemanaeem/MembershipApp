@@ -135,7 +135,7 @@ const EventDetail = (props) => {
               {props.data.online ? (
                 <React.Fragment>
                   <b>Meeting Link: </b>
-                  {props.data.meetingLink}
+                  <a href={props.data.meetingLink}>{props.data.meetingLink}</a>
                 </React.Fragment>
               ) : null}
             </Card.Text>
