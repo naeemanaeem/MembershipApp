@@ -91,10 +91,11 @@ function Home({ name, ...props }) {
       <Carousel.Item>
         <img
           className="d-block w-100"
-          style={{ width: '400px', height: '300px' }}
+          style={{ width: '200px', height: '250px', hasMargin ({ marginLeft, '0.8rem': }) }}
           src={slide_vol}
-          alt="First TEST slide"
+          alt="First slide"
         />
+
         <Carousel.Caption>
           <h3>First slide label</h3>
           <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
