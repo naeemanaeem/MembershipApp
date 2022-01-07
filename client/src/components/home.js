@@ -91,7 +91,9 @@ function Home({ name, ...props }) {
       <Carousel.Item>
         <img
           className="d-block w-100"
-          style={{ width: '200px', height: '250px', hasMargin ({ marginLeft, '0.8rem': }) }}
+          style={{ width: '200px', height: '250px'
+          //,hasMargin ({ marginLeft, '0.8rem': }) 
+          }}
           src={slide_vol}
           alt="First slide"
         />
