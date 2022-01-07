@@ -17,6 +17,7 @@ import mhma from './imgs/MHMA.png'
 import vol from './imgs/vol.jpeg'
 import pay from './imgs/pay.png'
 import act from './imgs/images.jpeg'
+import slide_vol from './imgs/community-work-day-flat-vector-illustration.jpg'
 
 
 function Home({ name, ...props }) {
@@ -90,8 +91,9 @@ function Home({ name, ...props }) {
       <Carousel.Item>
         <img
           className="d-block w-100"
-          src="holder.js/800x400?text=First slide&bg=373940"
-          alt="First slide"
+          style={{ width: '400px', height: '300px' }}
+          src={slide_vol}
+          alt="First TEST slide"
         />
         <Carousel.Caption>
           <h3>First slide label</h3>
