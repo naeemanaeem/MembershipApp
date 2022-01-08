@@ -18,6 +18,9 @@ import vol from './imgs/vol.jpeg'
 import pay from './imgs/pay.png'
 import act from './imgs/images.jpeg'
 import slide_vol from './imgs/community-work-day-flat-vector-illustration.jpg'
+import slide_act from './imgs/act.jpeg'
+//import slide_vol from './imgs/community-work-day-flat-vector-illustration.jpg'
+
 
 
 function Home({ name, ...props }) {
@@ -90,10 +93,9 @@ function Home({ name, ...props }) {
       <Carousel fade>
         <Carousel.Item>
           <img
-            className="d-block w-100"
+            className="slideshow"
             style={{
-              width: '200px', height: '250px'
-              //,hasMargin ({ marginLeft, '0.8rem': }) 
+              width: '1950px', height: '350px'
             }}
             src={slide_vol}
             alt="First slide"
@@ -106,8 +108,11 @@ function Home({ name, ...props }) {
         </Carousel.Item>
         <Carousel.Item>
           <img
-            className="d-block w-100"
-            src="holder.js/800x400?text=Second slide&bg=282c34"
+            className="slideshow"
+            style={{
+              width: '1950px', height: '350px'
+            }}
+            src={slide_act}
             alt="Second slide"
           />
 
@@ -118,7 +123,7 @@ function Home({ name, ...props }) {
         </Carousel.Item>
         <Carousel.Item>
           <img
-            className="d-block w-100"
+            className="slideshow"
             src="holder.js/800x400?text=Third slide&bg=20232a"
             alt="Third slide"
           />
@@ -129,6 +134,8 @@ function Home({ name, ...props }) {
           </Carousel.Caption>
         </Carousel.Item>
       </Carousel>
+
+
 
     </div>
   );
