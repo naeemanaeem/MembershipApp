@@ -19,8 +19,6 @@ import pay from './imgs/pay.png'
 import act from './imgs/images.jpeg'
 import slide_vol from './imgs/community-work-day-flat-vector-illustration.jpg'
 import slide_act from './imgs/act.jpeg'
-//import slide_vol from './imgs/community-work-day-flat-vector-illustration.jpg'
-
 
 
 function Home({ name, ...props }) {
@@ -48,18 +46,63 @@ function Home({ name, ...props }) {
 
   return (
 
-    <div>
-      <Container>
+    
+    <Container>
+      <div>
         <h1>Welcome to MCE - Muslims Centre of Excellence </h1>
         <h2 class="text-center">You Are {displayName}</h2>
         <br></br>
 
         <h5 class="text-center">
           Mountain House Muslim Association is a local non-profit focused on serving the Muslim community in Mountain House. </h5>
+      
 
-      </Container>
+      <Carousel fade style={{marginBottom: "50px"}}>
+      <Carousel.Item>
+        <img
+          className="d-block w-100"
+          style={{ width: '100%', height: '350px' }}
+          src={slide_vol}
+          alt="First TEST slide"
+        />
+        <Carousel.Caption>
+          <h3>First slide label</h3>
+          <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+        </Carousel.Caption>
+      </Carousel.Item>
+      <Carousel.Item>
+        <img
+          className="d-block w-100"
+          style={{
+              width: '100%', height: '350px'
+            }}
+          src={slide_act}
+          alt="Second slide"
+        />
 
-      <Card style={{ position: 'absolute', left: '0%', top: '40%', height: '30rem', width: '36rem' }}>
+        <Carousel.Caption>
+          <h3>Second slide label</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+        </Carousel.Caption>
+      </Carousel.Item>
+      <Carousel.Item>
+        <img
+          className="d-block w-100"
+          style={{
+              width: '1950px', height: '350px'
+            }}
+          src="holder.js/800x400?text=Third slide&bg=20232a"
+          alt="Third slide"
+        />
+
+        <Carousel.Caption>
+          <h3>Third slide label</h3>
+          <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
+        </Carousel.Caption>
+      </Carousel.Item>
+    </Carousel>
+      
+      <Card style={{ position: 'absolute', left: '0%', top: '60%', height: '30rem', width: '36rem' }}>
         <Card.Img variant="top" src={pay} />
         <Card.Body>
           <Card.Title>Make Payment</Card.Title>
@@ -69,7 +112,7 @@ function Home({ name, ...props }) {
           <Button onClick={goToPayment} style={{ position: 'absolute', left: '0%', top: '90%' }} variant="dark" size="lg" block>Payment</Button>
         </Card.Body>
       </Card>
-      <Card style={{ position: 'absolute', left: '34%', top: '40%', height: '30rem', width: '36rem' }}>
+      <Card style={{ position: 'absolute', left: '34%', top: '60%', height: '30rem', width: '36rem' }}>
         <Card.Img style={{ width: '570px', height: '300px' }} variant="top" src={vol} />
         <Card.Body>
           <Card.Title>Volunteer</Card.Title>
@@ -79,7 +122,7 @@ function Home({ name, ...props }) {
           <Button onClick={goToVolunteer} style={{ position: 'absolute', left: '0%', top: '90%' }} variant="dark" size="lg" block>Volunteer</Button>
         </Card.Body>
       </Card>
-      <Card style={{ position: 'absolute', left: '68%', top: '40%', height: '30rem', width: '36rem' }}>
+      <Card style={{ position: 'absolute', left: '68%', top: '60%', height: '30rem', width: '36rem' }}>
         <Card.Img style={{ width: '575px', height: '300px' }} variant="top" src={act} />
         <Card.Body>
           <Card.Title>Activities</Card.Title>
@@ -89,58 +132,12 @@ function Home({ name, ...props }) {
           <Button onClick={goToActivities} style={{ position: 'absolute', left: '0%', top: '90%' }} variant="dark" size="lg" block>Activities</Button>
         </Card.Body>
       </Card>
+      
+      </div>
+    </Container>
+      );
 
-      <Carousel fade>
-        <Carousel.Item>
-          <img
-            className="slideshow"
-            style={{
-              width: '1950px', height: '350px'
-            }}
-            src={slide_vol}
-            alt="First slide"
-          />
-
-          <Carousel.Caption>
-            <h3>First slide label</h3>
-            <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
-          </Carousel.Caption>
-        </Carousel.Item>
-        <Carousel.Item>
-          <img
-            className="slideshow"
-            style={{
-              width: '1950px', height: '350px'
-            }}
-            src={slide_act}
-            alt="Second slide"
-          />
-
-          <Carousel.Caption>
-            <h3>Second slide label</h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-          </Carousel.Caption>
-        </Carousel.Item>
-        <Carousel.Item>
-          <img
-            className="slideshow"
-            src="holder.js/800x400?text=Third slide&bg=20232a"
-            alt="Third slide"
-          />
-
-          <Carousel.Caption>
-            <h3>Third slide label</h3>
-            <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
-          </Carousel.Caption>
-        </Carousel.Item>
-      </Carousel>
-
-
-
-    </div>
-  );
-
-
+  
 
 }
 
