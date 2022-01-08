@@ -8,6 +8,7 @@ import PropTypes from "prop-types";
 import classes from "./eventDetail.module.css";
 
 const EventDetail = (props) => {
+  // console.log(props.data.location);
   const [showRegisterForm, setShowRegisterForm] = useState(false);
   const handleRegisteration = () => {
     setShowRegisterForm(true);
@@ -112,22 +113,33 @@ const EventDetail = (props) => {
             </Card.Text>
 
             <Card.Text>
-              {props.location && Object.keys(props.data.location).length > 0 ? (
+              {props.data.location &&
+              Object.keys(props.data.location).length > 0 ? (
                 <React.Fragment>
                   <b>Location: </b>
-
-                  {(props.data.location.street
-                    ? props.data.location.street
-                    : "") +
-                    (props.data.location.city
-                      ? ",  " + props.data.location.city
+                  <a
+                    href={`https://www.google.com/maps/place/${props.data.location.street
+                      .split(" ")
+                      .join("+")},+${props.data.location.city
+                      .split(" ")
+                      .join("+")},+${props.data.location.state}+${
+                      props.data.location.zip
+                    }`}
+                    target="blank"
+                  >
+                    {(props.data.location.street
+                      ? props.data.location.street
                       : "") +
-                    (props.data.location.state
-                      ? " " + props.data.location.state
-                      : "") +
-                    (props.data.location.zip
-                      ? " " + props.data.location.zip + "."
-                      : "")}
+                      (props.data.location.city
+                        ? ",  " + props.data.location.city
+                        : "") +
+                      (props.data.location.state
+                        ? " " + props.data.location.state
+                        : "") +
+                      (props.data.location.zip
+                        ? " " + props.data.location.zip + "."
+                        : "")}
+                  </a>
                 </React.Fragment>
               ) : null}
             </Card.Text>
