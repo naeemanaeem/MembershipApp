@@ -8,7 +8,7 @@ import slide_act from './imgs/act.jpeg'
 
 const SlideShow = (props) => {
     return (
-        <Carousel fade style={{ marginBottom: "50px", width: "100%", alignSelf: "center" }}>
+        
         <Carousel.Item>
           <img
             //className="d-block w-100"
@@ -23,7 +23,7 @@ const SlideShow = (props) => {
             <p>{props.description}.</p>
           </Carousel.Caption>
         </Carousel.Item>
-        </Carousel> 
+        
     )
 }
 export default SlideShow;
