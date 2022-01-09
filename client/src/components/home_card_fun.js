@@ -4,6 +4,8 @@ import {
     Button,
     Card
 } from "react-bootstrap";
+import slide_vol from './imgs/community-work-day-flat-vector-illustration.jpg'
+import slide_act from './imgs/act.jpeg'
 
 
 const HomeCard = (props) => {
