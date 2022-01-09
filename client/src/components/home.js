@@ -3,7 +3,8 @@ import { useState, useEffect } from 'react';
 
 import Carousel from 'react-bootstrap/Carousel';
 import HomeCard from './home_card_fun';
-import SlideShow from './carousel_func';
+//import SlideShow from './carousel_func';
+
 
 import {
   Container,
@@ -20,6 +21,7 @@ import pay from './imgs/pay.png'
 import act from './imgs/images.jpeg'
 import slide_vol from './imgs/community-work-day-flat-vector-illustration.jpg'
 import slide_act from './imgs/act.jpeg'
+import slide_diverse from './imgs/diverse_people.jpg'
 
 
 function Home({ name, ...props }) {
@@ -56,12 +58,46 @@ function Home({ name, ...props }) {
       <h5 class="text-center">
         Mountain House Muslim Association is a local non-profit focused on serving the Muslim community in Mountain House. </h5>
 
-      <div>
         <Carousel fade style={{ marginBottom: "50px", width: "100%", alignSelf: "center" }}>
-          {item.map(value =>
-            <SlideShow image={value.image} alt_description={value.alt} title={value.title} description={value.description} />)}
-        </Carousel>
-      </div>
+        <Carousel.Item>
+          <img
+            style={{ width: '100%', height: '350px' }}
+            src={slide_vol}
+            alt="First slide"
+          />
+          {/* <Carousel.Caption>
+            <h3>First slide label</h3>
+            <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+          </Carousel.Caption> */}
+        </Carousel.Item>
+        <Carousel.Item>
+          <img
+            style={{
+              width: '100%', height: '350px'
+            }}
+            src={slide_act}
+            alt="Second slide"
+          />
+
+          {/* <Carousel.Caption>
+            <h3>Second slide label</h3>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+          </Carousel.Caption> */}
+        </Carousel.Item>
+        <Carousel.Item>
+          <img
+            style={{
+              width: '100%', height: '350px'
+            }}
+            src={slide_diverse}
+            alt="Third slide"
+          />
+          {/* <Carousel.Caption>
+            <h3>Third slide label</h3>
+            <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
+          </Carousel.Caption> */}
+        </Carousel.Item>
+      </Carousel> 
 
 
       <div style={{ display: "flex", flexDirection: "row" }}>
