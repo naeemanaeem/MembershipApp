@@ -51,16 +51,16 @@ function Home({ name, ...props }) {
     <Container>
       <h1>Welcome to MCE - Muslims Centre of Excellence </h1>
       <h2 class="text-center">You Are {displayName}</h2>
-      
+
 
       <h5 class="text-center">
         Mountain House Muslim Association is a local non-profit focused on serving the Muslim community in Mountain House. </h5>
 
       <div>
-        {item.map(value =>
-          <Carousel fade style={{ marginBottom: "50px", width: "100%", alignSelf: "center" }}>
-            <SlideShow image={value.image} alt_description={value.alt} title={value.title} description={value.description} />
-          </Carousel>
+        <Carousel fade style={{ marginBottom: "50px", width: "100%", alignSelf: "center" }}>
+          {item.map(value =>
+            <SlideShow image={value.image} alt_description={value.alt} title={value.title} description={value.description} />)}
+        </Carousel>
       </div>
 
 
