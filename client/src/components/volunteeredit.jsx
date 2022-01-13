@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom'
 
 
@@ -23,7 +23,7 @@ function VolunteerEdit() {
         history.push(path);
     }
 
-    const [memberId] = useState(localStorage.idOfMember)
+    const [memberId] = useState(localStorage.googleId)
     const [validated, setValidated] = useState(false);
     const [fullName] = useState(localStorage.user_displayName);
     const [Email] = useState(localStorage.user_email);

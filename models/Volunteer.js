@@ -6,7 +6,7 @@ const VolunteerSchema = new mongoose.Schema(
     {
 
         memberId: {
-            type: mongoose.Schema.Types.ObjectId,
+            type: String,
             ref: "Member",
             required: true,
         },

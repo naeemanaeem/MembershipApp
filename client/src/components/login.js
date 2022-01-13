@@ -29,6 +29,7 @@ function Login() {
       localStorage.user_displayName = res.data.displayName;
       localStorage.user_email = res.data.email;
       localStorage.googleId = res.data.googleId;
+      localStorage.idOfMember = res.data._id;
     } catch (error) {
       console.log(error);
     }

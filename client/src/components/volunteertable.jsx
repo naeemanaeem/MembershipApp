@@ -12,8 +12,7 @@ import { MdOutlineIncompleteCircle } from "react-icons/md";
 
 const VolunteerTable = () => {
     const history = useHistory();
-
-
+    console.log(localStorage.idOfMember)
     const [volunteerPosts, setVolunteerPosts] = useState([]);
     const [showCheckmark, setShowCheckmark] = useState(false)
 
@@ -21,10 +20,11 @@ const VolunteerTable = () => {
         fetchVolunteers();
     }, []);
 
+
     const fetchVolunteers = () => {
 
         axios
-            .get("/volunteer/" + localStorage.idOfMember)
+            .get("/volunteer/" + localStorage.googleId)
             .then((res) => {
                 setVolunteerPosts(res.data);
             })
@@ -39,23 +39,7 @@ const VolunteerTable = () => {
         history.push(path);
     }
 
-    const modalForm = () => {
-        <Modal.Dialog>
-            <Modal.Header closeButton>
-                <Modal.Title>Modal title</Modal.Title>
-            </Modal.Header>
 
-            <Modal.Body>
-                <p>Modal body text goes here.</p>
-            </Modal.Body>
-
-            <Modal.Footer>
-                <Button variant="secondary">Close</Button>
-                <Button variant="primary">Save changes</Button>
-            </Modal.Footer>
-        </Modal.Dialog>
-
-    }
 
     var today = new Date();
     var dd = String(today.getDate()).padStart(2, '0');
