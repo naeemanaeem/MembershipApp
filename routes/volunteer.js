@@ -2,15 +2,9 @@ const express = require('express');
 const mongodb = require('mongodb');
 const mongoose = require('mongoose');
 const router = express.Router();
-const { ensureAuth } = require('../middleware/auth');
 const Volunteer = require('../models/Volunteer');
 
 const ObjectID = mongodb.ObjectID;
-
-// @route GET api/books/test
-// @description tests books route
-// @access Public
-router.get('/test', (req, res) => res.send('book route testing!'));
 
 // @route GET api/books
 // @description Get all books
@@ -30,11 +24,9 @@ router.get('/:id', (req, res) => {
         .catch(err => res.status(404).json({ novolunteerfound: 'No Volunteer found' }));
 });
 
-
 router.post("/", async (req, res) => {
     try {
-        const v = req.body;
-        const volunteer = await Volunteer.create(v);
+        const volunteer = await Volunteer.create(req.body);
         if (volunteer) {
             return res.status(200).send(volunteer);
         } else {

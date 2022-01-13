@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom'
-import Volunteer from './volunteer.jsx';
 
 
 
@@ -12,21 +11,20 @@ import {
     Form,
     InputGroup,
     Button,
-
     Container,
 } from "react-bootstrap";
 
 
-function VolunteerSignup(props) {
+function VolunteerEdit() {
     const history = useHistory();
-
 
     const routeChange = (params) => {
         let path = `VolunteerTable`;
         history.push(path);
     }
-    const [validated, setValidated] = useState(false);
+
     const [memberId] = useState(localStorage.idOfMember)
+    const [validated, setValidated] = useState(false);
     const [fullName] = useState(localStorage.user_displayName);
     const [Email] = useState(localStorage.user_email);
     const [Event, setEvent] = useState('');
@@ -34,6 +32,32 @@ function VolunteerSignup(props) {
     const [HoursAvailable, setHoursAvailable] = useState('');
     const [volunteerPosts, setVolunteerPosts] = useState([]);
 
+    const postData = {
+        memberId,
+        fullName,
+        Email,
+        Event,
+        EventDate,
+        HoursAvailable
+    };
+
+    useEffect(() => {
+        fetchVolunteers();
+
+    }, [])
+
+
+    const fetchVolunteers = (_id) => {
+
+        axios
+            .get("/volunteer/" + _id)
+            .then((res) => {
+                setVolunteerPosts(res.data);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
 
 
     const handleSubmit = (event) => {
@@ -46,61 +70,8 @@ function VolunteerSignup(props) {
 
         setValidated(true);
 
-        const postData = {
-            memberId,
-            fullName,
-            Email,
-            Event,
-            EventDate,
-            HoursAvailable
-        };
-
-        if (window.confirm("Are you sure you want to sign up? \nPress OK or Cancel.")) {
-            if (Event === "selectevent" || EventDate === '' || HoursAvailable === '') {
-                alert("You have an issue with your form.\nEvent, Date, and Hours must be entered.");
-            }
-            else {
-                axios
-                    .get("/volunteer")
-                    .then((res) => {
-                        setVolunteerPosts(res.data);
-                        var totalHours = 0;
-                        volunteerPosts.map((volunteer) => {
-
-                            if (volunteer.Event === postData.Event && volunteer.HoursAvailable > 0) {
-
-                                totalHours += volunteer.HoursAvailable;
-                            }
-                        });
-                        if (totalHours < 100) {
-                            axios
-                                .post("/volunteer", postData)
-                                .then(response => {
-                                    routeChange();
-                                })
-                                .catch(err => {
-                                    console.log("Error in Creating Volunteer!");
-                                })
-                        } else {
-                            alert("You are not able to sign up for this volunteer opportunity as the maximum hours needed have been reached");
-                            Promise.reject("You are not able to sign up for this volunteer opportunity");
-                        }
-
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    });
 
 
-            }
-
-
-        }
-
-        else {
-            event.preventDefault();
-
-        }
 
 
     };
@@ -110,8 +81,8 @@ function VolunteerSignup(props) {
 
     return (
         <Container>
-            <h1 className="ml-5 mt-3"> Volunteer Form </h1>
-            <Form className="form" noValidate validated={validated} onSubmit={handleSubmit} >
+            <h1 className="ml-5 mt-3"> Update Your Volunteer Form </h1>
+            <Form noValidate validated={validated} onSubmit={handleSubmit} >
                 <Form.Group md="4" controlId="validationCustom01">
                     <Form.Label>Full Name</Form.Label>
                     <Form.Control
@@ -195,10 +166,12 @@ function VolunteerSignup(props) {
 
 
 
-                <Button variant="dark" size='lg' type="submit" >Sign Up</Button>
+                <Button variant="dark" size='lg' type="submit" >Save</Button>
             </Form>
+            <Button variant="danger" size='lg' type="submit" >Delete</Button>
+
         </Container>
     );
 }
 
-export default VolunteerSignup;
+export default VolunteerEdit;
