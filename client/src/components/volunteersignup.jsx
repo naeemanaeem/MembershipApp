@@ -26,7 +26,7 @@ function VolunteerSignup(props) {
         history.push(path);
     }
     const [validated, setValidated] = useState(false);
-    const [memberId] = useState(localStorage.idOfMember)
+    const [memberId] = useState(localStorage.googleId)
     const [fullName] = useState(localStorage.user_displayName);
     const [Email] = useState(localStorage.user_email);
     const [Event, setEvent] = useState('');
