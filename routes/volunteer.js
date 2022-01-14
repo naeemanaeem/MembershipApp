@@ -10,16 +10,23 @@ const ObjectID = mongodb.ObjectID;
 // @description Get all books
 // @access Public
 router.get('/', (req, res) => {
-    Volunteer.find()
-        .then(volunteers => res.json(volunteers))
-        .catch(err => res.status(404).json({ novolunteersfound: 'No Volunteers found' }));
+    let userid = req.query.myuser;
+    if (typeof userid === 'string') {
+        Volunteer.find({ memberId: userid })
+            .then(volunteer => res.json(volunteer))
+            .catch(err => res.status(404).json({ novolunteerfound: 'No Volunteer found' }));
+    } else {
+        Volunteer.find()
+            .then(volunteers => res.json(volunteers))
+            .catch(err => res.status(404).json({ novolunteersfound: 'No Volunteers found' }));
+    }
 });
 
 // @route GET api/books/:id
 // @description Get single book by id
 // @access Public
 router.get('/:id', (req, res) => {
-    Volunteer.find({ memberId: req.params.id })
+    Volunteer.findById(req.params.id)
         .then(volunteer => res.json(volunteer))
         .catch(err => res.status(404).json({ novolunteerfound: 'No Volunteer found' }));
 });

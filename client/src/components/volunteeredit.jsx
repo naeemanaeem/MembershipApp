@@ -18,29 +18,23 @@ import {
 function VolunteerEdit(props) {
     const history = useHistory();
 
-    const routeChange = (params) => {
-        let path = `VolunteerTable`;
+    const routeChangeToVolunteer = (params) => {
+        let path = `Volunteer`;
         history.push(path);
     }
-    console.log(props.volunteerId);
 
-    const [memberId] = useState(localStorage.googleId)
+
+
+    const [memberId, setMemberId] = useState(localStorage.googleId)
     const [validated, setValidated] = useState(false);
-    const [fullName] = useState(localStorage.user_displayName);
-    const [Email] = useState(localStorage.user_email);
+    const [fullName, setFullName] = useState(localStorage.user_displayName);
+    const [Email, setEmail] = useState(localStorage.user_email);
     const [Event, setEvent] = useState('');
     const [EventDate, setEventDate] = useState('');
     const [HoursAvailable, setHoursAvailable] = useState('');
     const [volunteerPosts, setVolunteerPosts] = useState([]);
 
-    const postData = {
-        memberId,
-        fullName,
-        Email,
-        Event,
-        EventDate,
-        HoursAvailable
-    };
+
 
     useEffect(() => {
         fetchVolunteers(props.volunteerId);
@@ -56,12 +50,33 @@ function VolunteerEdit(props) {
 
                 console.log(res.data)
                 setVolunteerPosts(res.data);
+                setFullName(res.data.fullName);
+                setEvent(res.data.Event);
+                setEmail(res.data.Email);
+                setHoursAvailable(res.data.HoursAvailable);
+                setEventDate(res.data.EventDate);
             })
             .catch((err) => {
                 console.log(err);
             });
     };
-
+    const deleteVolunteer = () => {
+        if (window.confirm("Are you sure you want to delete? \nPress OK or Cancel.")) {
+            axios
+                .delete("/volunteer/" + props.volunteerId)
+                .then((res) => {
+                    // update your component state
+                    let newVolunteerPosts = volunteerPosts.filter(
+                        (volunteer) => volunteer._id !== props.volunteerId
+                    );
+                    setVolunteerPosts(newVolunteerPosts);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            routeChangeToVolunteer();
+        }
+    };
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -71,16 +86,66 @@ function VolunteerEdit(props) {
             event.stopPropagation();
         }
 
+        const postData = {
+            memberId,
+            fullName,
+            Email,
+            Event,
+            EventDate,
+            HoursAvailable
+        };
+
         setValidated(true);
 
+        if (window.confirm("Are you sure you want to update? \nPress OK or Cancel.")) {
+            if (Event === "selectevent" || EventDate === '' || HoursAvailable === '') {
+                alert("You have an issue with your form.\nEvent, Date, and Hours must be entered.");
+            }
+            else {
+                axios
+                    .get("/volunteer")
+                    .then((res) => {
+                        setVolunteerPosts(res.data);
+                        var totalHours = 0;
+                        volunteerPosts.map((volunteer) => {
+
+                            if (volunteer.Event === postData.Event && volunteer.HoursAvailable > 0) {
+
+                                totalHours += volunteer.HoursAvailable;
+                            }
+                        });
+                        if (totalHours < 100) {
+                            axios
+                                .put("/volunteer/" + props.volunteerId, postData)
+                                .then(response => {
+                                    routeChangeToVolunteer();
+                                })
+                                .catch(err => {
+                                    console.log("Error in Creating Volunteer!");
+                                })
+                        } else {
+                            alert("You are not able to sign up for this volunteer opportunity as the maximum hours needed have been reached");
+                            Promise.reject("You are not able to sign up for this volunteer opportunity");
+                        }
+
+                    })
+                    .catch((err) => {
+                        console.log(err);
+                    });
 
 
+            }
+
+
+        }
+
+        else {
+            event.preventDefault();
+
+        }
 
 
     };
-
-
-
 
     return (
         <Container>
@@ -171,7 +236,11 @@ function VolunteerEdit(props) {
 
                 <Button variant="dark" size='lg' type="submit" >Save</Button>
             </Form>
-            <Button variant="danger" size='lg' type="submit" >Delete</Button>
+            <Button variant="danger" size='lg' type="submit" onClick={deleteVolunteer} >Delete</Button>
+
+            <Button variant="dark" size='lg' type="submit" onClick={routeChangeToVolunteer} >Cancel</Button>
+
+
 
         </Container>
     );
