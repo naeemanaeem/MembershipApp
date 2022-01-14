@@ -15,7 +15,7 @@ const VolunteerTable = () => {
     const history = useHistory();
     console.log(localStorage.idOfMember)
     const [volunteerPosts, setVolunteerPosts] = useState([]);
-    const [showCheckmark, setShowCheckmark] = useState(false)
+    const [showCheckmark, setShowCheckmark] = useState(true)
     const [volunteerId, setVolunteerId] = useState(null)
 
 
@@ -27,7 +27,7 @@ const VolunteerTable = () => {
     const fetchVolunteers = () => {
 
         axios
-            .get("/volunteer/" + localStorage.googleId)
+            .get("/volunteer/?myuser=" + localStorage.googleId)
             .then((res) => {
                 setVolunteerPosts(res.data);
             })

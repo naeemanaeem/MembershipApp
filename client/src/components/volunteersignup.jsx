@@ -71,13 +71,15 @@ function VolunteerSignup(props) {
                     .then((res) => {
                         setVolunteerPosts(res.data);
                         var totalHours = 0;
-                        volunteerPosts.map((volunteer) => {
+                        {
+                            volunteerPosts.map((volunteer) => {
 
-                            if (volunteer.Event === postData.Event && volunteer.HoursAvailable > 0) {
+                                if (volunteer.Event === postData.Event && volunteer.HoursAvailable > 0) {
 
-                                totalHours += volunteer.HoursAvailable;
-                            }
-                        });
+                                    totalHours += volunteer.HoursAvailable;
+                                }
+                            })
+                        };
                         if (totalHours < 100) {
                             axios
                                 .post("/volunteer", postData)
