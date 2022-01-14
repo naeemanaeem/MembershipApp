@@ -15,13 +15,14 @@ import {
 } from "react-bootstrap";
 
 
-function VolunteerEdit() {
+function VolunteerEdit(props) {
     const history = useHistory();
 
     const routeChange = (params) => {
         let path = `VolunteerTable`;
         history.push(path);
     }
+    console.log(props.volunteerId);
 
     const [memberId] = useState(localStorage.googleId)
     const [validated, setValidated] = useState(false);
@@ -42,16 +43,18 @@ function VolunteerEdit() {
     };
 
     useEffect(() => {
-        fetchVolunteers();
+        fetchVolunteers(props.volunteerId);
 
-    }, [])
+    }, [props.volunteerId])
 
 
-    const fetchVolunteers = (_id) => {
-
+    const fetchVolunteers = (id) => {
+        console.log(id);
         axios
-            .get("/volunteer/" + _id)
+            .get("/volunteer/" + id)
             .then((res) => {
+
+                console.log(res.data)
                 setVolunteerPosts(res.data);
             })
             .catch((err) => {

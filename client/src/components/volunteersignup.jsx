@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom'
 import Volunteer from './volunteer.jsx';
 
@@ -21,6 +21,7 @@ function VolunteerSignup(props) {
     const history = useHistory();
 
 
+
     const routeChange = (params) => {
         let path = `VolunteerTable`;
         history.push(path);
@@ -34,6 +35,11 @@ function VolunteerSignup(props) {
     const [HoursAvailable, setHoursAvailable] = useState('');
     const [volunteerPosts, setVolunteerPosts] = useState([]);
 
+
+    useEffect(() => {
+        setEvent(props.event)
+
+    }, [])
 
 
     const handleSubmit = (event) => {
@@ -152,17 +158,11 @@ function VolunteerSignup(props) {
                         <Form.Control as="select" name="state" type="text"
                             placeholder="Event"
                             value={Event}
-                            onChange={(e) => setEvent(e.target.value)}
 
                             aria-describedby="inputGroupPrepend"
                             required>
-                            <option value="selectevent">Select Event</option>
-                            <option value="Family Night Setup">Family Night Setup</option>
-                            <option value="Family Night Cleanup">Family Night Cleanup</option>
-                            <option value="Coding Tutor">Coding Tutor</option>
-                            <option value="Soccer Referee">Soccer Referee</option>
-                            <option value="Sunday School Setup">Sunday School Setup</option>
-                            <option value="Sunday School Cleanup">Sunday School Cleanup</option>
+                            <option value={Event}>{Event}</option>
+
 
                         </Form.Control>
                         <Form.Control.Feedback type="invalid">
