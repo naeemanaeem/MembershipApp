@@ -40,7 +40,7 @@ const Volunteer = (props) => {
 
     }
 
-    const routeChangeToTable = (params) => {
+    const routeChangeToTable = () => {
 
         let path = `VolunteerTable`;
         history.push(path);

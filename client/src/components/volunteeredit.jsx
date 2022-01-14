@@ -48,7 +48,6 @@ function VolunteerEdit(props) {
             .get("/volunteer/" + id)
             .then((res) => {
 
-                console.log(res.data)
                 setVolunteerPosts(res.data);
                 setFullName(res.data.fullName);
                 setEvent(res.data.Event);
@@ -234,9 +233,9 @@ function VolunteerEdit(props) {
 
 
 
-                <Button variant="dark" size='lg' type="submit" >Save</Button>
+                <Button variant="dark" size='lg' type="submit" >Update this Event</Button>
             </Form>
-            <Button variant="danger" size='lg' type="submit" onClick={deleteVolunteer} >Delete</Button>
+            <Button variant="danger" size='lg' type="submit" onClick={deleteVolunteer} >Delete this Event</Button>
 
             <Button variant="dark" size='lg' type="submit" onClick={routeChangeToVolunteer} >Cancel</Button>
 
