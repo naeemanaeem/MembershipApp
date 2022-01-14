@@ -8,6 +8,7 @@ import Navigation from './components/navigation';
 import Home from './components/home';
 import Volunteer from './components/volunteer';
 import VolunteerSignup from './components/volunteersignup';
+import VolunteerEdit from './components/volunteeredit';
 
 import Members from './components/members';
 import PrintOut from './components/printout';
@@ -37,6 +38,8 @@ class App extends Component {
             <Route exact path="/members" component={Members} />
             <Route exact path="/myaccount" component={MyAccount} />
             <Route exact path="/volunteertable" component={VolunteerTable} />
+            <Route exact path="/volunteeredit" component={VolunteerEdit} />
+
             <Route exact path="/payment" component={Payment} />
 
             <Route exact path="/PrintOut" component={PrintOut} />

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom'
-import Volunteer from './volunteer.jsx';
 
 
 
@@ -12,35 +11,71 @@ import {
     Form,
     InputGroup,
     Button,
-
     Container,
 } from "react-bootstrap";
 
 
-function VolunteerSignup(props) {
+function VolunteerEdit(props) {
     const history = useHistory();
 
-
-
-    const routeChange = (params) => {
-        let path = `VolunteerTable`;
+    const routeChangeToVolunteer = (params) => {
+        let path = `Volunteer`;
         history.push(path);
     }
+
+
+
+    const [memberId, setMemberId] = useState(localStorage.googleId)
     const [validated, setValidated] = useState(false);
-    const [memberId] = useState(localStorage.googleId)
-    const [fullName] = useState(localStorage.user_displayName);
-    const [Email] = useState(localStorage.user_email);
+    const [fullName, setFullName] = useState(localStorage.user_displayName);
+    const [Email, setEmail] = useState(localStorage.user_email);
     const [Event, setEvent] = useState('');
     const [EventDate, setEventDate] = useState('');
     const [HoursAvailable, setHoursAvailable] = useState('');
     const [volunteerPosts, setVolunteerPosts] = useState([]);
 
 
+
     useEffect(() => {
-        setEvent(props.event)
+        fetchVolunteers(props.volunteerId);
 
-    }, [])
+    }, [props.volunteerId])
 
+
+    const fetchVolunteers = (id) => {
+        console.log(id);
+        axios
+            .get("/volunteer/" + id)
+            .then((res) => {
+
+                setVolunteerPosts(res.data);
+                setFullName(res.data.fullName);
+                setEvent(res.data.Event);
+                setEmail(res.data.Email);
+                setHoursAvailable(res.data.HoursAvailable);
+                setEventDate(res.data.EventDate);
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+    const deleteVolunteer = () => {
+        if (window.confirm("Are you sure you want to delete? \nPress OK or Cancel.")) {
+            axios
+                .delete("/volunteer/" + props.volunteerId)
+                .then((res) => {
+                    // update your component state
+                    let newVolunteerPosts = volunteerPosts.filter(
+                        (volunteer) => volunteer._id !== props.volunteerId
+                    );
+                    setVolunteerPosts(newVolunteerPosts);
+                })
+                .catch((error) => {
+                    console.log(error);
+                });
+            routeChangeToVolunteer();
+        }
+    };
 
     const handleSubmit = (event) => {
         event.preventDefault();
@@ -49,8 +84,6 @@ function VolunteerSignup(props) {
         if (form.checkValidity() === false) {
             event.stopPropagation();
         }
-
-        setValidated(true);
 
         const postData = {
             memberId,
@@ -61,7 +94,9 @@ function VolunteerSignup(props) {
             HoursAvailable
         };
 
-        if (window.confirm("Are you sure you want to sign up? \nPress OK or Cancel.")) {
+        setValidated(true);
+
+        if (window.confirm("Are you sure you want to update? \nPress OK or Cancel.")) {
             if (Event === "selectevent" || EventDate === '' || HoursAvailable === '') {
                 alert("You have an issue with your form.\nEvent, Date, and Hours must be entered.");
             }
@@ -71,20 +106,18 @@ function VolunteerSignup(props) {
                     .then((res) => {
                         setVolunteerPosts(res.data);
                         var totalHours = 0;
-                        {
-                            volunteerPosts.map((volunteer) => {
+                        volunteerPosts.map((volunteer) => {
 
-                                if (volunteer.Event === postData.Event && volunteer.HoursAvailable > 0) {
+                            if (volunteer.Event === postData.Event && volunteer.HoursAvailable > 0) {
 
-                                    totalHours += volunteer.HoursAvailable;
-                                }
-                            })
-                        };
+                                totalHours += volunteer.HoursAvailable;
+                            }
+                        });
                         if (totalHours < 100) {
                             axios
-                                .post("/volunteer", postData)
+                                .put("/volunteer/" + props.volunteerId, postData)
                                 .then(response => {
-                                    routeChange();
+                                    routeChangeToVolunteer();
                                 })
                                 .catch(err => {
                                     console.log("Error in Creating Volunteer!");
@@ -113,13 +146,10 @@ function VolunteerSignup(props) {
 
     };
 
-
-
-
     return (
         <Container>
-            <h1 className="ml-5 mt-3"> Volunteer Form </h1>
-            <Form className="form" noValidate validated={validated} onSubmit={handleSubmit} >
+            <h1 className="ml-5 mt-3"> Update Your Volunteer Form </h1>
+            <Form noValidate validated={validated} onSubmit={handleSubmit} >
                 <Form.Group md="4" controlId="validationCustom01">
                     <Form.Label>Full Name</Form.Label>
                     <Form.Control
@@ -160,11 +190,17 @@ function VolunteerSignup(props) {
                         <Form.Control as="select" name="state" type="text"
                             placeholder="Event"
                             value={Event}
+                            onChange={(e) => setEvent(e.target.value)}
 
                             aria-describedby="inputGroupPrepend"
                             required>
-                            <option value={Event}>{Event}</option>
-
+                            <option value="selectevent">Select Event</option>
+                            <option value="Family Night Setup">Family Night Setup</option>
+                            <option value="Family Night Cleanup">Family Night Cleanup</option>
+                            <option value="Coding Tutor">Coding Tutor</option>
+                            <option value="Soccer Referee">Soccer Referee</option>
+                            <option value="Sunday School Setup">Sunday School Setup</option>
+                            <option value="Sunday School Cleanup">Sunday School Cleanup</option>
 
                         </Form.Control>
                         <Form.Control.Feedback type="invalid">
@@ -197,10 +233,16 @@ function VolunteerSignup(props) {
 
 
 
-                <Button variant="dark" size='lg' type="submit" >Sign Up</Button>
+                <Button variant="dark" size='lg' type="submit" >Update this Event</Button>
             </Form>
+            <Button variant="danger" size='lg' type="submit" onClick={deleteVolunteer} >Delete this Event</Button>
+
+            <Button variant="dark" size='lg' type="submit" onClick={routeChangeToVolunteer} >Cancel</Button>
+
+
+
         </Container>
     );
 }
 
-export default VolunteerSignup;
+export default VolunteerEdit;
