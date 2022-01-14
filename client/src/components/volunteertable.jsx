@@ -8,6 +8,7 @@ import axios from 'axios';
 import { AiFillEdit } from "react-icons/ai";
 import { FcCheckmark } from "react-icons/fc";
 import { MdOutlineIncompleteCircle } from "react-icons/md";
+import VolunteerEdit from './volunteeredit';
 
 
 const VolunteerTable = () => {
@@ -15,6 +16,8 @@ const VolunteerTable = () => {
     console.log(localStorage.idOfMember)
     const [volunteerPosts, setVolunteerPosts] = useState([]);
     const [showCheckmark, setShowCheckmark] = useState(false)
+    const [volunteerId, setVolunteerId] = useState(null)
+
 
     useEffect(() => {
         fetchVolunteers();
@@ -34,9 +37,12 @@ const VolunteerTable = () => {
     };
 
 
-    const routeChange = (_id) => {
+    const routeChange = (id) => {
         let path = `volunteeredit`;
-        history.push(path);
+        // history.push(path);
+        setVolunteerId(id);
+
+        // <VolunteerEdit></VolunteerEdit>
     }
 
 
@@ -63,55 +69,62 @@ const VolunteerTable = () => {
     }
     console.log(compareTime2('2019-01-20', today))
 
+    if (volunteerId) {
+        return (
+            <VolunteerEdit volunteerId={volunteerId} />
+        )
+    }
+    else {
 
-    return (
-        <div>
-            <br></br>
-            <br></br>
-            <h1>Your Volunteer Events</h1>
-            <br></br>
-            <div style={{
-                display: "flex",
-                justifyContent: "center",
-                alignItems: "center",
-            }} >
-                <Table striped bordered hover>
-                    <thead  >
-                        <tr >
-                            <th style={{ textAlign: "center" }} >Id</th>
+        return (
+            <div>
+                <br></br>
+                <br></br>
+                <h1>Your Volunteer Events</h1>
+                <br></br>
+                <div style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                }} >
+                    <Table striped bordered hover>
+                        <thead  >
+                            <tr >
+                                <th style={{ textAlign: "center" }} >Id</th>
 
-                            <th style={{ textAlign: "center" }} >Full Name</th>
-                            <th style={{ textAlign: "center" }}>Email</th>
-                            <th style={{ textAlign: "center" }}>Event</th>
-                            <th style={{ textAlign: "center" }} >Event Date</th>
-                            <th style={{ textAlign: "center" }} >Hours</th>
-                            <th style={{ textAlign: "center" }}>Status</th>
-                            <th style={{ textAlign: "center" }}>View Volunteer</th>
-
-                        </tr>
-                    </thead>
-                    <tbody>
-
-                        {volunteerPosts.map((volunteer) => (
-
-                            <tr key={volunteer.id}>
-                                <td style={{ textAlign: "center" }}>{volunteer._id}</td>
-
-                                <td style={{ textAlign: "center" }}>{volunteer.fullName}</td>
-                                <td style={{ textAlign: "center" }}>{volunteer.Email}</td>
-                                <td style={{ textAlign: "center" }}>{volunteer.Event}</td>
-                                <td style={{ textAlign: "center" }} >{volunteer.EventDate}</td>
-                                <td style={{ textAlign: "center" }} >{volunteer.HoursAvailable}</td>
-                                {showCheckmark ? (<td style={{ textAlign: "center" }}>  <h1><FcCheckmark /></h1> </td>) : (<td style={{ textAlign: "center" }}>  <h1>X</h1> </td>)}
-                                <td style={{ textAlign: "center" }}>  <h1><AiFillEdit onClick={routeChange} /></h1> </td>
+                                <th style={{ textAlign: "center" }} >Full Name</th>
+                                <th style={{ textAlign: "center" }}>Email</th>
+                                <th style={{ textAlign: "center" }}>Event</th>
+                                <th style={{ textAlign: "center" }} >Event Date</th>
+                                <th style={{ textAlign: "center" }} >Hours</th>
+                                <th style={{ textAlign: "center" }}>Status</th>
+                                <th style={{ textAlign: "center" }}>Edit Volunteer</th>
 
                             </tr>
-                        ))}
-                    </tbody>
+                        </thead>
+                        <tbody>
 
-                </Table>
+                            {volunteerPosts.map((volunteer) => (
+
+                                <tr key={volunteer.id}>
+                                    <td style={{ textAlign: "center" }}>{volunteer._id}</td>
+
+                                    <td style={{ textAlign: "center" }}>{volunteer.fullName}</td>
+                                    <td style={{ textAlign: "center" }}>{volunteer.Email}</td>
+                                    <td style={{ textAlign: "center" }}>{volunteer.Event}</td>
+                                    <td style={{ textAlign: "center" }} >{volunteer.EventDate}</td>
+                                    <td style={{ textAlign: "center" }} >{volunteer.HoursAvailable}</td>
+                                    {showCheckmark ? (<td style={{ textAlign: "center" }}>  <h1><FcCheckmark /></h1> </td>) : (<td style={{ textAlign: "center" }}>  <h1>X</h1> </td>)}
+                                    <td style={{ textAlign: "center" }}>  <h1><AiFillEdit onClick={() => routeChange(volunteer._id)} /></h1> </td>
+
+                                </tr>
+                            ))}
+                        </tbody>
+
+                    </Table>
+                </div>
             </div>
-        </div>
-    );
+        );
+    }
 };
 export default VolunteerTable;
