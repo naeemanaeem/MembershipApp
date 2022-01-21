@@ -1,7 +1,6 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { useState, useEffect } from 'react';
 
-import Carousel from 'react-bootstrap/Carousel';
 
 
 import {
@@ -21,10 +20,6 @@ import act from './imgs/images.jpeg'
 
 function Home({ name, ...props }) {
 
-  const [show, setShow] = useState(false);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
 
   const history = useHistory();
   const goToVolunteer = (params) => {
