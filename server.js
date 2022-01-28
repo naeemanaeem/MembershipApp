@@ -108,7 +108,7 @@ app.get("*", (req, res) => {
 });
 
 // Set our backend port to be either an environment variable or port 5000
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5001;
 
 // Configure our server to listen on the port defined by our port variable
 app.listen(PORT, () => console.log(`BACK_END_SERVICE_PORT: ${PORT}`));
