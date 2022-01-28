@@ -13,7 +13,10 @@ const ActivityRegisterSchema = new mongoose.Schema(
       ref: "Member",
       required: true,
     },
-
+    googleId: {
+      type: String,
+      required: true,
+    },
     registeredMembersIds: [
       {
         type: mongoose.Schema.Types.ObjectId,

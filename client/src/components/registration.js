@@ -36,6 +36,7 @@ const RegistrationForm = (props) => {
     fetchData();
   }, []);
   const handlePostOfPaymentStatus = (paymentId, paymentMethodId) => {
+    const googleId = localStorage.googleId;
     const data = {
       activityId: props.eventId,
       memberId: memberId,
@@ -45,6 +46,7 @@ const RegistrationForm = (props) => {
       paymentAmount: paymentAmount,
       paymentType: paymentType,
       description: "Registration for " + props.eventTitle,
+      googleId: googleId,
     };
 
     try {
