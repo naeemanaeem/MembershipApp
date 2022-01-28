@@ -70,7 +70,6 @@ router.delete("/logout", async (req, res) => {
 });
 
 router.get("/me", async (req, res) => {
-  //   res.status(200).send(req.user);
   res.status(200).send(req.session.user);
 });
 
