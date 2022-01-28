@@ -72,7 +72,7 @@ class Members extends Component {
       m.Dependents = [];
       const res = await axios.post("/members", m);
 
-      if (!localStorage.idOfMember) {
+      if (typeof localStorage.idOfMember === 'undefined') {
         localStorage.idOfMember = res.data._id;
       }
 

@@ -1,9 +1,8 @@
-import React, { Component } from 'react';
+import React from 'react';
 import { useState, useEffect } from 'react';
 
 import Carousel from 'react-bootstrap/Carousel';
 import HomeCard from './home_card_fun';
-//import SlideShow from './carousel_func';
 
 
 import {
@@ -26,10 +25,6 @@ import slide_diverse from './imgs/diverse_people.jpg'
 
 function Home({ name, ...props }) {
 
-  const [show, setShow] = useState(false);
-
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
 
   const history = useHistory();
   const goToVolunteer = (params) => {

@@ -6,7 +6,7 @@ const VolunteerSchema = new mongoose.Schema(
     {
 
         memberId: {
-            type: mongoose.Schema.Types.ObjectId,
+            type: String,
             ref: "Member",
             required: true,
         },
@@ -15,7 +15,6 @@ const VolunteerSchema = new mongoose.Schema(
             type: String,
             trim: true,
             required: true,
-
         },
 
         Email: {
@@ -29,7 +28,6 @@ const VolunteerSchema = new mongoose.Schema(
             type: String,
             trim: true,
             required: true,
-
         },
 
 
@@ -37,7 +35,6 @@ const VolunteerSchema = new mongoose.Schema(
             type: String,
             trim: true,
             required: true,
-
         },
         HoursAvailable: {
             type: Number,
