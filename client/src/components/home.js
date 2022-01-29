@@ -1,18 +1,16 @@
+
+
+
 import React from 'react';
 import { useState, useEffect } from 'react';
-
 import Carousel from 'react-bootstrap/Carousel';
 import HomeCard from './home_card_fun';
-
-
 import {
   Container,
   Button,
   Card
 } from "react-bootstrap";
-
 import { useHistory } from 'react-router-dom'
-
 import axios from 'axios'
 import mhma from './imgs/MHMA.png'
 import vol from './imgs/vol.jpeg'
@@ -23,26 +21,49 @@ import slide_act from './imgs/act.jpeg'
 import slide_diverse from './imgs/diverse_people.jpg'
 
 
+
 function Home({ name, ...props }) {
-
-
+  const [userActivities, setUserActivities] = useState([]);
   const history = useHistory();
   const goToVolunteer = (params) => {
     let path = `Volunteer`;
     history.push(path);
-  }
+  };
   const goToPayment = (params) => {
     let path = `payment`;
     history.push(path);
-  }
+  };
   const goToActivities = (params) => {
     let path = `activities`;
     history.push(path);
-  }
+  };
 
   const displayName = localStorage.user_displayName; //item
   const data = [{ title: "Make Payment", description: "Make a payment for MHMA membership fees, zakat, masjid donation, or sadaqah.", image: pay }, { title: "Activities", description: "Sign Up for MHMA Activities, such as Youth Soccer, Tafseer-E-Quran, or COVID Vaccination.", image: act }, { title: "Volunteer", description: "Volunteer for MHMA events, such as Sunday School setup/cleanup or youth soccer referee.", image: vol }];
   const item = [{ image: slide_vol, alt_description: "alternate discription for slide 1", title: "title", description: "hello" }, { image: slide_act, alt_description: "alternate discription for slide 2", title: "title", description: "hello" }, { image: slide_act, alt_description: "alternate discription for slide 3", title: "title", description: "hello" }];
+
+ 
+
+
+  useEffect(() => {
+    const fetchMemberActivites = async () => {
+      // fetch all the activities the user has registered for.
+      try {
+        const activities = await axios.get(
+          `http://localhost:3000/activities/registration-info/by-google-id`
+        );
+        // get activities titles from the response and update state.
+        const registeredActivities = activities.data.map(
+          (activity) => activity.activityId.title
+        );
+
+        setUserActivities([...new Set(registeredActivities)]);
+      } catch (error) {
+        console.log("error: ", error);
+      }
+    };
+    fetchMemberActivites();
+  }, []);
 
   return (
     <Container>
@@ -109,3 +130,4 @@ function Home({ name, ...props }) {
 
 
 export default Home;
+
