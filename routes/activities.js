@@ -6,7 +6,7 @@ const ActivityRegister = require("../models/ActivityRegister");
 const Member = require("../models/Member");
 
 // Get all internal activities that are current
-router.get("/", async (req, res) => {
+router.get("/", ensureAuth, async (req, res) => {
   try {
     const date = new Date().toISOString();
     const activities = await Activity.find({ startDateTime: { $gte: date } });
@@ -153,6 +153,27 @@ router.get("/registration/all", ensureAuth, async (req, res) => {
   }
 });
 
+// get registration info of all the activities where googleId is equal to req.session.user.googleId
+
+router.get("/registration-info/by-google-id", ensureAuth, async (req, res) => {
+  try {
+    const response = await ActivityRegister.find({
+      googleId: req.session.user.googleId,
+    })
+      .populate("activityId")
+      .lean();
+
+    if (!response) {
+      return res.status(404).send("Not found.");
+    }
+    return res.send(response);
+  } catch (error) {
+    console.error(error);
+    // return server error
+    return res.status(500);
+  }
+});
+
 //Get info of the members registered for a given activity.
 //The info returns the activity details
 // as well as the biodata of the members registered for that activity
@@ -174,7 +195,7 @@ router.get("/registration/:id", ensureAuth, async (req, res) => {
     if (newResponse) {
       Promise.all(newResponse)
         .then((result) => {
-          response.registeredMembersIds = result;
+          // response.registeredMembersIds = result;
           return res
             .status(200)
             .send({ ...response, registeredMembersIds: result });
