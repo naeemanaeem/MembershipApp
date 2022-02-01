@@ -125,7 +125,12 @@ const RegistrationForm = (props) => {
       </center>
     );
   } else if (showSuccessPage) {
-    return <SuccessPage eventTitle={props.eventTitle} />;
+    return (
+      <SuccessPage
+        /*eventTitle={props.eventTitle}*/
+        message={`You have been successively registered for ${props.eventTitle} event.`}
+      />
+    );
   } else {
     return (
       <React.Fragment>
