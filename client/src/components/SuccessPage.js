@@ -5,7 +5,8 @@ import imageSrc from "../images/green_circle_checkmark.png";
 const PaymentSuccess = (props) => {
   return (
     <div className={Classes.successPage}>
-      <h4>You have successfully registered for the {props.eventTitle}.</h4>
+      {/* <h4>You have successfully registered for the {props.eventTitle}.</h4> */}
+      <h4>{props.message}</h4>
       <img
         src={imageSrc}
         alt="green circle with checkmark"
@@ -17,7 +18,9 @@ const PaymentSuccess = (props) => {
         className={Classes.btn}
         onClick={() => window.location.reload(true)}
       >
-        Return to Activity Hub
+        {props.route && props.route === "Payment"
+          ? "Return to Payment Page"
+          : "Return to Activity Hub"}
       </button>
     </div>
   );

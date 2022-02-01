@@ -7,7 +7,11 @@ const MultipartyMiddleware = multiparty();
 /*************** START HERE  **********************/
 const { google } = require("googleapis");
 // Service account key file from google cloud console
-const KEYFILEPATH = path.join(__dirname, "serviceAccountCred.json");
+// const KEYFILEPATH = path.join(__dirname, "serviceAccountCred.json");
+const KEYFILEPATH = path.join(
+  __dirname,
+  "../config/secrets/serviceAccountCred.json"
+);
 
 // Adding drive scope will give us full access to Google drive account
 const SCOPES = ["https://www.googleapis.com/auth/drive"];

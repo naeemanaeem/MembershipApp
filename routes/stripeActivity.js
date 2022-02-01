@@ -1,7 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const { ensureAuth } = require("../middleware/auth");
-require("dotenv").config({ path: "./config/config.env" });
+// require("dotenv").config({ path: "./config/config.env" });
+// require("dotenv").config({ path: "./config/secrets/config.env" });
 const stripe = require("stripe")(process.env.STRIPE_SECRET_TEST);
 router.post("/create-customer", ensureAuth, async (req, res) => {
   let { email, payment_method } = req.body;
