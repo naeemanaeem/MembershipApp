@@ -32,15 +32,18 @@ const buttonlist2 = ["PayPal", "Card (Stripe)"];
 // const stripePromise = loadStripe(PUBLIC_KEY);
 function Payment({ addTextLog }) {
   const [profile, setProfile] = useState({
-    PaymentReason: "",
-    PaymentMethod: "",
-    Firstname: "",
-    Lastname: "",
-    Email: "",
-    Amount: "",
+    PaymentReason: null,
+    PaymentMethod: null,
+    Firstname: null,
+    Lastname: null,
+    Email: null,
+    Amount: null,
     Status: "Processing",
     Type: "Outgoing",
+    Comments: "",
   });
+  const [proceedToPayment, setProceedToPayment] = useState(false);
+  const [showButton, setShowButton] = useState(true);
   const [clientSecret, setClientSecret] = useState("");
 
   const [selectedMethod, setSelectedMethod] = useState(false);
@@ -51,7 +54,57 @@ function Payment({ addTextLog }) {
   const [paymentSuccess, setPaymentSuccess] = useState(false);
   /**************************** */
   const [stripeTestPromise, setStripeTestPromise] = useState(null);
+  const errors = {
+    PaymentReason: "",
+    PaymentMethod: "",
+    Firstname: "",
+    Lastname: "",
+    Email: "",
+    Amount: "",
+  };
+  const [formErrors, setErrors] = useState(errors);
+  const validEmail = (val) =>
+    /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/i.test(val);
+  const findFormErrors = () => {
+    const { PaymentReason, PaymentMethod, Firstname, Lastname, Email, Amount } =
+      profile;
+    const newErrors = {};
 
+    if (!PaymentReason || PaymentReason === "")
+      newErrors.PaymentReason = "Please select payment reason!";
+
+    if (!PaymentMethod || PaymentMethod === "")
+      newErrors.PaymentMethod = "Please choose method of payment!";
+
+    if (!Firstname || Firstname === "")
+      newErrors.Firstname = "Firstname is required!";
+
+    if (!Lastname || Lastname === "")
+      newErrors.Lastname = "Lastname is required!";
+    if (!Email || Email === "") newErrors.Email = "Email cannot be blank!";
+    else if (validEmail(Email) === false)
+      newErrors.Email = "Invalid Email address!";
+
+    if (!Amount || Amount === "")
+      newErrors.Amount = "Please enter amount to pay!";
+    else if (isNaN(Number(Amount)))
+      newErrors.Amount = "Payment amount must be in numbers!";
+
+    return newErrors;
+  };
+  const handleClearProfile = () => {
+    setProfile({
+      PaymentReason: null,
+      PaymentMethod: null,
+      Firstname: null,
+      Lastname: null,
+      Email: null,
+      Amount: null,
+      Status: "Processing",
+      Type: "Outgoing",
+      Comments: "",
+    });
+  };
   useEffect(() => {
     (async () => {
       const { publishableKey } = await fetch(
@@ -75,6 +128,8 @@ function Payment({ addTextLog }) {
     setPaymentSuccess(true);
   };
   const saveNewPayment = async (p) => {
+    p.Status = "Success";
+    console.log("p:", p);
     const res = await axios.post("/payments", p);
     const newpayments = [...payments, res.data];
     setPayments(newpayments);
@@ -102,7 +157,7 @@ function Payment({ addTextLog }) {
       <React.Fragment>
         <div className="bg-image">
           <h2 className="ml-5 mt-3">Payment</h2>
-          <Form onSubmit={handleSubmit}>
+          <Form /*onSubmit={handleSubmit}*/>
             <div className="ml-3 mt-3 mb-5 middle">
               <Card style={{ width: "60%", height: "100%" }}>
                 <h5 className="ml-3 mt-4">Reason for Payment</h5>
@@ -158,20 +213,34 @@ function Payment({ addTextLog }) {
                 <Row className="ml-1 mr-1">
                   <Col>
                     <div className="ml-4 mr-1">
-                      <text>First Name</text>
+                      {/* <text>First Name</text> */}
+                      <Form.Label>First Name</Form.Label>
                       <Form.Control
                         placeholder="First Name"
                         value={profile.Firstname}
                         name="Firstname"
                         aria-label="firstname"
                         aria-describedby="firstname"
-                        onChange={handleChange}
+                        onChange={(e) => {
+                          handleChange(e);
+                          if (!!formErrors.Firstname)
+                            setErrors({
+                              ...formErrors,
+                              Firstname: null,
+                            });
+                        }}
+                        isInvalid={!!formErrors.Firstname}
                       />
+
+                      <Form.Control.Feedback type="invalid">
+                        {formErrors.Firstname}
+                      </Form.Control.Feedback>
                     </div>
                   </Col>
                   <Col>
                     <div className="mr-4 ml-1">
-                      <text>Last Name</text>
+                      {/* <text>Last Name</text> */}
+                      <Form.Label>Last Name</Form.Label>
                       <Form.Control
                         placeholder="Last Name"
                         value={profile.Lastname}
@@ -179,14 +248,27 @@ function Payment({ addTextLog }) {
                         aria-label="lastname"
                         type="text"
                         aria-describedby="lastname"
-                        onChange={handleChange}
+                        onChange={(e) => {
+                          handleChange(e);
+                          if (!!formErrors.Lastname)
+                            setErrors({
+                              ...formErrors,
+                              Lastname: null,
+                            });
+                        }}
+                        isInvalid={!!formErrors.Lastname}
                       />
+
+                      <Form.Control.Feedback type="invalid">
+                        {formErrors.Lastname}
+                      </Form.Control.Feedback>
                     </div>
                   </Col>
                 </Row>
                 <Row className="ml-2 mr-2">
                   <Col className="mt-3 ml-3 mr-3">
-                    <text className="mt-3 ml-2 mr-3">Email</text>
+                    {/* <text className="mt-3 ml-2 mr-3">Email</text> */}
+                    <Form.Label>Email</Form.Label>
                     <Form.Control
                       placeholder="Email"
                       value={profile.Email}
@@ -194,29 +276,61 @@ function Payment({ addTextLog }) {
                       type="text"
                       aria-label="email"
                       aria-describedby="email"
-                      onChange={handleChange}
+                      onChange={(e) => {
+                        handleChange(e);
+                        if (!!formErrors.Email)
+                          setErrors({
+                            ...formErrors,
+                            Email: null,
+                          });
+                      }}
+                      isInvalid={!!formErrors.Email}
                     />
+
+                    <Form.Control.Feedback type="invalid">
+                      {formErrors.Email}
+                    </Form.Control.Feedback>
                   </Col>
                 </Row>
                 <Row className="ml-2 mr-2">
                   <Col className="mt-3 ml-3 mr-3">
-                    <text className="mt-3">Amount</text>
+                    {/* <text className="mt-3">Amount</text> */}
+                    <Form.Label>Amount</Form.Label>
                     <Form.Control
                       placeholder="$"
                       value={profile.Amount}
                       name="Amount"
                       aria-label="Amount"
                       aria-describedby="Amount"
-                      onChange={handleChange}
                       type="decimal"
+                      onChange={(e) => {
+                        handleChange(e);
+                        if (!!formErrors.Amount)
+                          setErrors({
+                            ...formErrors,
+                            Amount: null,
+                          });
+                      }}
+                      isInvalid={!!formErrors.Amount}
                     />
+
+                    <Form.Control.Feedback type="invalid">
+                      {formErrors.Amount}
+                    </Form.Control.Feedback>
                   </Col>
                 </Row>
                 <Row className="ml-2 mr-2">
                   <Col className="mt-3 ml-3 mr-3 mb-3">
-                    <text className="mt-3">Comments</text>
+                    {/* <text className="mt-3">Comments</text> */}
+                    <Form.Label className="mt-3">Comments</Form.Label>
                     <InputGroup>
-                      <FormControl as="textarea" aria-label="With textarea" />
+                      <FormControl
+                        as="textarea"
+                        name="Comments"
+                        aria-label="With textarea"
+                        required={true}
+                        onChange={handleChange}
+                      />
                     </InputGroup>
                   </Col>
                 </Row>
@@ -227,6 +341,7 @@ function Payment({ addTextLog }) {
                       id="clear3"
                       type="reset"
                       value="Reset"
+                      onClick={handleClearProfile}
                     >
                       Clear
                     </Button>
@@ -234,7 +349,7 @@ function Payment({ addTextLog }) {
                 </Row>
                 <Row className="center mb-3">
                   <div className="mt-3">
-                    {selectedMethod ? (
+                    {proceedToPayment && selectedMethod ? (
                       paypal ? (
                         <PayPal
                           handlePaymentSuccess={handlePaymentSuccess}
@@ -259,13 +374,38 @@ function Payment({ addTextLog }) {
                     )}
                   </div>
                 </Row>
-                <Row className="center mb-3">
+                {/* <Row className="center mb-3">
                   {paypal ? (
                     <Button
                       variant="primary"
                       type="submit"
                       onClick={() => {
                         alert(JSON.stringify(profile, "", 2));
+                      }}
+                    >
+                      Pay Now
+                    </Button>
+                  ) : (
+                    () => setPayPal(false)
+                  )}
+                </Row> */}
+                <Row className="center mb-3">
+                  {profile.PaymentMethod &&
+                  profile.PaymentReason &&
+                  showButton ? (
+                    <Button
+                      variant="primary"
+                      type="submit"
+                      onClick={() => {
+                        const newErrors = findFormErrors();
+                        if (Object.keys(newErrors).length > 0) {
+                          setErrors(newErrors);
+                          alert("Please correct erros in your form entries!");
+                        } else {
+                          alert(JSON.stringify(profile, "", 2));
+                          setProceedToPayment(true);
+                          setShowButton(false);
+                        }
                       }}
                     >
                       Pay Now
