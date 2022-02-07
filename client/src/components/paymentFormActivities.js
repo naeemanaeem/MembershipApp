@@ -24,12 +24,11 @@ const CARD_OPTIONS = {
   },
 };
 const PaymentForm = (props) => {
-  console.log(localStorage);
   // access activityTitle, cost and handlePostOfPaymentStatus as props
   const stripe = useStripe();
   const elements = useElements();
   const uuidPayment = UUID();
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(localStorage.user_email);
   const handleSubmit = async (e) => {
     e.preventDefault();
     // Stripe.js has not yet loaded.

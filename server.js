@@ -13,7 +13,8 @@ const bodyParser = require("body-parser");
 const cors = require("cors");
 
 // Load config
-dotevn.config({ path: "./config/config.env" });
+// dotevn.config({ path: "./config/config.env" });
+dotevn.config({ path: "./config/secrets/config.env" });
 if (
   process.env.NODE_ENV === "production" ||
   process.env.NODE_ENV === "staging"

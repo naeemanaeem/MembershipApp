@@ -1,4 +1,4 @@
-import React, { Component, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   InputGroup,
@@ -22,25 +22,28 @@ import PropTypes from "prop-types";
 import Stripe from "./stripe";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
+import SuccessPage from "./SuccessPage";
 
 const buttonlist1 = ["Membership Fee", "Donation", "Sadaqah", "Zakat"];
 const buttonlist2 = ["PayPal", "Card (Stripe)"];
 
-const PUBLIC_KEY =
-  "pk_test_51JR4m9CMdg35S26EAT3K6nPEVlxPHubEwzlQ4c2VetzslZmjts2FNQKWxkwZAiQdIgA1kWbCbvmQBGWBrbRONn7a00BSJqSyYd";
-const stripePromise = loadStripe(PUBLIC_KEY);
+// const PUBLIC_KEY =
+//   "pk_test_51JR4m9CMdg35S26EAT3K6nPEVlxPHubEwzlQ4c2VetzslZmjts2FNQKWxkwZAiQdIgA1kWbCbvmQBGWBrbRONn7a00BSJqSyYd";
+// const stripePromise = loadStripe(PUBLIC_KEY);
 function Payment({ addTextLog }) {
   const [profile, setProfile] = useState({
-    Description: "",
-    PaymentMethod: "",
-    Firstname: "",
-    Lastname: "",
-    Email: "",
-    Amount: "",
+    PaymentReason: null,
+    PaymentMethod: null,
+    Firstname: null,
+    Lastname: null,
+    Email: null,
+    Amount: null,
     Status: "Processing",
     Type: "Outgoing",
+    Comments: "",
   });
-
+  const [proceedToPayment, setProceedToPayment] = useState(false);
+  const [showButton, setShowButton] = useState(true);
   const [clientSecret, setClientSecret] = useState("");
 
   const [selectedMethod, setSelectedMethod] = useState(false);
@@ -48,12 +51,72 @@ function Payment({ addTextLog }) {
   const [paypal, setPayPal] = useState(false);
 
   const [payments, setPayments] = useState([]);
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
+  /**************************** */
+  const [stripeTestPromise, setStripeTestPromise] = useState(null);
+  const errors = {
+    PaymentReason: "",
+    PaymentMethod: "",
+    Firstname: "",
+    Lastname: "",
+    Email: "",
+    Amount: "",
+  };
+  const [formErrors, setErrors] = useState(errors);
+  const validEmail = (val) =>
+    /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/i.test(val);
+  const findFormErrors = () => {
+    const { PaymentReason, PaymentMethod, Firstname, Lastname, Email, Amount } =
+      profile;
+    const newErrors = {};
+
+    if (!PaymentReason || PaymentReason === "")
+      newErrors.PaymentReason = "Please select payment reason!";
+
+    if (!PaymentMethod || PaymentMethod === "")
+      newErrors.PaymentMethod = "Please choose method of payment!";
+
+    if (!Firstname || Firstname === "")
+      newErrors.Firstname = "Firstname is required!";
+
+    if (!Lastname || Lastname === "")
+      newErrors.Lastname = "Lastname is required!";
+    if (!Email || Email === "") newErrors.Email = "Email cannot be blank!";
+    else if (validEmail(Email) === false)
+      newErrors.Email = "Invalid Email address!";
+
+    if (!Amount || Amount === "")
+      newErrors.Amount = "Please enter amount to pay!";
+    else if (isNaN(Number(Amount)))
+      newErrors.Amount = "Payment amount must be in numbers!";
+
+    return newErrors;
+  };
+  const handleClearProfile = () => {
+    setProfile({
+      PaymentReason: null,
+      PaymentMethod: null,
+      Firstname: null,
+      Lastname: null,
+      Email: null,
+      Amount: null,
+      Status: "Processing",
+      Type: "Outgoing",
+      Comments: "",
+    });
+  };
   useEffect(() => {
+    (async () => {
+      const { publishableKey } = await fetch(
+        "http://localhost:3000/activity/config"
+      ).then((res) => res.json());
+      const stripePromise = loadStripe(publishableKey);
+      setStripeTestPromise(stripePromise);
+    })();
     const getAllPayments = async () => {
       try {
         const res = await axios.get("/payments");
         setPayments(res.data);
-        console.log("refreshed");
       } catch (e) {
         console.log(e);
       }
@@ -61,7 +124,12 @@ function Payment({ addTextLog }) {
     getAllPayments();
   }, []);
 
+  const handlePaymentSuccess = () => {
+    setPaymentSuccess(true);
+  };
   const saveNewPayment = async (p) => {
+    p.Status = "Success";
+    console.log("p:", p);
     const res = await axios.post("/payments", p);
     const newpayments = [...payments, res.data];
     setPayments(newpayments);
@@ -77,179 +145,282 @@ function Payment({ addTextLog }) {
   const handleSubmit = (e) => {
     saveNewPayment(profile);
   };
-
-  return (
-    <React.Fragment>
-      <div className="bg-image">
-        <h2 className="ml-5 mt-3">Payment</h2>
-        <Form onSubmit={handleSubmit}>
-          <div className="ml-3 mt-3 mb-5 middle">
-            <Card style={{ width: "60%", height: "100%" }}>
-              <h5 className="ml-3 mt-4">Reason for Payment</h5>
-              <Row>
-                <ToggleButtonGroup
-                  type="radio"
-                  name="Description"
-                  style={{ height: "100%", width: "100%" }}
-                  className="ml-5 mr-5"
-                >
-                  {buttonlist1.map((buttonLabel, i) => (
+  if (paymentSuccess) {
+    return (
+      <SuccessPage
+        message="Your Payment has been processed Successfully"
+        route="Payment"
+      />
+    );
+  } else {
+    return (
+      <React.Fragment>
+        <div className="bg-image">
+          <h2 className="ml-5 mt-3">Payment</h2>
+          <Form /*onSubmit={handleSubmit}*/>
+            <div className="ml-3 mt-3 mb-5 middle">
+              <Card style={{ width: "60%", height: "100%" }}>
+                <h5 className="ml-3 mt-4">Reason for Payment</h5>
+                <Row>
+                  <ToggleButtonGroup
+                    type="radio"
+                    name="PaymentReason"
+                    style={{ height: "100%", width: "100%" }}
+                    className="ml-5 mr-5"
+                  >
+                    {buttonlist1.map((buttonLabel, i) => (
+                      <ToggleButton
+                        id={"radio" + i}
+                        value={buttonLabel}
+                        variant="outline-primary"
+                        className="mb-3"
+                        onChange={handleChange}
+                      >
+                        {buttonLabel}
+                      </ToggleButton>
+                    ))}
+                  </ToggleButtonGroup>
+                </Row>
+                <h5 className="ml-3 mt-5">Payment Method</h5>
+                <Row>
+                  <ToggleButtonGroup
+                    type="radio"
+                    name="PaymentMethod"
+                    style={{ height: "100%", width: "100%" }}
+                    className="ml-5 mr-5"
+                  >
                     <ToggleButton
-                      id={"radio" + i}
-                      value={buttonLabel}
+                      id="radio1"
+                      value="PayPal"
                       variant="outline-primary"
-                      className="mb-3"
+                      onClick={() => setPayPal(true) & setSelectedMethod(true)}
                       onChange={handleChange}
                     >
-                      {buttonLabel}
+                      PayPal
                     </ToggleButton>
-                  ))}
-                </ToggleButtonGroup>
-              </Row>
-              <h5 className="ml-3 mt-5">Payment Method</h5>
-              <Row>
-                <ToggleButtonGroup
-                  type="radio"
-                  name="PaymentMethod"
-                  style={{ height: "100%", width: "100%" }}
-                  className="ml-5 mr-5"
-                >
-                  <ToggleButton
-                    id="radio1"
-                    value="PayPal"
-                    variant="outline-primary"
-                    onClick={() => setPayPal(true) & setSelectedMethod(true)}
-                    onChange={handleChange}
-                  >
-                    PayPal
-                  </ToggleButton>
-                  <ToggleButton
-                    id="radio2"
-                    value="Stripe"
-                    variant="outline-primary"
-                    onClick={() => setPayPal(false) & setSelectedMethod(true)}
-                    onChange={handleChange}
-                  >
-                    Card (Stripe)
-                  </ToggleButton>
-                </ToggleButtonGroup>
-              </Row>
-              <h5 className="ml-3 mt-5">User Information</h5>
-              <Row className="ml-1 mr-1">
-                <Col>
-                  <div className="ml-4 mr-1">
-                    <text>First Name</text>
-                    <Form.Control
-                      placeholder="First Name"
-                      value={profile.Firstname}
-                      name="Firstname"
-                      aria-label="firstname"
-                      aria-describedby="firstname"
+                    <ToggleButton
+                      id="radio2"
+                      value="Stripe"
+                      variant="outline-primary"
+                      onClick={() => setPayPal(false) & setSelectedMethod(true)}
                       onChange={handleChange}
-                    />
-                  </div>
-                </Col>
-                <Col>
-                  <div className="mr-4 ml-1">
-                    <text>Last Name</text>
+                    >
+                      Card (Stripe)
+                    </ToggleButton>
+                  </ToggleButtonGroup>
+                </Row>
+                <h5 className="ml-3 mt-5">User Information</h5>
+                <Row className="ml-1 mr-1">
+                  <Col>
+                    <div className="ml-4 mr-1">
+                      {/* <text>First Name</text> */}
+                      <Form.Label>First Name</Form.Label>
+                      <Form.Control
+                        placeholder="First Name"
+                        value={profile.Firstname}
+                        name="Firstname"
+                        aria-label="firstname"
+                        aria-describedby="firstname"
+                        onChange={(e) => {
+                          handleChange(e);
+                          if (!!formErrors.Firstname)
+                            setErrors({
+                              ...formErrors,
+                              Firstname: null,
+                            });
+                        }}
+                        isInvalid={!!formErrors.Firstname}
+                      />
+
+                      <Form.Control.Feedback type="invalid">
+                        {formErrors.Firstname}
+                      </Form.Control.Feedback>
+                    </div>
+                  </Col>
+                  <Col>
+                    <div className="mr-4 ml-1">
+                      {/* <text>Last Name</text> */}
+                      <Form.Label>Last Name</Form.Label>
+                      <Form.Control
+                        placeholder="Last Name"
+                        value={profile.Lastname}
+                        name="Lastname"
+                        aria-label="lastname"
+                        type="text"
+                        aria-describedby="lastname"
+                        onChange={(e) => {
+                          handleChange(e);
+                          if (!!formErrors.Lastname)
+                            setErrors({
+                              ...formErrors,
+                              Lastname: null,
+                            });
+                        }}
+                        isInvalid={!!formErrors.Lastname}
+                      />
+
+                      <Form.Control.Feedback type="invalid">
+                        {formErrors.Lastname}
+                      </Form.Control.Feedback>
+                    </div>
+                  </Col>
+                </Row>
+                <Row className="ml-2 mr-2">
+                  <Col className="mt-3 ml-3 mr-3">
+                    {/* <text className="mt-3 ml-2 mr-3">Email</text> */}
+                    <Form.Label>Email</Form.Label>
                     <Form.Control
-                      placeholder="Last Name"
-                      value={profile.Lastname}
-                      name="Lastname"
-                      aria-label="lastname"
+                      placeholder="Email"
+                      value={profile.Email}
+                      name="Email"
                       type="text"
-                      aria-describedby="lastname"
-                      onChange={handleChange}
+                      aria-label="email"
+                      aria-describedby="email"
+                      onChange={(e) => {
+                        handleChange(e);
+                        if (!!formErrors.Email)
+                          setErrors({
+                            ...formErrors,
+                            Email: null,
+                          });
+                      }}
+                      isInvalid={!!formErrors.Email}
                     />
-                  </div>
-                </Col>
-              </Row>
-              <Row className="ml-2 mr-2">
-                <Col className="mt-3 ml-3 mr-3">
-                  <text className="mt-3 ml-2 mr-3">Email</text>
-                  <Form.Control
-                    placeholder="Email"
-                    value={profile.Email}
-                    name="Email"
-                    type="text"
-                    aria-label="email"
-                    aria-describedby="email"
-                    onChange={handleChange}
-                  />
-                </Col>
-              </Row>
-              <Row className="ml-2 mr-2">
-                <Col className="mt-3 ml-3 mr-3">
-                  <text className="mt-3">Amount</text>
-                  <Form.Control
-                    placeholder="$"
-                    value={profile.Amount}
-                    name="Amount"
-                    aria-label="Amount"
-                    aria-describedby="Amount"
-                    onChange={handleChange}
-                    type="decimal"
-                  />
-                </Col>
-              </Row>
-              <Row className="ml-2 mr-2">
-                <Col className="mt-3 ml-3 mr-3 mb-3">
-                  <text className="mt-3">Comments</text>
-                  <InputGroup>
-                    <FormControl as="textarea" aria-label="With textarea" />
-                  </InputGroup>
-                </Col>
-              </Row>
-              <Row className="ml-2">
-                <Col className="mt-3 ml-3 mr-2 mb-3">
-                  <Button
-                    variant="danger"
-                    id="clear3"
-                    type="reset"
-                    value="Reset"
-                  >
-                    Clear
-                  </Button>
-                </Col>
-              </Row>
-              <Row className="center mb-3">
-                <div className="mt-3">
-                  {selectedMethod ? (
-                    paypal ? (
-                      <PayPal />
-                    ) : (
-                      <Elements stripe={stripePromise}>
-                        <Stripe
+
+                    <Form.Control.Feedback type="invalid">
+                      {formErrors.Email}
+                    </Form.Control.Feedback>
+                  </Col>
+                </Row>
+                <Row className="ml-2 mr-2">
+                  <Col className="mt-3 ml-3 mr-3">
+                    {/* <text className="mt-3">Amount</text> */}
+                    <Form.Label>Amount</Form.Label>
+                    <Form.Control
+                      placeholder="$"
+                      value={profile.Amount}
+                      name="Amount"
+                      aria-label="Amount"
+                      aria-describedby="Amount"
+                      type="decimal"
+                      onChange={(e) => {
+                        handleChange(e);
+                        if (!!formErrors.Amount)
+                          setErrors({
+                            ...formErrors,
+                            Amount: null,
+                          });
+                      }}
+                      isInvalid={!!formErrors.Amount}
+                    />
+
+                    <Form.Control.Feedback type="invalid">
+                      {formErrors.Amount}
+                    </Form.Control.Feedback>
+                  </Col>
+                </Row>
+                <Row className="ml-2 mr-2">
+                  <Col className="mt-3 ml-3 mr-3 mb-3">
+                    {/* <text className="mt-3">Comments</text> */}
+                    <Form.Label className="mt-3">Comments</Form.Label>
+                    <InputGroup>
+                      <FormControl
+                        as="textarea"
+                        name="Comments"
+                        aria-label="With textarea"
+                        required={true}
+                        onChange={handleChange}
+                      />
+                    </InputGroup>
+                  </Col>
+                </Row>
+                <Row className="ml-2">
+                  <Col className="mt-3 ml-3 mr-2 mb-3">
+                    <Button
+                      variant="danger"
+                      id="clear3"
+                      type="reset"
+                      value="Reset"
+                      onClick={handleClearProfile}
+                    >
+                      Clear
+                    </Button>
+                  </Col>
+                </Row>
+                <Row className="center mb-3">
+                  <div className="mt-3">
+                    {proceedToPayment && selectedMethod ? (
+                      paypal ? (
+                        <PayPal
+                          handlePaymentSuccess={handlePaymentSuccess}
+                          handleSubmit={handleSubmit}
                           profile={profile}
-                          handleSubmitData={handleSubmit}
-                          clientSecret={clientSecret}
                         />
-                      </Elements>
-                    )
+                      ) : (
+                        <Elements
+                          // stripe={stripePromise}
+                          stripe={stripeTestPromise ? stripeTestPromise : null}
+                        >
+                          <Stripe
+                            profile={profile}
+                            handleSubmitData={handleSubmit}
+                            // clientSecret={clientSecret}
+                            handlePaymentSuccess={handlePaymentSuccess}
+                          />
+                        </Elements>
+                      )
+                    ) : (
+                      () => setSelectedMethod(false)
+                    )}
+                  </div>
+                </Row>
+                {/* <Row className="center mb-3">
+                  {paypal ? (
+                    <Button
+                      variant="primary"
+                      type="submit"
+                      onClick={() => {
+                        alert(JSON.stringify(profile, "", 2));
+                      }}
+                    >
+                      Pay Now
+                    </Button>
                   ) : (
-                    () => setSelectedMethod(false)
+                    () => setPayPal(false)
                   )}
-                </div>
-              </Row>
-              <Row className="center mb-3">
-                {paypal ? (
-                  <Button
-                    variant="primary"
-                    type="submit"
-                    onClick={() => alert(JSON.stringify(profile, "", 2))}
-                  >
-                    Pay Now
-                  </Button>
-                ) : (
-                  () => setPayPal(false)
-                )}
-              </Row>
-            </Card>
-          </div>
-        </Form>
-      </div>
-    </React.Fragment>
-  );
+                </Row> */}
+                <Row className="center mb-3">
+                  {profile.PaymentMethod &&
+                  profile.PaymentReason &&
+                  showButton ? (
+                    <Button
+                      variant="primary"
+                      type="submit"
+                      onClick={() => {
+                        const newErrors = findFormErrors();
+                        if (Object.keys(newErrors).length > 0) {
+                          setErrors(newErrors);
+                          alert("Please correct erros in your form entries!");
+                        } else {
+                          alert(JSON.stringify(profile, "", 2));
+                          setProceedToPayment(true);
+                          setShowButton(false);
+                        }
+                      }}
+                    >
+                      Pay Now
+                    </Button>
+                  ) : (
+                    () => setPayPal(false)
+                  )}
+                </Row>
+              </Card>
+            </div>
+          </Form>
+        </div>
+      </React.Fragment>
+    );
+  }
 }
 
 export default Payment;
