@@ -81,7 +81,7 @@ function Stripe(props) {
       setError(null);
       setProcessing(false);
       setSuccess(true);
-      alert("Success stripe");
+      // alert("Success stripe");
       props.handlePaymentSuccess();
       props.handleSubmitData();
     }
