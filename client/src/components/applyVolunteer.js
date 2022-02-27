@@ -12,6 +12,7 @@ import Classes from "./applyVolunteer.module.css";
 
 function VolunteerSignup(props) {
   const [validated, setValidated] = useState(false);
+  const [showInvalid, setShowInvalid] = useState(false);
   const [memberId] = useState(localStorage.googleId);
   const [fullName, setFullName] = useState(localStorage.user_displayName);
   const [email, setEmail] = useState(localStorage.user_email);
@@ -88,39 +89,46 @@ function VolunteerSignup(props) {
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    // const form = event.currentTarget;
+    const form = e.currentTarget;
 
-    // if (form.checkValidity() === false) {
-    //   event.stopPropagation();
-    // }
-    // setValidated(true);
+    if (form.checkValidity() === false) {
+      event.stopPropagation();
+    }
+    setValidated(true);
 
-    let selectedDateTime = selectedStartInterval.map((interval, i) => {
-      return {
-        startInterval: interval,
-        endInterval: selectedEndInterval[i],
-      };
-    });
-    let data = {
-      memberId: localStorage.googleId,
-      fullName: fullName,
-      email: email,
-      event: event,
-      selectedDateTime: selectedDateTime,
-      comments: comments,
-    };
-
-    axios
-      .patch(`/activities/${props.event._id}`, {
-        // volunteerSlots: [Number(...updatedMaxVolunteers)],
-        volunteerSlots: updatedVolunteerSlots,
-      })
-      .then((res) => {
-        axios.post(`/volunteer`, data).catch((error) => {
-          console.log("ERROR:", error.message);
-        });
+    if (fullName === "" || email === "") {
+      e.stopPropagation();
+    } else if (selectedStartInterval.length === 0) {
+      setShowInvalid(true);
+      e.stopPropagation();
+    } else {
+      let selectedDateTime = selectedStartInterval.map((interval, i) => {
+        return {
+          startInterval: interval,
+          endInterval: selectedEndInterval[i],
+        };
       });
-    props.hideForm();
+      let data = {
+        memberId: localStorage.googleId,
+        fullName: fullName,
+        email: email,
+        event: event,
+        selectedDateTime: selectedDateTime,
+        comments: comments,
+      };
+
+      axios
+        .patch(`/activities/${props.event._id}`, {
+          // volunteerSlots: [Number(...updatedMaxVolunteers)],
+          volunteerSlots: updatedVolunteerSlots,
+        })
+        .then((res) => {
+          axios.post(`/volunteer`, data).catch((error) => {
+            console.log("ERROR:", error.message);
+          });
+        });
+      props.hideForm();
+    }
   };
 
   // handleFetchData();
@@ -215,11 +223,7 @@ function VolunteerSignup(props) {
             placeholder="Enter Full Name"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
-            //isInvalid={!!formErrors.title}
           />
-          {/* <Form.Control.Feedback type="invalid">
-            {formErrors.title}
-          </Form.Control.Feedback> */}
           <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
           <Form.Control.Feedback type="invalid">
             Please enter your full name.
@@ -251,20 +255,24 @@ function VolunteerSignup(props) {
           />
         </Form.Group>
 
-        <div>
+        <Form.Group>
           <Form.Label>Volunteer Dates Available</Form.Label>
           {props.event.startInterval.map((interval, i) => {
             let startDateTime = formatDateTime(interval);
             let endDateTime = formatDateTime(props.event.endInterval[i]);
             let maxVolunteers = props.event.volunteerSlots[i];
             let inputId = `${interval}, ${props.event.endInterval[i]}, ${props.event.volunteerSlots[i]}`;
+            const inputStyle = showInvalid
+              ? "1px solid red"
+              : "1px solid lightgrey";
+
             if (maxVolunteers > 0) {
               return (
                 <div
                   style={{
-                    border: "1px solid lightgrey",
                     padding: "5px",
                     borderRadius: "4px",
+                    border: inputStyle,
                     margin: "3px",
                   }}
                 >
@@ -315,7 +323,12 @@ function VolunteerSignup(props) {
               );
             }
           })}
-        </div>
+          {showInvalid && (
+            <div type="invalid" style={{ color: "red", fontSize: "13px" }}>
+              <p>Please choose at least one open slot!</p>
+            </div>
+          )}
+        </Form.Group>
 
         {/* <Form.Group md="6" controlId="validationCustom03">
           <InputGroup hasValidation>
@@ -343,7 +356,6 @@ function VolunteerSignup(props) {
             value={comments}
             onChange={(e) => setComments(e.target.value)}
           />
-          <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
         </Form.Group>
 
         <span>
