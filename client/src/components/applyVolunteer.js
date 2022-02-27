@@ -39,12 +39,21 @@ function VolunteerSignup(props) {
   // ).toLocaleDateString();
   // const endIntervalTime = formatTime(props.event.endDateTime);
 
+  //...
+
   const formatDateTime = (datetime) => {
     let timeArray = new Date(datetime).toLocaleTimeString().split("");
     let dateArray = new Date(datetime).toLocaleDateString();
     timeArray.splice(4, 3);
 
     return [dateArray, timeArray.join("")];
+  };
+
+  const handleClearForm = () => {
+    setFullName("");
+    setEmail("");
+    setComments("");
+    props.hideForm();
   };
 
   const handleCheckboxes = (e, i) => {
@@ -78,6 +87,14 @@ function VolunteerSignup(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // const form = event.currentTarget;
+
+    // if (form.checkValidity() === false) {
+    //   event.stopPropagation();
+    // }
+    // setValidated(true);
+
     let selectedDateTime = selectedStartInterval.map((interval, i) => {
       return {
         startInterval: interval,
@@ -105,24 +122,6 @@ function VolunteerSignup(props) {
       });
     props.hideForm();
   };
-
-  // <Form.Group md="6" controlId="validationCustom03">
-  //   <Form.Label>Volunteer Dates Available</Form.Label>
-
-  //   <InputGroup hasValidation>
-  //     <Form.Control
-  //       as="select"
-  //       name="state"
-  //       type="text"
-  //       placeholder="EventDate"
-  //       value={EventDate}
-  //       aria-describedby="inputGroupPrepend"
-  //       required
-  //     >
-  //       <option value={EventDate}>{EventDate}</option>
-  //     </Form.Control>
-  //   </InputGroup>
-  // </Form.Group>;
 
   // handleFetchData();
 
@@ -206,7 +205,7 @@ function VolunteerSignup(props) {
         className="form"
         noValidate
         validated={validated}
-        //onSubmit={handleSubmit}
+        onSubmit={handleSubmit}
       >
         <Form.Group md="4" controlId="validationCustom01">
           <Form.Label>Full Name</Form.Label>
@@ -216,12 +215,17 @@ function VolunteerSignup(props) {
             placeholder="Enter Full Name"
             value={fullName}
             onChange={(e) => setFullName(e.target.value)}
+            //isInvalid={!!formErrors.title}
           />
+          {/* <Form.Control.Feedback type="invalid">
+            {formErrors.title}
+          </Form.Control.Feedback> */}
           <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
           <Form.Control.Feedback type="invalid">
             Please enter your full name.
           </Form.Control.Feedback>
         </Form.Group>
+
         <Form.Group md="4" controlId="validationCustom02">
           <Form.Label>Email</Form.Label>
           <Form.Control
@@ -231,12 +235,12 @@ function VolunteerSignup(props) {
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
-
           <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
           <Form.Control.Feedback type="invalid">
-            Please enter your email.
+            Please enter your email
           </Form.Control.Feedback>
         </Form.Group>
+
         <Form.Group md="4" controlId="validationCustom02">
           <Form.Label>Event</Form.Label>
           <Form.Control
@@ -245,11 +249,6 @@ function VolunteerSignup(props) {
             placeholder="Enter Event"
             value={event}
           />
-
-          <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-          <Form.Control.Feedback type="invalid">
-            Please enter the event.
-          </Form.Control.Feedback>
         </Form.Group>
 
         <div>
@@ -336,23 +335,6 @@ function VolunteerSignup(props) {
         </Form.Group>  */}
 
         <br></br>
-        <Form.Group md="3" controlId="validationCustom05">
-          <Form.Label>
-            Enter How Many Hours You Want To Volunteer For
-          </Form.Label>
-          <Form.Control
-            type="number"
-            placeholder="Hours"
-            value={hoursAvailable}
-            onChange={(e) => setHoursAvailable(e.target.value)}
-            required
-          />
-          <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
-
-          <Form.Control.Feedback type="invalid">
-            Please enter how many hours.
-          </Form.Control.Feedback>
-        </Form.Group>
         <Form.Group md="3" controlId="validationCustom06">
           <Form.Label>Comments</Form.Label>
           <Form.Control
@@ -363,9 +345,35 @@ function VolunteerSignup(props) {
           />
           <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
         </Form.Group>
-        <Button variant="dark" size="lg" type="submit" onClick={handleSubmit}>
+
+        <span>
+          <Button variant="danger" size="lg" onClick={handleClearForm}>
+            Cancel
+          </Button>
+          <Button variant="dark" size="lg" type="submit" onClick={handleSubmit}>
+            Sign Up
+          </Button>
+        </span>
+
+        {/* <Button
+          variant="dark"
+          size="lg"
+          type="submit"
+          onClick={(event) => {
+            const newErrors = findFormErrors();
+            if (Object.keys(newErrors).length > 0) {
+              setErrors(newErrors);
+              alert("Please correct erros in your form entries!");
+            } else {
+              {
+                handleSubmit;
+              }
+            }
+            //setData({});
+          }}
+        >
           Sign Up
-        </Button>
+        </Button> */}
       </Form>
     </Card>
 

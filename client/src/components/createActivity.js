@@ -148,14 +148,12 @@ const ActivityForm = (props) => {
     setIsInterval([...isInterval, RenderInterval]);
     // setIntervalInputId((state) => state + 1);
   };
-  console.log("IsIntervLLal", isInterval);
 
   const removeInterval = (id) => {
     //setIsInterval([...isInterval, <RenderInterval />]);
     // let id = intervalRef.current.id;
     let renderIntervals = [...isInterval];
     renderIntervals.splice(id, 1);
-    console.log("RNANDER INTERFDS", renderIntervals);
     setIsInterval(renderIntervals);
   };
 

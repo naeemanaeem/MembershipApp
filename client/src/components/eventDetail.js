@@ -10,7 +10,6 @@ import { Row } from "react-bootstrap";
 import VolunteerSignup from "./applyVolunteer.js";
 
 const EventDetail = (props) => {
-  // console.log(props.data.location);
   const [showRegisterForm, setShowRegisterForm] = useState(false);
   const [showVolunteerForm, setShowVolunteerForm] = useState(false);
   const handleRegisteration = () => {
@@ -43,7 +42,8 @@ const EventDetail = (props) => {
   // so decimal number is multiplied by 100 to convert into integer before storing.
   const cost = (props.data.cost / 100).toFixed(2);
   const hideVolunteerSignup = () => {
-    showVolunteerForm = setShowVolunteerForm(false);
+    // showVolunteerForm = setShowVolunteerForm(false);
+    setShowVolunteerForm(false);
   };
 
   if (showVolunteerForm) {
