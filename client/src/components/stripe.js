@@ -1,10 +1,5 @@
-import React, { Component, useEffect, useState } from "react";
-import {
-  CardElement,
-  Elements,
-  useElements,
-  useStripe,
-} from "@stripe/react-stripe-js";
+import React, { useState } from "react";
+import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import styled from "styled-components";
 import axios from "axios";
 import { Button } from "react-bootstrap";
@@ -18,7 +13,7 @@ const CardElementContainer = styled.div`
   justify-content left:
   margin-top: 20px;
   margin-bottom: 15px;
-  background-color: lightblue;
+  background-color: #E8F0FE;
   border-radius: 5px;
   width: 400px;
   & .StripeElement {
@@ -31,7 +26,7 @@ const cardElementOptions = {
   style: {
     base: {
       fontSize: "16px",
-      color: "#fff",
+      color: "black",
       "::placeholder": {
         color: "#87bbfd",
       },
@@ -47,7 +42,6 @@ const cardElementOptions = {
 function Stripe(props) {
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
-  const [processing, setProcessing] = useState("");
   const [disabled, setDisabled] = useState(true);
 
   const stripe = useStripe();
@@ -55,7 +49,7 @@ function Stripe(props) {
 
   const handleSubmit = async (ev) => {
     ev.preventDefault();
-    setProcessing(true);
+    setDisabled(true);
 
     const cardElement = elements.getElement(CardElement);
 
@@ -76,12 +70,11 @@ function Stripe(props) {
 
     if (payload.error) {
       setError(`payment failed ${payload.error.message}`);
-      setProcessing(false);
+      setDisabled(false);
     } else {
       setError(null);
-      setProcessing(false);
+      setDisabled(true);
       setSuccess(true);
-      // alert("Success stripe");
       props.handlePaymentSuccess();
       props.handleSubmitData();
     }
@@ -92,7 +85,7 @@ function Stripe(props) {
     setError(event.error ? event.error.message : "");
   };
   return (
-    <form id="payment-form" onSubmit={handleSubmit}>
+    <form id="payment-form">
       <CardElementContainer>
         <CardElement
           id="card-element"
@@ -100,14 +93,15 @@ function Stripe(props) {
           onChange={handleChange}
         />
       </CardElementContainer>
-      <div className="stripepaybutton">
+      <div className="stripepaybuttonContainer">
         <Button
-          disabled={processing || disabled || success}
+          className="stripepaybutton"
+          disabled={disabled || success}
           type="submit"
           id="submit"
           onClick={handleSubmit}
         >
-          Pay now
+          Pay Now
         </Button>
         {error && (
           <div className="card-error" role="alert">

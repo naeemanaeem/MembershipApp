@@ -17,7 +17,6 @@ import moment from "moment";
 import axios from "axios";
 import PropTypes from "prop-types";
 import classes from "./createActivity.module.css";
-
 const ActivityForm = (props) => {
   /* State and constants
    *************************** */
@@ -31,6 +30,7 @@ const ActivityForm = (props) => {
     startDateTime: "",
     contactEmail: "",
     imageUrl: "",
+    zipCode: "",
   };
   const [data, setData] = useState(currentData);
   const [isOnline, setIsOnline] = useState(false);
@@ -51,9 +51,17 @@ const ActivityForm = (props) => {
     ); // fragment locator
     return !!pattern.test(str);
   };
+  const validZip = (val) => /^\d{5}$|^\d{5}-\d{4}$/i.test(val);
 
   const findFormErrors = () => {
-    const { title, description, startDateTime, contactEmail, imageUrl } = data;
+    const {
+      title,
+      description,
+      startDateTime,
+      contactEmail,
+      imageUrl,
+      location,
+    } = data;
     const newErrors = {};
     // title errors
     if (!title || title === "") newErrors.title = "Title cannot be blank!";
@@ -69,9 +77,15 @@ const ActivityForm = (props) => {
       newErrors.contactEmail = "Email cannot be blank!";
     else if (validEmail(contactEmail) === false)
       newErrors.contactEmail = "Invalid Email address!";
+
     // imageUrl errors
     if (imageUrl && validURL(imageUrl.toString()) === false)
       newErrors.imageUrl = "Invalid URL!";
+    //zip code errors
+    if (!location.zip || location.zip === "")
+      newErrors.zipCode = "Zip code is required!";
+    else if (validZip(location.zip) === false)
+      newErrors.zipCode = "Invalid Zip Code!";
     return newErrors;
   };
   /************************************/
@@ -444,19 +458,28 @@ const ActivityForm = (props) => {
                       placeholder="ZIP"
                       aria-label="zip"
                       aria-describedby="zip"
-                      type="text"
+                      // type="text"
                       defaultValue={
                         eventToBeEdited.location
                           ? eventToBeEdited.location.zip
-                          : ""
+                          : null
                       }
-                      onChange={(e) =>
+                      onChange={(e) => {
                         setData({
                           ...data,
                           location: { ...data.location, zip: e.target.value },
-                        })
-                      }
+                        });
+                        if (!!formErrors.zip)
+                          setErrors({
+                            ...formErrors,
+                            zipCode: null,
+                          });
+                      }}
+                      isInvalid={!!formErrors.zipCode}
                     />
+                    <Form.Control.Feedback type="invalid">
+                      {formErrors.zipCode}
+                    </Form.Control.Feedback>
                   </Col>
                 </Row>
               </Form.Group>

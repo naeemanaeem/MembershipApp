@@ -1,17 +1,15 @@
 import React from "react";
 import Classes from "./SuccessPage.module.css";
-import imageSrc from "../images/green_circle_checkmark.png";
-
+import imageSrc from "../images/light-blue_checkmark.svg.png";
 const PaymentSuccess = (props) => {
   return (
     <div className={Classes.successPage}>
-      {/* <h4>You have successfully registered for the {props.eventTitle}.</h4> */}
       <h4>{props.message}</h4>
       <img
         src={imageSrc}
         alt="green circle with checkmark"
-        height="400"
-        width="400"
+        height="340"
+        width="340"
       />
       <h2 style={{ marginTop: "10px" }}>Thank You!</h2>
       <button

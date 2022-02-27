@@ -10,12 +10,12 @@
   flex-flow: nowrap;
   justify-content: space-between;
   margin: "0 auto";
+  margin-top: 35px;
 }
 
 .title {
   padding: 2%;
   color: black;
-  font-family: "robo, Arial, Helvetica, sans-serif";
 }
 /* add activities btn */
 .btnPlus {

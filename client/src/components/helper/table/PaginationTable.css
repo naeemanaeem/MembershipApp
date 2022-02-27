@@ -1,4 +1,4 @@
-table {
+/* table {
   font-family: Arial, Helvetica, sans-serif;
   border-collapse: collapse;
   width: 100%;
@@ -7,7 +7,7 @@ table {
 table td,
 table th {
   border: 1px solid #ddd;
-  /* padding: 8px; */
+
   padding: 20px;
 }
 
@@ -24,8 +24,7 @@ tfoot td {
   padding-top: 12px;
   padding-bottom: 12px;
   text-align: "center";
-  /* background-color: #04aa6d; */
-  /* background-color: #549da8; */
+
   background-color: #4287f5;
   color: white;
 }
@@ -33,4 +32,4 @@ tfoot td {
   background-color: "green";
   color: "green";
   width: 200;
-}
+} */
