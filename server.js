@@ -80,6 +80,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // Routes
 
 app.use("/auth", require("./routes/auth"));
+app.use("/slides", require("./routes/carouselSlides"));
 app.use("/members", require("./routes/members"));
 app.use("/payments", require("./routes/payments"));
 app.use("/volunteer", require("./routes/volunteer"));
