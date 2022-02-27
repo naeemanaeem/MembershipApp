@@ -6,7 +6,7 @@ const ActivityRegister = require("../models/ActivityRegister");
 const Member = require("../models/Member");
 
 // Get all internal activities that are current
-router.get("/", ensureAuth, async (req, res) => {
+router.get("/", async (req, res) => {
   try {
     const date = new Date().toISOString();
     const activities = await Activity.find({ startDateTime: { $gte: date } });
@@ -18,6 +18,7 @@ router.get("/", ensureAuth, async (req, res) => {
     return res.status(500);
   }
 });
+
 // Get all internal activities ( old and current ones)
 router.get("/all", async (req, res) => {
   try {

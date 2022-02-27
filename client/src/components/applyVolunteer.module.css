@@ -1,0 +1,11 @@
+.card {
+  margin: 5% auto;
+  width: 60rem;
+  padding: 4%;
+  font-family: "robo, Arial, Helvetica, sans-serif";
+  align-self: "center";
+}
+
+.checkboxLabel {
+  margin: 20px;
+}
