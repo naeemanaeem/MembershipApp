@@ -14,13 +14,14 @@ import PayPal from "./paypal";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import "./paymentStyling.css";
+import PropTypes from "prop-types";
 import Stripe from "./stripe";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import SuccessPage from "./SuccessPage";
+
 import { Container } from "react-bootstrap";
 const buttonlist1 = ["Membership Fee", "Donation", "Sadaqah", "Zakat"];
-
 function Payment({ addTextLog }) {
   const [profile, setProfile] = useState({
     PaymentReason: null,
@@ -39,6 +40,7 @@ function Payment({ addTextLog }) {
   const [paypal, setPayPal] = useState(false);
   const [payments, setPayments] = useState([]);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
+
   const [stripeTestPromise, setStripeTestPromise] = useState(null);
   const errors = {
     PaymentReason: "",
@@ -115,6 +117,7 @@ function Payment({ addTextLog }) {
   };
   const saveNewPayment = async (p) => {
     p.Status = "Success";
+
     const res = await axios.post("/payments", p);
     const newpayments = [...payments, res.data];
     setPayments(newpayments);
@@ -207,6 +210,7 @@ function Payment({ addTextLog }) {
                       </ToggleButton>
                     </ToggleButtonGroup>
                   </Col>
+
                 </Row>
                 <h5 className="ml-3 mt-5">User Information</h5>
                 <Row className="ml-1 mr-1">
@@ -333,6 +337,7 @@ function Payment({ addTextLog }) {
                     <Button
                       variant="danger"
                       size="lg"
+
                       id="clear3"
                       type="reset"
                       value="Reset"
@@ -367,6 +372,7 @@ function Payment({ addTextLog }) {
                     )}
                   </div>
                 </Row>
+
                 <Row className="center mb-3">
                   {profile.PaymentMethod &&
                   profile.PaymentReason &&

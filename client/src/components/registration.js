@@ -179,6 +179,7 @@ const RegistrationForm = (props) => {
                     if (dependent.length === 0) {
                       return null;
                     }
+
                     return (
                       <Checkbox
                         key={index}
@@ -271,6 +272,7 @@ const RegistrationForm = (props) => {
                   <Button
                     size="lg"
                     variant="outline-primary"
+
                     onClick={handlePayment}
                   >
                     Proceed to Checkout

@@ -1,5 +1,7 @@
 import { format } from "date-fns";
+
 // import ColumnFilter from "./ColumnFilter";
+
 export const GROUPED_COLUMNS = [
   {
     Header: "ID",
@@ -28,6 +30,7 @@ export const GROUPED_COLUMNS = [
         Footer: "Gender",
         accessor: "gender",
       },
+
       {
         Header: "Date of Birth",
         Footer: "Date of Birth",
@@ -54,6 +57,7 @@ export const GROUPED_COLUMNS = [
         Header: "City",
         Footer: "City",
         accessor: "City",
+
         checked: true,
       },
       {
@@ -103,18 +107,19 @@ export const GROUPED_COLUMNS = [
         Header: "Voter",
         Footer: "Voter",
         accessor: "Voter",
+
       },
     ],
   },
   {
     Header: "Payments",
     Footer: "Payments",
-
     columns: [
       {
         Header: "Balance",
         Footer: "Balance",
         accessor: "balance",
+
       },
     ],
   },

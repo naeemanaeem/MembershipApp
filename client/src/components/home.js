@@ -11,6 +11,7 @@ import act from "./imgs/images.jpeg";
 import slide_vol from "./imgs/community-work-day-flat-vector-illustration.jpg";
 import slide_act from "./imgs/act.jpeg";
 import slide_diverse from "./imgs/diverse_people.jpg";
+
 import Classes from "./home.module.css";
 import { Modal, Button } from "react-bootstrap";
 function Home({ name, ...props }) {
@@ -20,6 +21,7 @@ function Home({ name, ...props }) {
   // const [slides, setSlides] = useState(imageSources);
   const [showForm, setShowForm] = useState(false);
   const [slide, setSlide] = useState("");
+
   const history = useHistory();
   const goToVolunteer = (params) => {
     let path = `Volunteer`;
@@ -33,6 +35,7 @@ function Home({ name, ...props }) {
     let path = `activities`;
     history.push(path);
   };
+
   useEffect(() => {
     axios.get("/slides").then((res) => {
       if (res.data) {
@@ -53,6 +56,7 @@ function Home({ name, ...props }) {
     setShowForm(false);
     setSlide("");
   };
+
   const displayName = localStorage.user_displayName;
   const data = [
     {
@@ -74,6 +78,7 @@ function Home({ name, ...props }) {
       image: vol,
     },
   ];
+
 
   useEffect(() => {
     const fetchMemberActivites = async () => {

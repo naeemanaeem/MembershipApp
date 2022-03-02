@@ -40,6 +40,7 @@ class MyAccount extends Component {
       this.setState({ error: e.message });
       console.error(e);
     }
+
   }
 
   //REGISTER NEW MEMBER
@@ -78,6 +79,7 @@ class MyAccount extends Component {
 
   //SAVES NEW DEPENDENTS
   async saveNewDependent(m, account) {
+
     if (
       m.Firstname &&
       m.Firstname.length > 0 &&
@@ -104,6 +106,7 @@ class MyAccount extends Component {
   //SAVED UPDATED MEMBERS/DEPENDENTS
   async saveUpdatedMember(m) {
     try {
+
       await axios.put("members/" + m._id, m);
       const member = await axios.get("members/" + m._id);
       this.setState({ myaccount: member.data });
@@ -120,10 +123,12 @@ class MyAccount extends Component {
       if (isOwner) {
         member = this.state.myaccount; //SET MEMBER TO MYACCOUNT
       } else {
+
         member = this.state.dependents.find((el) => el._id === m._id); //SET MEMBER TO DEPENDENT
       }
       if (member) {
         //UPDATE MEMBER/DEPENDENT
+
         member.Firstname = m.Firstname;
         member.Lastname = m.Lastname;
         member.HouseNo = m.HouseNo;
@@ -132,6 +137,7 @@ class MyAccount extends Component {
         member.City = m.City;
         member.Postcode = m.Postcode;
         member.Country = m.Country;
+
         member.Gender = m.Gender;
         member.Spouse = m.Spouse;
         member.State = m.State;
@@ -158,10 +164,12 @@ class MyAccount extends Component {
         }
       } else {
         //ADD NEW DEPENDENT
+
         console.log("Save dependent - ", m);
         m.Guardians.push(this.state.myaccount._id);
         this.saveNewDependent(m);
       }
+
     } catch (error) {
       console.error(error);
     }
@@ -242,12 +250,12 @@ class MyAccount extends Component {
   editMemberOnCancel = (m) => {
     console.log(m);
     this.setState(
+
       { myaccount: m },
       this.editMember()
       // this.hideMemberEditDialog()
     );
   };
-
   //SAVES EDITED MEMBER
   editMemberOnSave = (m) => {
     this.editMember();
@@ -256,10 +264,12 @@ class MyAccount extends Component {
     this.saveUpdatedMember(m, true);
   };
 
+
   editMember = () => {
     // this.showMemberEditDialog();
     //FOR HIDING AND SHOWING SAVE AND CANCEL
     var x = document.getElementById("editing");
+
     if (x.style.display === "none") {
       x.style.display = "block";
       document.getElementById("editMemButton").style.display = "none";
@@ -356,6 +366,7 @@ class MyAccount extends Component {
             age--;
           }
         } else {
+
           age--;
         }
       }
@@ -364,6 +375,7 @@ class MyAccount extends Component {
     }
     return age;
   }
+
 
   render() {
     let detailPage, dependentPage;
@@ -597,6 +609,7 @@ class MyAccount extends Component {
            <Form.Group className="detailSpace mb-4">
                 <Form.Label>Member Type</Form.Label>
                 <Form.Control value="Paying" className="detailSelWid"/>
+
                </Form.Group>
 
               <Form.Group className="mb-4">
@@ -675,6 +688,7 @@ class MyAccount extends Component {
             >
               Add Dependent
             </Button>
+
           </h4>
           <hr class="solid mr-2" />
           <Table className="mr-4 table">
@@ -689,6 +703,7 @@ class MyAccount extends Component {
             </thead>
             <tbody>
               {dependent.map((dep) => {
+
                 return (
                   <tr>
                     <td className="tablebody">{dep.Firstname}</td>

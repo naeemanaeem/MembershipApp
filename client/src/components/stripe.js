@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import styled from "styled-components";
@@ -14,6 +15,7 @@ const CardElementContainer = styled.div`
   margin-top: 20px;
   margin-bottom: 15px;
   background-color: #E8F0FE;
+
   border-radius: 5px;
   width: 400px;
   & .StripeElement {
@@ -27,6 +29,7 @@ const cardElementOptions = {
     base: {
       fontSize: "16px",
       color: "black",
+
       "::placeholder": {
         color: "#87bbfd",
       },
@@ -49,6 +52,7 @@ function Stripe(props) {
 
   const handleSubmit = async (ev) => {
     ev.preventDefault();
+
     setDisabled(true);
 
     const cardElement = elements.getElement(CardElement);
@@ -85,6 +89,7 @@ function Stripe(props) {
     setError(event.error ? event.error.message : "");
   };
   return (
+
     <form id="payment-form">
       <CardElementContainer>
         <CardElement
@@ -93,10 +98,12 @@ function Stripe(props) {
           onChange={handleChange}
         />
       </CardElementContainer>
+
       <div className="stripepaybuttonContainer">
         <Button
           className="stripepaybutton"
           disabled={disabled || success}
+
           type="submit"
           id="submit"
           onClick={handleSubmit}

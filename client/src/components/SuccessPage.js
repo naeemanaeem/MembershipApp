@@ -1,5 +1,6 @@
 import React from "react";
 import Classes from "./SuccessPage.module.css";
+
 import imageSrc from "../images/light-blue_checkmark.svg.png";
 const PaymentSuccess = (props) => {
   return (
@@ -7,7 +8,7 @@ const PaymentSuccess = (props) => {
       <h4>{props.message}</h4>
       <img
         src={imageSrc}
-        alt="green circle with checkmark"
+        alt="blue circle with checkmark"
         height="340"
         width="340"
       />

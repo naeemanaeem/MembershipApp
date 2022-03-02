@@ -1,8 +1,11 @@
+
 import React, { useMemo, useState, useRef } from "react";
+
 import {
   useTable,
   useSortBy,
   useGlobalFilter,
+
   usePagination,
 } from "react-table";
 import { GROUPED_COLUMNS } from "./helper/table/columns";
@@ -140,6 +143,7 @@ const MembersTable = (props) => {
 
       getExportFileBlob,
     },
+
     useGlobalFilter,
     useSortBy,
     usePagination,
@@ -149,7 +153,9 @@ const MembersTable = (props) => {
     getTableProps,
     getTableBodyProps,
     headerGroups,
+
     prepareRow,
+
     page,
     nextPage,
     previousPage,
@@ -159,6 +165,7 @@ const MembersTable = (props) => {
     gotoPage,
     pageCount,
     setPageSize,
+
     state,
     setGlobalFilter,
     allColumns,
