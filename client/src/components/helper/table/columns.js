@@ -1,18 +1,17 @@
 import { format } from "date-fns";
 
+// import ColumnFilter from "./ColumnFilter";
+
 export const GROUPED_COLUMNS = [
   {
     Header: "ID",
     Footer: "ID",
     accessor: "_id",
-
-    disableFilters: true,
   },
   {
     Header: "USER INFO",
     Footer: "USER INFO",
 
-    disableFilters: true,
     columns: [
       {
         Header: "First Name",
@@ -31,21 +30,22 @@ export const GROUPED_COLUMNS = [
         Footer: "Gender",
         accessor: "gender",
       },
-      // {
-      //   Header: "Date of Birth",
-      //   Footer: "Date of Birth",
-      //   accessor: "date_of_birth",
-      //   Cell: ({ value }) => {
-      //     return format(new Date(value), "MM/dd/yyyy");
-      //   },
-      // },
+
+      {
+        Header: "Date of Birth",
+        Footer: "Date of Birth",
+        accessor: "date_of_birth",
+
+        Cell: ({ value }) => {
+          return format(new Date(value), "MM/dd/yyyy");
+        },
+      },
     ],
   },
   {
     Header: "Location",
     Footer: "Location",
 
-    disableFilters: true,
     columns: [
       {
         Header: "Home Address",
@@ -57,6 +57,8 @@ export const GROUPED_COLUMNS = [
         Header: "City",
         Footer: "City",
         accessor: "City",
+
+        checked: true,
       },
       {
         Header: "Village",
@@ -74,7 +76,7 @@ export const GROUPED_COLUMNS = [
   {
     Header: "Contact Info",
     Footer: "Contact Info",
-    disableFilters: true,
+
     columns: [
       {
         Header: "Email Address",
@@ -93,40 +95,38 @@ export const GROUPED_COLUMNS = [
   {
     Header: "Status",
     Footer: "Status",
-    disableFilters: true,
+
     columns: [
       {
         Header: "Membership",
         Footer: "Membership",
         accessor: "membership",
-        checked: false,
       },
 
       {
         Header: "Voter",
         Footer: "Voter",
         accessor: "Voter",
-        checked: false,
+
       },
     ],
   },
   {
     Header: "Payments",
     Footer: "Payments",
-    disableFilters: true,
     columns: [
       {
         Header: "Balance",
         Footer: "Balance",
         accessor: "balance",
-        checked: false,
+
       },
     ],
   },
   {
     Header: "View Member",
     Footer: "View Member",
-    disableFilters: true,
+
     columns: [
       {
         Header: "View Member",

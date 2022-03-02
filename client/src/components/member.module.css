@@ -1,0 +1,14 @@
+.centerimg {
+  text-align: center;
+  border: 1px solid rgb(202, 201, 201);
+}
+.center {
+  text-align: center;
+}
+.pointer {
+  cursor: pointer;
+}
+
+.image {
+  width: 25%;
+}

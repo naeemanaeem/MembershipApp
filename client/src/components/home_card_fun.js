@@ -1,5 +1,7 @@
 import React from "react";
 import { Button, Card } from "react-bootstrap";
+import Classes from "./home_card.module.css";
+
 
 const HomeCard = (props) => {
   const pageHandler =
@@ -9,14 +11,17 @@ const HomeCard = (props) => {
       ? props.goToPayment
       : props.goToVolunteer;
   return (
-    <Card style={{ left: "0%", top: "80%", height: "30rem", width: "36rem" }}>
-      <Card.Img variant="top" src={props.image} />
+
+    <Card className={Classes.card}>
+      <Card.Img variant="top" src={props.image} width="100px" height="150px" />
+
       <Card.Body>
         <Card.Title>{props.title}</Card.Title>
         <Card.Text>{props.description}</Card.Text>
         <Button
           onClick={pageHandler}
-          style={{ position: "absolute", left: "0%", top: "90%" }}
+          className={Classes.btn}
+
           variant="dark"
           size="lg"
           block

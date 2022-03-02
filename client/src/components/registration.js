@@ -176,6 +176,9 @@ const RegistrationForm = (props) => {
                     let dependent = members.filter(
                       (member) => member._id === dependentId
                     );
+                    if (dependent.length === 0) {
+                      return null;
+                    }
 
                     return (
                       <Checkbox
@@ -268,7 +271,8 @@ const RegistrationForm = (props) => {
                 ) : (
                   <Button
                     size="lg"
-                    variant="outline-success"
+                    variant="outline-primary"
+
                     onClick={handlePayment}
                   >
                     Proceed to Checkout

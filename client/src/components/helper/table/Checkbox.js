@@ -1,6 +1,8 @@
 import React from "react";
 import "./PaginationTable.css";
 
+import "../../css_stuff/paginationtable.css";
+
 export const Checkbox = React.forwardRef(({ indeterminate, ...rest }, ref) => {
   const defaultRef = React.useRef();
   const resolvedRef = ref || defaultRef;
@@ -11,7 +13,8 @@ export const Checkbox = React.forwardRef(({ indeterminate, ...rest }, ref) => {
 
   return (
     <>
-      <input type="checkbox" ref={resolvedRef} {...rest} /> 
+      <input type="checkbox" ref={resolvedRef} {...rest} />
+
     </>
   );
 });

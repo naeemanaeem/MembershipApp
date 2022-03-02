@@ -4,17 +4,19 @@
   align-items: center;
   text-align: center;
   margin: 10px;
-  margin-top: 60px;
+  margin-top: 120px;
+  font-family: Arial, "Segoe UI Symbol", "Noto Color Emoji";
 }
 .btn {
   margin-top: 10px;
   font-size: 16px;
-  color: green;
+  color: #007bff;
   background-color: transparent;
   border: none;
   padding-left: 40px;
   display: block;
 }
 .btn:hover {
-  color: orange;
+  /* color: orange; */
+  color: rgb(161, 159, 159);
 }

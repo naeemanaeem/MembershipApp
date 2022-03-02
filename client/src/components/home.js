@@ -12,8 +12,16 @@ import slide_vol from "./imgs/community-work-day-flat-vector-illustration.jpg";
 import slide_act from "./imgs/act.jpeg";
 import slide_diverse from "./imgs/diverse_people.jpg";
 
+import Classes from "./home.module.css";
+import { Modal, Button } from "react-bootstrap";
 function Home({ name, ...props }) {
   const [userActivities, setUserActivities] = useState([]);
+  // const imageSources = [slide_vol, slide_act, slide_diverse];
+  const [slides, setSlides] = useState([]);
+  // const [slides, setSlides] = useState(imageSources);
+  const [showForm, setShowForm] = useState(false);
+  const [slide, setSlide] = useState("");
+
   const history = useHistory();
   const goToVolunteer = (params) => {
     let path = `Volunteer`;
@@ -26,6 +34,27 @@ function Home({ name, ...props }) {
   const goToActivities = (params) => {
     let path = `activities`;
     history.push(path);
+  };
+
+  useEffect(() => {
+    axios.get("/slides").then((res) => {
+      if (res.data) {
+        setSlides([...res.data]);
+      }
+    });
+  }, []);
+  const addSlide = () => {
+    // send post to server.
+    axios.post("/slides/", { imageSrc: slide }).then((res) => {
+      console.log(res.data);
+      setSlides([...slides, { id: res.data._id, imageSrc: slide }]);
+    });
+    setSlide("");
+    closeForm();
+  };
+  const closeForm = () => {
+    setShowForm(false);
+    setSlide("");
   };
 
   const displayName = localStorage.user_displayName;
@@ -49,26 +78,7 @@ function Home({ name, ...props }) {
       image: vol,
     },
   ];
-  const item = [
-    {
-      image: slide_vol,
-      alt_description: "alternate discription for slide 1",
-      title: "title",
-      description: "hello",
-    },
-    {
-      image: slide_act,
-      alt_description: "alternate discription for slide 2",
-      title: "title",
-      description: "hello",
-    },
-    {
-      image: slide_act,
-      alt_description: "alternate discription for slide 3",
-      title: "title",
-      description: "hello",
-    },
-  ];
+
 
   useEffect(() => {
     const fetchMemberActivites = async () => {
@@ -91,52 +101,66 @@ function Home({ name, ...props }) {
   }, []);
 
   return (
-    <Container>
-      <h1>Welcome to MCE - Muslims Centre of Excellence </h1>
-      <h2 class="text-center">You Are {displayName}</h2>
-
-      <h5 class="text-center">
+    <Container fluid>
+      <h1 className="mt-5">Welcome to MCE - Muslims Centre of Excellence </h1>
+      <h5 className="text-center mt-2">
         Mountain House Muslim Association is a local non-profit focused on
         serving the Muslim community in Mountain House.{" "}
       </h5>
-
-      <Carousel
-        fade
-        style={{ marginBottom: "50px", width: "100%", alignSelf: "center" }}
-      >
-        <Carousel.Item>
-          <img
-            style={{ width: "100%", height: "350px" }}
-            src={slide_vol}
-            alt="First slide"
-          />
-        </Carousel.Item>
-        <Carousel.Item>
-          <img
-            style={{
-              width: "100%",
-              height: "350px",
-            }}
-            src={slide_act}
-            alt="Second slide"
-          />
-        </Carousel.Item>
-        <Carousel.Item>
-          <img
-            style={{
-              width: "100%",
-              height: "350px",
-            }}
-            src={slide_diverse}
-            alt="Third slide"
-          />
-        </Carousel.Item>
+      <h2 class="text-center mt-5">You Are {displayName}</h2>
+      <div className={Classes.plus_btn_container}>
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          width="42"
+          height="42"
+          fill="black"
+          className="bi bi-plus-square-fill"
+          viewBox="0 0 16 16"
+          onClick={() => {
+            setShowForm(true);
+          }}
+        >
+          <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm6.5 4.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3a.5.5 0 0 1 1 0z" />
+        </svg>
+      </div>
+      <Modal show={showForm} onHide={closeForm}>
+        <Modal.Header closeButton>
+          <Modal.Title>Add Slide To Carousel</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <form>
+            <input
+              onChange={(e) => setSlide(e.target.value)}
+              value={slide}
+              className={Classes.form_input}
+              placeholder=" Add Image URL"
+            />
+          </form>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={closeForm}>
+            Cancel
+          </Button>
+          <Button variant="primary" onClick={addSlide}>
+            Save Changes
+          </Button>
+        </Modal.Footer>
+      </Modal>
+      <Carousel fade className={Classes.carousel}>
+        {slides.map((slide, i) => (
+          <Carousel.Item key={slide._id}>
+            <img
+              className={Classes.image}
+              src={slide.imageSrc}
+              alt={`slide ${i + 1}`}
+            />
+          </Carousel.Item>
+        ))}
       </Carousel>
 
-      <div style={{ display: "flex", flexDirection: "row" }}>
+      <div className={Classes.home_card}>
         {data.map((value) => (
           <HomeCard
-            style={{ margin: "5px" }}
             title={value.title}
             description={value.description}
             image={value.image}

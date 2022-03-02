@@ -9,10 +9,6 @@ import {
   Card,
   ToggleButton,
   ToggleButtonGroup,
-  ButtonGroup,
-  Modal,
-  Container,
-  ButtonToolbar,
 } from "react-bootstrap";
 import PayPal from "./paypal";
 import "bootstrap/dist/css/bootstrap.min.css";
@@ -24,12 +20,8 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import SuccessPage from "./SuccessPage";
 
+import { Container } from "react-bootstrap";
 const buttonlist1 = ["Membership Fee", "Donation", "Sadaqah", "Zakat"];
-const buttonlist2 = ["PayPal", "Card (Stripe)"];
-
-// const PUBLIC_KEY =
-//   "pk_test_51JR4m9CMdg35S26EAT3K6nPEVlxPHubEwzlQ4c2VetzslZmjts2FNQKWxkwZAiQdIgA1kWbCbvmQBGWBrbRONn7a00BSJqSyYd";
-// const stripePromise = loadStripe(PUBLIC_KEY);
 function Payment({ addTextLog }) {
   const [profile, setProfile] = useState({
     PaymentReason: null,
@@ -44,15 +36,11 @@ function Payment({ addTextLog }) {
   });
   const [proceedToPayment, setProceedToPayment] = useState(false);
   const [showButton, setShowButton] = useState(true);
-  const [clientSecret, setClientSecret] = useState("");
-
   const [selectedMethod, setSelectedMethod] = useState(false);
-
   const [paypal, setPayPal] = useState(false);
-
   const [payments, setPayments] = useState([]);
   const [paymentSuccess, setPaymentSuccess] = useState(false);
-  /**************************** */
+
   const [stripeTestPromise, setStripeTestPromise] = useState(null);
   const errors = {
     PaymentReason: "",
@@ -129,7 +117,7 @@ function Payment({ addTextLog }) {
   };
   const saveNewPayment = async (p) => {
     p.Status = "Success";
-    console.log("p:", p);
+
     const res = await axios.post("/payments", p);
     const newpayments = [...payments, res.data];
     setPayments(newpayments);
@@ -147,73 +135,87 @@ function Payment({ addTextLog }) {
   };
   if (paymentSuccess) {
     return (
-      <SuccessPage
-        message="Your Payment has been processed Successfully"
-        route="Payment"
-      />
+      <Container fluid>
+        <SuccessPage
+          message="Your Payment has been processed Successfully"
+          route="Payment"
+        />
+      </Container>
     );
   } else {
     return (
-      <React.Fragment>
+      <Container className="pr-5 pl-5">
         <div className="bg-image">
-          <h2 className="ml-5 mt-3">Payment</h2>
-          <Form /*onSubmit={handleSubmit}*/>
-            <div className="ml-3 mt-3 mb-5 middle">
-              <Card style={{ width: "60%", height: "100%" }}>
+          <center>
+            <h1 className="ml-5 mt-5">Payment</h1>
+          </center>
+          <Form>
+            <div className="ml-3 mt-3 mb-5 ">
+              <Card>
                 <h5 className="ml-3 mt-4">Reason for Payment</h5>
                 <Row>
-                  <ToggleButtonGroup
-                    type="radio"
-                    name="PaymentReason"
-                    style={{ height: "100%", width: "100%" }}
-                    className="ml-5 mr-5"
-                  >
-                    {buttonlist1.map((buttonLabel, i) => (
-                      <ToggleButton
-                        id={"radio" + i}
-                        value={buttonLabel}
-                        variant="outline-primary"
-                        className="mb-3"
-                        onChange={handleChange}
-                      >
-                        {buttonLabel}
-                      </ToggleButton>
-                    ))}
-                  </ToggleButtonGroup>
+                  <Col>
+                    <ToggleButtonGroup
+                      className="d-flex ml-5 mr-5"
+                      type="radio"
+                      name="PaymentReason"
+                      // style={{ height: "100%", width: "100%" }}
+                      // className="ml-5 mr-5"
+                    >
+                      {buttonlist1.map((buttonLabel, i) => (
+                        <ToggleButton
+                          id={"radio" + i}
+                          value={buttonLabel}
+                          variant="outline-primary"
+                          className="mb-3"
+                          onChange={handleChange}
+                        >
+                          {buttonLabel}
+                        </ToggleButton>
+                      ))}
+                    </ToggleButtonGroup>
+                  </Col>
                 </Row>
                 <h5 className="ml-3 mt-5">Payment Method</h5>
                 <Row>
-                  <ToggleButtonGroup
-                    type="radio"
-                    name="PaymentMethod"
-                    style={{ height: "100%", width: "100%" }}
-                    className="ml-5 mr-5"
-                  >
-                    <ToggleButton
-                      id="radio1"
-                      value="PayPal"
-                      variant="outline-primary"
-                      onClick={() => setPayPal(true) & setSelectedMethod(true)}
-                      onChange={handleChange}
+                  <Col>
+                    <ToggleButtonGroup
+                      type="radio"
+                      name="PaymentMethod"
+                      // style={{ height: "100%", width: "100%" }}
+                      // className="ml-5 mr-5"
+                      className="d-flex ml-5 mr-5"
                     >
-                      PayPal
-                    </ToggleButton>
-                    <ToggleButton
-                      id="radio2"
-                      value="Stripe"
-                      variant="outline-primary"
-                      onClick={() => setPayPal(false) & setSelectedMethod(true)}
-                      onChange={handleChange}
-                    >
-                      Card (Stripe)
-                    </ToggleButton>
-                  </ToggleButtonGroup>
+                      <ToggleButton
+                        id="radio1"
+                        value="PayPal"
+                        variant="outline-primary"
+                        onClick={() =>
+                          setPayPal(true) & setSelectedMethod(true)
+                        }
+                        onChange={handleChange}
+                      >
+                        PayPal
+                      </ToggleButton>
+                      <ToggleButton
+                        id="radio2"
+                        value="Stripe"
+                        variant="outline-primary"
+                        onClick={() =>
+                          setPayPal(false) & setSelectedMethod(true)
+                        }
+                        onChange={handleChange}
+                      >
+                        Card (Stripe)
+                      </ToggleButton>
+                    </ToggleButtonGroup>
+                  </Col>
+
                 </Row>
                 <h5 className="ml-3 mt-5">User Information</h5>
                 <Row className="ml-1 mr-1">
                   <Col>
                     <div className="ml-4 mr-1">
-                      {/* <text>First Name</text> */}
                       <Form.Label>First Name</Form.Label>
                       <Form.Control
                         placeholder="First Name"
@@ -239,7 +241,6 @@ function Payment({ addTextLog }) {
                   </Col>
                   <Col>
                     <div className="mr-4 ml-1">
-                      {/* <text>Last Name</text> */}
                       <Form.Label>Last Name</Form.Label>
                       <Form.Control
                         placeholder="Last Name"
@@ -267,7 +268,6 @@ function Payment({ addTextLog }) {
                 </Row>
                 <Row className="ml-2 mr-2">
                   <Col className="mt-3 ml-3 mr-3">
-                    {/* <text className="mt-3 ml-2 mr-3">Email</text> */}
                     <Form.Label>Email</Form.Label>
                     <Form.Control
                       placeholder="Email"
@@ -294,7 +294,6 @@ function Payment({ addTextLog }) {
                 </Row>
                 <Row className="ml-2 mr-2">
                   <Col className="mt-3 ml-3 mr-3">
-                    {/* <text className="mt-3">Amount</text> */}
                     <Form.Label>Amount</Form.Label>
                     <Form.Control
                       placeholder="$"
@@ -321,7 +320,6 @@ function Payment({ addTextLog }) {
                 </Row>
                 <Row className="ml-2 mr-2">
                   <Col className="mt-3 ml-3 mr-3 mb-3">
-                    {/* <text className="mt-3">Comments</text> */}
                     <Form.Label className="mt-3">Comments</Form.Label>
                     <InputGroup>
                       <FormControl
@@ -338,6 +336,8 @@ function Payment({ addTextLog }) {
                   <Col className="mt-3 ml-3 mr-2 mb-3">
                     <Button
                       variant="danger"
+                      size="lg"
+
                       id="clear3"
                       type="reset"
                       value="Reset"
@@ -358,13 +358,11 @@ function Payment({ addTextLog }) {
                         />
                       ) : (
                         <Elements
-                          // stripe={stripePromise}
                           stripe={stripeTestPromise ? stripeTestPromise : null}
                         >
                           <Stripe
                             profile={profile}
                             handleSubmitData={handleSubmit}
-                            // clientSecret={clientSecret}
                             handlePaymentSuccess={handlePaymentSuccess}
                           />
                         </Elements>
@@ -374,21 +372,7 @@ function Payment({ addTextLog }) {
                     )}
                   </div>
                 </Row>
-                {/* <Row className="center mb-3">
-                  {paypal ? (
-                    <Button
-                      variant="primary"
-                      type="submit"
-                      onClick={() => {
-                        alert(JSON.stringify(profile, "", 2));
-                      }}
-                    >
-                      Pay Now
-                    </Button>
-                  ) : (
-                    () => setPayPal(false)
-                  )}
-                </Row> */}
+
                 <Row className="center mb-3">
                   {profile.PaymentMethod &&
                   profile.PaymentReason &&
@@ -396,19 +380,20 @@ function Payment({ addTextLog }) {
                     <Button
                       variant="primary"
                       type="submit"
-                      onClick={() => {
+                      size="lg"
+                      onClick={(e) => {
+                        e.preventDefault();
                         const newErrors = findFormErrors();
                         if (Object.keys(newErrors).length > 0) {
                           setErrors(newErrors);
                           alert("Please correct erros in your form entries!");
                         } else {
-                          alert(JSON.stringify(profile, "", 2));
                           setProceedToPayment(true);
                           setShowButton(false);
                         }
                       }}
                     >
-                      Pay Now
+                      Proceed To Payment
                     </Button>
                   ) : (
                     () => setPayPal(false)
@@ -418,7 +403,7 @@ function Payment({ addTextLog }) {
             </div>
           </Form>
         </div>
-      </React.Fragment>
+      </Container>
     );
   }
 }
