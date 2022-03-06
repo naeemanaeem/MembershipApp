@@ -17,12 +17,10 @@ function VolunteerSignup(props) {
   const [fullName, setFullName] = useState(localStorage.user_displayName);
   const [email, setEmail] = useState(localStorage.user_email);
   const [event] = useState(props.event.title);
-  // const [EventDate, setEventDate] = useState(props.event.startDateTime);
+
   const [hoursAvailable, setHoursAvailable] = useState("");
   const [comments, setComments] = useState("");
   const [volunteerPosts, setVolunteerPosts] = useState([]);
-
-  const [checked, setChecked] = useState([]);
 
   const [selectedStartInterval, setSelectedStartInterval] = useState([]);
   const [selectedEndInterval, setSelectedEndInterval] = useState([]);
@@ -30,17 +28,26 @@ function VolunteerSignup(props) {
   const [updatedVolunteerSlots, setUpdatedVolunteerSlots] = useState(
     props.event.volunteerSlots
   );
-  // const startIntervalDate = new Date(
-  //   props.event.startInterval
-  // ).toLocaleDateString();
-  // const startIntervalTime = formatTime(props.event.startDateTime);
 
-  // const endIntervalDate = new Date(
-  //   props.event.endInterval
-  // ).toLocaleDateString();
-  // const endIntervalTime = formatTime(props.event.endDateTime);
+  let checkedArrayLength = new Array(props.event.startInterval.length).fill(
+    false
+  );
+  const [checked, setChecked] = useState(checkedArrayLength);
 
-  //...
+  const validEmail = (val) =>
+    /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/i.test(val);
+  const validURL = (str) => {
+    var pattern = new RegExp(
+      "^(https?:\\/\\/)?" + // protocol
+        "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
+        "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
+        "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
+        "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
+        "(\\#[-a-z\\d_]*)?$",
+      "i"
+    ); // fragment locator
+    return !!pattern.test(str);
+  };
 
   const formatDateTime = (datetime) => {
     let timeArray = new Date(datetime).toLocaleTimeString().split("");
@@ -57,154 +64,54 @@ function VolunteerSignup(props) {
     props.hideForm();
   };
 
-  const handleCheckboxes = (e, i) => {
-    let data = e.target.id.split(",");
-    // let newStartInterval = [...selectedStartInterval];
-    // newStartInterval[i] = data[0];
-
-    if (e.target.checked) {
-      setSelectedStartInterval([
-        ...selectedStartInterval,
-        new Date(data[0].trim()),
-      ]);
-      setSelectedEndInterval([
-        ...selectedEndInterval,
-        new Date(data[1].trim()),
-      ]);
-      setUpdatedMaxVolunteers([
-        ...updatedMaxVolunteers,
-        (data[2] - 1).toString(),
-      ]);
-      let volunteerSlot = [...updatedVolunteerSlots];
-      volunteerSlot[i] = Number(data[2]) - 1;
-      setUpdatedVolunteerSlots(volunteerSlot);
-    } else {
-      // setUpdatedMaxVolunteers([...updatedMaxVolunteers, data[2].toString()]);
-      let volunteerSlot = [...updatedVolunteerSlots];
-      volunteerSlot[i] = Number(data[2]);
-      setUpdatedVolunteerSlots(volunteerSlot);
-    }
+  const handleChange = (e, i) => {
+    let updatedChecked = [...checked];
+    updatedChecked[i] = e.target.checked;
+    setChecked(updatedChecked);
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    const updatedStartInterval = [];
+    const updatedEndInterval = [];
+    let updatedMaxVolunteer = [...props.event.volunteerSlots];
+    checked.forEach((interval, i) => {
+      if (interval) {
+        updatedStartInterval.push(props.event.startInterval[i]);
+        updatedEndInterval.push(props.event.endInterval[i]);
+        updatedMaxVolunteer[i] = updatedMaxVolunteer[i] - 1;
+      }
+    });
+
     const form = e.currentTarget;
 
-    if (form.checkValidity() === false) {
-      event.stopPropagation();
-    }
-    setValidated(true);
-
-    if (fullName === "" || email === "") {
-      e.stopPropagation();
-    } else if (selectedStartInterval.length === 0) {
-      setShowInvalid(true);
-      e.stopPropagation();
-    } else {
-      let selectedDateTime = selectedStartInterval.map((interval, i) => {
-        return {
-          startInterval: interval,
-          endInterval: selectedEndInterval[i],
-        };
-      });
-      let data = {
-        memberId: localStorage.googleId,
-        fullName: fullName,
-        email: email,
-        event: event,
-        selectedDateTime: selectedDateTime,
-        comments: comments,
+    let selectedDateTime = updatedStartInterval.map((interval, i) => {
+      return {
+        startInterval: interval,
+        endInterval: updatedEndInterval[i],
       };
+    });
+    let data = {
+      memberId: localStorage.googleId,
+      fullName: fullName,
+      email: email,
+      event: event,
+      selectedDateTime: selectedDateTime,
+      comments: comments,
+    };
 
-      axios
-        .patch(`/activities/${props.event._id}`, {
-          // volunteerSlots: [Number(...updatedMaxVolunteers)],
-          volunteerSlots: updatedVolunteerSlots,
-        })
-        .then((res) => {
-          axios.post(`/volunteer`, data).catch((error) => {
-            console.log("ERROR:", error.message);
-          });
+    axios
+      .patch(`/activities/${props.event._id}`, {
+        volunteerSlots: updatedMaxVolunteer,
+      })
+      .then((res) => {
+        axios.post(`/volunteer`, data).catch((error) => {
+          console.log("ERROR:", error.message);
         });
-      props.hideForm();
-    }
+      });
+    props.hideForm();
   };
-
-  // handleFetchData();
-
-  // const handleSubmit = (event) => {
-  //   event.preventDefault();
-  //   const form = event.currentTarget;
-
-  //   if (form.checkValidity() === false) {
-  //     event.stopPropagation();
-  //   }
-
-  //   setValidated(true);
-
-  //   const postData = {
-  //     memberId,
-  //     fullName,
-  //     Email,
-  //     Event,
-  //     EventDate,
-  //     hoursAvailable,
-  //   };
-
-  //   if (
-  //     window.confirm("Are you sure you want to sign up? \nPress OK or Cancel.")
-  //   ) {
-  //     if (
-  //       Event === "selectevent" ||
-  //       EventDate === "" ||
-  //       hoursAvailable === ""
-  //     ) {
-  //       alert(
-  //         "You have an issue with your form.\nEvent, Date, and Hours must be entered."
-  //       );
-  //     } else {
-  //       axios
-  //         .get("/volunteer")
-  //         .then((res) => {
-  //           setVolunteerPosts(res.data);
-  //           var totalHours = 0;
-  //           {
-  //             volunteerPosts.map((volunteer) => {
-  //               if (
-  //                 volunteer.Event === postData.Event &&
-  //                 volunteer.hoursAvailable > 0
-  //               ) {
-  //                 totalHours += volunteer.hoursAvailable;
-  //               }
-  //             });
-  //           }
-  //           if (totalHours < 100) {
-  //             axios
-  //               .post("/volunteer", postData)
-  //               .then((response) => {
-  //                 routeChange();
-  //               })
-  //               .catch((err) => {
-  //                 console.log("Error in Creating Volunteer!");
-  //               });
-  //           } else {
-  //             alert(
-  //               "You are not able to sign up for this volunteer opportunity as the maximum hours needed have been reached"
-  //             );
-  //             Promise.reject(
-  //               "You are not able to sign up for this volunteer opportunity"
-  //             );
-  //           }
-  //         })
-  //         .catch((err) => {
-  //           console.log(err);
-  //         });
-  //     }
-  //   } else {
-  //     event.preventDefault();
-  //   }
-  // };
 
   return (
     <Card className={Classes.card}>
@@ -241,7 +148,7 @@ function VolunteerSignup(props) {
           />
           <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
           <Form.Control.Feedback type="invalid">
-            Please enter your email
+            Please enter a (legitimate) email
           </Form.Control.Feedback>
         </Form.Group>
 
@@ -281,7 +188,8 @@ function VolunteerSignup(props) {
                       type="checkbox"
                       id={inputId}
                       disabled={false}
-                      onChange={(e) => handleCheckboxes(e, i)}
+                      checked={checked[i]}
+                      onChange={(e) => handleChange(e, i)}
                     />{" "}
                     <span className={Classes.checkboxLabel}>
                       <strong>{startDateTime[0]}</strong> ({startDateTime[1]})
@@ -330,23 +238,6 @@ function VolunteerSignup(props) {
           )}
         </Form.Group>
 
-        {/* <Form.Group md="6" controlId="validationCustom03">
-          <InputGroup hasValidation>
-              <Form.Control
-                as="select"
-                name="state"
-                type="text"
-                placeholder="EventDate"
-                value={EventDate}
-                aria-describedby="inputGroupPrepend"
-                required
-              >
-                {renderDropdown()}
-                <option value={EventDate}>{EventDate}</option>
-              </Form.Control>
-            </InputGroup>
-        </Form.Group>  */}
-
         <br></br>
         <Form.Group md="3" controlId="validationCustom06">
           <Form.Label>Comments</Form.Label>
@@ -366,32 +257,8 @@ function VolunteerSignup(props) {
             Sign Up
           </Button>
         </span>
-
-        {/* <Button
-          variant="dark"
-          size="lg"
-          type="submit"
-          onClick={(event) => {
-            const newErrors = findFormErrors();
-            if (Object.keys(newErrors).length > 0) {
-              setErrors(newErrors);
-              alert("Please correct erros in your form entries!");
-            } else {
-              {
-                handleSubmit;
-              }
-            }
-            //setData({});
-          }}
-        >
-          Sign Up
-        </Button> */}
       </Form>
     </Card>
-
-    // <Container>
-
-    // </Container>
   );
 }
 

@@ -102,7 +102,6 @@ const ActivityForm = (props) => {
 
           <Col>
             <Form.Label className="mt-3">Slots</Form.Label>
-
             <Form.Control
               className="rounded"
               aria-label="slots available"
