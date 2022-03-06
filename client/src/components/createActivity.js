@@ -82,9 +82,10 @@ const ActivityForm = (props) => {
     if (imageUrl && validURL(imageUrl.toString()) === false)
       newErrors.imageUrl = "Invalid URL!";
     //zip code errors
-    if (!location.zip || location.zip === "")
+
+    if (location && (!location.zip || location.zip === ""))
       newErrors.zipCode = "Zip code is required!";
-    else if (validZip(location.zip) === false)
+    else if (location && validZip(location.zip) === false)
       newErrors.zipCode = "Invalid Zip Code!";
     return newErrors;
   };
