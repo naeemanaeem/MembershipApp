@@ -31,7 +31,7 @@
 .home_card {
   display: flex;
   flex-direction: row;
-  width: 80%;
+  width: 81%;
   margin: 30px auto;
 }
 .form_input {
