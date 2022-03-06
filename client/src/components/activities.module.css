@@ -23,7 +23,7 @@
   cursor: pointer;
 }
 .btnPlus:hover {
-  opacity: 0.2;
+  opacity: 0.5;
 }
 /*Shows a message when no activities are ongoing or when no activities found on loading the page*/
 .emptyActivities {

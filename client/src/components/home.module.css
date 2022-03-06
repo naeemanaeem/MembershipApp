@@ -47,3 +47,9 @@
   width: 100%;
   border: 1px solid black;
 }
+.svg_btn {
+  cursor: pointer;
+}
+.svg_btn:hover {
+  opacity: 0.5;
+}

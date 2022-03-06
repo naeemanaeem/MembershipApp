@@ -13,7 +13,6 @@ import { Modal, Button } from "react-bootstrap";
 
 const Home = ({ name, ...props }) => {
   const [userActivities, setUserActivities] = useState([]);
-  console.log("userActivities: ", userActivities);
   const [error, setError] = useState(null);
   const [slides, setSlides] = useState([]);
   const [showForm, setShowForm] = useState(false);
@@ -203,7 +202,7 @@ const Home = ({ name, ...props }) => {
                       width="35"
                       height="30"
                       fill="white"
-                      class="bi bi-trash"
+                      className={`bi bi-trash ${Classes.svg_btn}`}
                       viewBox="0 0 16 16"
                       id={slide.imageSrc}
                       onClick={(e) => {
@@ -213,7 +212,7 @@ const Home = ({ name, ...props }) => {
                     >
                       <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
                       <path
-                        fill-rule="evenodd"
+                        fillRule="evenodd"
                         d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"
                       />
                     </svg>
@@ -223,7 +222,7 @@ const Home = ({ name, ...props }) => {
                     width="42"
                     height="42"
                     fill="black"
-                    className="bi bi-plus-square-fill"
+                    className={`bi bi-plus-square-fill  ${Classes.svg_btn}`}
                     viewBox="0 0 16 16"
                     onClick={() => {
                       setShowForm(true);
