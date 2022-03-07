@@ -6,3 +6,6 @@
   left: 0%;
   top: 90%;
 }
+.btn:hover {
+  opacity: 0.7;
+}

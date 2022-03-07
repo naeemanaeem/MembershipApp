@@ -1,11 +1,9 @@
-
 import React, { useMemo, useState, useRef } from "react";
 
 import {
   useTable,
   useSortBy,
   useGlobalFilter,
-
   usePagination,
 } from "react-table";
 import { GROUPED_COLUMNS } from "./helper/table/columns";

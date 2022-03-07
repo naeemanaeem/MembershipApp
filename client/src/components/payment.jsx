@@ -14,12 +14,11 @@ import PayPal from "./paypal";
 import "bootstrap/dist/css/bootstrap.min.css";
 import axios from "axios";
 import "./paymentStyling.css";
-import PropTypes from "prop-types";
 import Stripe from "./stripe";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import SuccessPage from "./SuccessPage";
-
+import { validEmail } from "./helper/formValidation";
 import { Container } from "react-bootstrap";
 const buttonlist1 = ["Membership Fee", "Donation", "Sadaqah", "Zakat"];
 function Payment({ addTextLog }) {
@@ -51,8 +50,6 @@ function Payment({ addTextLog }) {
     Amount: "",
   };
   const [formErrors, setErrors] = useState(errors);
-  const validEmail = (val) =>
-    /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/i.test(val);
   const findFormErrors = () => {
     const { PaymentReason, PaymentMethod, Firstname, Lastname, Email, Amount } =
       profile;
@@ -73,7 +70,7 @@ function Payment({ addTextLog }) {
     else if (validEmail(Email) === false)
       newErrors.Email = "Invalid Email address!";
 
-    if (!Amount || Amount === "")
+    if (!Amount || Amount === "" || Amount === "0")
       newErrors.Amount = "Please enter amount to pay!";
     else if (isNaN(Number(Amount)))
       newErrors.Amount = "Payment amount must be in numbers!";
@@ -210,7 +207,6 @@ function Payment({ addTextLog }) {
                       </ToggleButton>
                     </ToggleButtonGroup>
                   </Col>
-
                 </Row>
                 <h5 className="ml-3 mt-5">User Information</h5>
                 <Row className="ml-1 mr-1">
@@ -337,7 +333,6 @@ function Payment({ addTextLog }) {
                     <Button
                       variant="danger"
                       size="lg"
-
                       id="clear3"
                       type="reset"
                       value="Reset"

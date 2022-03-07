@@ -38,27 +38,24 @@ const Home = ({ name, ...props }) => {
     axios
       .post("/slides/", { imageSrc: slide })
       .then((res) => {
-        setSlides([...slides, { id: res.data._id, imageSrc: slide }]);
+        setSlides([...slides, res.data]);
       })
       .catch((error) => setError(error.message));
     setSlide("");
     closeForm();
   };
   const deleteSlide = (indx, e) => {
-    console.log(indx);
     setCurrentSlide({ imageSrc: e.target.id, alt: indx });
   };
   const confirmDelete = (id) => {
-    closeAlertBox();
-
     axios
       .delete(`/slides/${id}`)
       .then((res) => {
-        console.log(res.data);
         const updatedSlides = slides.filter((slide) => slide._id !== id);
         setSlides(updatedSlides);
       })
       .catch((error) => setError(error.message));
+    closeAlertBox();
   };
   const closeForm = () => {
     setShowForm(false);
@@ -123,7 +120,7 @@ const Home = ({ name, ...props }) => {
         setSlides([...res.data]);
       })
       .catch((error) => {
-        console.log(error.message);
+        console.log(error);
         setError(error.message);
       });
     // fetch all the activities the member has registered for
@@ -169,7 +166,7 @@ const Home = ({ name, ...props }) => {
         <div className={Classes.carousel_container}>
           <Carousel fade>
             {slides.map((slide, i) => (
-              <Carousel.Item key={slide._id}>
+              <Carousel.Item key={slide._id} /*key={i}*/>
                 <Modal show={showAlert} onHide={closeAlertBox}>
                   <Modal.Header closeButton>
                     <Modal.Title>Deleting slide:</Modal.Title>

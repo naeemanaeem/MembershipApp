@@ -115,6 +115,22 @@ router.delete("/:id", ensureAuth, async (req, res) => {
   }
 });
 
+// Delete all payments history
+router.delete("/delete/history", ensureAuth, async (req, res) => {
+  try {
+    const response = await Payment.remove({}).lean();
+
+    if (!response) {
+      return res.status(404).send("Failed to delete payment history!");
+    }
+
+    return res.send(response);
+  } catch (error) {
+    console.error(error);
+    // return server error
+    return res.status(500);
+  }
+});
 // Payment stats
 router.get("/stats", ensureAuth, async (req, res) => {
   try {

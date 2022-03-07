@@ -74,6 +74,7 @@ const Activities = () => {
             })
             .catch((error) => {
               console.log("ERROR:", error.message);
+              throw new Error(error.message);
             });
         }
         // update your component state
@@ -84,6 +85,7 @@ const Activities = () => {
       })
       .catch((error) => {
         console.log(error);
+        setError(error.message);
       });
 
     setEventDetail((state) => !state);
