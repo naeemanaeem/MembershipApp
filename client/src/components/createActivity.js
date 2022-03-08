@@ -17,6 +17,8 @@ import moment from "moment";
 import axios from "axios";
 import PropTypes from "prop-types";
 import classes from "./createActivity.module.css";
+import { validEmail, validURL, validZip } from "./helper/formValidation";
+
 const ActivityForm = (props) => {
   /* State and constants
    *************************** */
@@ -37,22 +39,6 @@ const ActivityForm = (props) => {
   const [formErrors, setErrors] = useState(errors);
   const minDate = moment(new Date()).format("YYYY-MM-DDTHH:MM");
   const maxDate = data.startDateTime;
-  const validEmail = (val) =>
-    /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/i.test(val);
-  const validURL = (str) => {
-    var pattern = new RegExp(
-      "^(https?:\\/\\/)?" + // protocol
-        "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
-        "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
-        "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
-        "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
-        "(\\#[-a-z\\d_]*)?$",
-      "i"
-    ); // fragment locator
-    return !!pattern.test(str);
-  };
-  const validZip = (val) => /^\d{5}$|^\d{5}-\d{4}$/i.test(val);
-
   const findFormErrors = () => {
     const {
       title,
@@ -82,9 +68,10 @@ const ActivityForm = (props) => {
     if (imageUrl && validURL(imageUrl.toString()) === false)
       newErrors.imageUrl = "Invalid URL!";
     //zip code errors
-    if (!location.zip || location.zip === "")
+
+    if (location && (!location.zip || location.zip === ""))
       newErrors.zipCode = "Zip code is required!";
-    else if (validZip(location.zip) === false)
+    else if (location && validZip(location.zip) === false)
       newErrors.zipCode = "Invalid Zip Code!";
     return newErrors;
   };

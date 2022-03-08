@@ -1,7 +1,4 @@
 import { format } from "date-fns";
-
-// import ColumnFilter from "./ColumnFilter";
-
 export const GROUPED_COLUMNS = [
   {
     Header: "ID",
@@ -107,7 +104,6 @@ export const GROUPED_COLUMNS = [
         Header: "Voter",
         Footer: "Voter",
         accessor: "Voter",
-
       },
     ],
   },
@@ -119,7 +115,6 @@ export const GROUPED_COLUMNS = [
         Header: "Balance",
         Footer: "Balance",
         accessor: "balance",
-
       },
     ],
   },
