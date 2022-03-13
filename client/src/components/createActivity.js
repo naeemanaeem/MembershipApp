@@ -139,13 +139,12 @@ const ActivityForm = (props) => {
   };
 
   // const [isInterval, setIsInterval] = useState([<RenderInterval />]);
+  // const intervals = props.eventToBeEdited.
   const [isInterval, setIsInterval] = useState([RenderInterval]);
   const [intervalInputId, setIntervalInputId] = useState(0);
 
   const addInterval = () => {
-    // setIsInterval([...isInterval, <RenderInterval />]);
     setIsInterval([...isInterval, RenderInterval]);
-    // setIntervalInputId((state) => state + 1);
   };
 
   const removeInterval = (id) => {

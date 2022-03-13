@@ -110,6 +110,8 @@ function VolunteerSignup(props) {
           console.log("ERROR:", error.message);
         });
       });
+
+    window.location.reload(true);
     props.hideForm();
   };
 
