@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import {
   Modal,
   Form,
@@ -9,7 +9,6 @@ import {
   Dropdown,
   Row,
   Col,
-  Icon,
 } from "react-bootstrap";
 
 import { CKEditor } from "@ckeditor/ckeditor5-react";
@@ -41,32 +40,16 @@ const ActivityForm = (props) => {
   const [formErrors, setErrors] = useState(errors);
   const minDate = moment(new Date()).format("YYYY-MM-DDTHH:MM");
   const maxDate = data.startDateTime;
-
-  let startInt =
-    eventToBeEdited && eventToBeEdited.startInterval
-      ? eventToBeEdited.startInterval
-      : [];
-  let endInt =
-    eventToBeEdited && eventToBeEdited.endInterval
-      ? eventToBeEdited.endInterval
-      : [];
+  let startInt = data.startInterval ? data.startInterval : [];
+  let endInt = data.endInterval ? data.endInterval : [];
   let volunteerSlots =
-    eventToBeEdited && eventToBeEdited.volunteeringSlots
-      ? eventToBeEdited.volunteeringSlots
-      : [];
-
+    data.volunteerSlots?.length > 0 ? data.volunteerSlots : [];
   const [startInterval, setStartInterval] = useState(startInt);
   const [endInterval, setEndInterval] = useState(endInt);
   const [volunteeringSlots, setVolunteeringSlots] = useState(volunteerSlots);
-
   const RenderInterval = (i) => {
     return (
-      <Form.Group
-        className="mb-3"
-        controlId="formGroupDateTime"
-        // ref={intervalRef}
-        id={i}
-      >
+      <Form.Group className="mb-3" controlId="formGroupDateTime" id={i}>
         <Row style={{ justifyContent: "center" }}>
           <Col>
             <Form.Label className="mt-3">Start Interval</Form.Label>
@@ -79,7 +62,9 @@ const ActivityForm = (props) => {
               min={minDate}
               required
               onChange={(e) => {
-                setStartInterval([...startInterval, e.target.value]);
+                let updatedStartInterval = [...startInterval];
+                updatedStartInterval.splice(i, 1, e.target.value);
+                setStartInterval(updatedStartInterval);
               }}
             />
           </Col>
@@ -95,7 +80,9 @@ const ActivityForm = (props) => {
               min={minDate}
               required
               onChange={(e) => {
-                setEndInterval([...endInterval, e.target.value]);
+                let updatedEndInterval = [...endInterval];
+                updatedEndInterval.splice(i, 1, e.target.value);
+                setEndInterval(updatedEndInterval);
               }}
             />
           </Col>
@@ -107,13 +94,12 @@ const ActivityForm = (props) => {
               aria-label="slots available"
               aria-describedby="volunteering slots"
               type="number"
-              min={1}
+              min="1"
               required
               onChange={(e) => {
-                setVolunteeringSlots([
-                  ...volunteeringSlots,
-                  Number(e.target.value),
-                ]);
+                let updatedSlots = [...volunteeringSlots];
+                updatedSlots.splice(i, 1, Number(e.target.value));
+                setVolunteeringSlots(updatedSlots);
               }}
             />
           </Col>
@@ -130,7 +116,6 @@ const ActivityForm = (props) => {
             >
               <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm3.354 4.646L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 1 1 .708-.708z" />
             </svg>
-            {/* </Button> */}
           </Col>
         </Row>
         <hr></hr>
@@ -138,21 +123,19 @@ const ActivityForm = (props) => {
     );
   };
 
-  // const [isInterval, setIsInterval] = useState([<RenderInterval />]);
-  // const intervals = props.eventToBeEdited.
-  const [isInterval, setIsInterval] = useState([RenderInterval]);
-  const [intervalInputId, setIntervalInputId] = useState(0);
+  let renderedIntervals = data.startInterval?.map((item, i) => RenderInterval);
+  const [intervals, setIntervals] = useState(
+    renderedIntervals ? renderedIntervals : [RenderInterval]
+  );
 
   const addInterval = () => {
-    setIsInterval([...isInterval, RenderInterval]);
+    setIntervals([...intervals, RenderInterval]);
   };
 
   const removeInterval = (id) => {
-    //setIsInterval([...isInterval, <RenderInterval />]);
-    // let id = intervalRef.current.id;
-    let renderIntervals = [...isInterval];
+    let renderIntervals = [...intervals];
     renderIntervals.splice(id, 1);
-    setIsInterval(renderIntervals);
+    setIntervals(renderIntervals);
   };
 
   const validEmail = (val) =>
@@ -722,30 +705,6 @@ const ActivityForm = (props) => {
 
               {isVolunteer && (
                 <React.Fragment>
-                  {/* <Form.Label className="mt-3">
-                    Total number of volunteers needed for this event
-                  </Form.Label>
-
-                  <Form.Group
-                    className="mb-3"
-                    controlId="formGroupVolunteersNeeded"
-                  >
-                    <Form.Control
-                      placeholder="Volunteers needed"
-                      aria-label="volunteers-needed"
-                      aria-describedby="volunteers-needed"
-                      type="number"
-                      defaultValue={
-                        eventToBeEdited.isVolunteer
-                          ? eventToBeEdited.isVolunteer
-                          : null
-                      }
-                      onChange={(e) =>
-                        setData({ ...data, volunteersNeeded: e.target.value })
-                      }
-                    />
-                  </Form.Group> */}
-
                   <Form.Label className="mt-3">
                     Add Volunteer Intervals
                   </Form.Label>
@@ -758,9 +717,8 @@ const ActivityForm = (props) => {
                   </Button>
 
                   <hr></hr>
-                  {/* <div>{isInterval}</div> */}
                   <div>
-                    {isInterval.map((item, i) => {
+                    {intervals.map((item, i) => {
                       return item(i);
                     })}
                   </div>
@@ -792,6 +750,7 @@ const ActivityForm = (props) => {
                     endInterval: endInterval,
                     volunteerSlots: volunteeringSlots,
                   };
+
                   if (Object.keys(eventToBeEdited).length > 0) {
                     axios
                       .patch(`/activities/${eventToBeEdited._id}`, updatedData)
