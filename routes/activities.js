@@ -9,7 +9,7 @@ const Member = require("../models/Member");
 router.get("/", async (req, res) => {
   try {
     const date = new Date().toISOString();
-    const activities = await Activity.find({ startDateTime: { $gte: date } });
+    const activities = await Activity.find({ endDateTime: { $gte: date } });
 
     return res.send(activities);
   } catch (error) {

@@ -57,13 +57,16 @@
   max-width: 500px;
 }
 
-.stripepaybutton {
+.stripepaybuttonContainer {
   display: flex;
-  column-gap: 15px;
-  align-items: left;
-  min-height: 45px;
-  max-width: 500px;
+  flex-direction: row;
+  justify-content: center;
   margin-bottom: 20px;
+  min-height: 45px;
+}
+.stripepaybutton {
+  width: 100%;
+  margin: 0;
 }
 
 .clear {

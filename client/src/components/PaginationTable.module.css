@@ -1,0 +1,95 @@
+.navbar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  flex-flow: nowrap;
+  margin: 0 5% 2% 5%;
+}
+.export_table {
+  width: 16%;
+  border: 2px solid grey;
+}
+.filter_container {
+  display: flex;
+}
+.filter_text {
+  border: 2px solid grey;
+  border-right: 0px;
+  background-color: white;
+  padding: 5px 35px 5px 10px;
+  border-radius: 4px 0px 0px 4px;
+  color: #495057;
+}
+.arrow_icon {
+  padding-top: 6px;
+  padding-right: 2px;
+  border: 2px solid grey;
+  background-color: white;
+  border-bottom-right-radius: 5px;
+  border-top-right-radius: 5px;
+  border-left: none;
+  margin-left: -4px;
+}
+.checkbox_container {
+  position: absolute;
+  display: none;
+  z-index: 1.5;
+  background-color: white;
+  padding: 0 0 15px 0;
+  border-radius: 5px;
+  margin: 0px 0 0 0;
+  font-size: 16px;
+  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+}
+
+.page_container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  margin-top: 30px;
+  align-items: center;
+  margin-bottom: 30px;
+}
+.go_to_page {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.page_input {
+  width: 50px;
+  margin-right: 5px;
+}
+.page_select {
+  padding: 5px;
+}
+/* Table styles */
+
+.table {
+  font-family: Verdana, Arial, Helvetica, sans-serif;
+  text-align: center;
+  margin: 0 auto;
+  width: 90%;
+}
+
+.table_head {
+  background-color: #007bff;
+  border: 1px solid #ddd;
+  padding: 20px;
+  text-align: center;
+  color: white;
+}
+.td {
+  text-align: center;
+  padding: 10px;
+  border: 1px solid rgb(202, 201, 201);
+}
+.center {
+  text-align: center;
+  padding: auto;
+}
+.tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+.tr:hover {
+  background-color: #ddd;
+}

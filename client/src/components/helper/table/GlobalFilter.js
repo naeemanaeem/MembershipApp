@@ -8,23 +8,18 @@ const GlobalFilter = ({ filter, setFilter }) => {
   }, 500);
 
   return (
-    <div
+    <input
       style={{
-        margin: 15,
-        fontWeight: "bold",
-        color: "#1941e3",
+        border: "2px solid grey",
+        borderRadius: "4px",
       }}
-    >
-      Search: {"   "}
-      {/* <input value={filter || ""} onChange={(e) => setFilter(e.target.value)} /> */}
-      <input
-        value={value}
-        onChange={(e) => {
-          setValue(e.target.value);
-          onChange(e.target.value);
-        }}
-      />
-    </div>
+      value={value}
+      placeholder="   Search"
+      onChange={(e) => {
+        setValue(e.target.value);
+        onChange(e.target.value);
+      }}
+    />
   );
 };
 export default GlobalFilter;

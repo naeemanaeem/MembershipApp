@@ -1,5 +1,4 @@
 import React from "react";
-import "./PaginationTable.css";
 
 export const Checkbox = React.forwardRef(({ indeterminate, ...rest }, ref) => {
   const defaultRef = React.useRef();
@@ -11,7 +10,7 @@ export const Checkbox = React.forwardRef(({ indeterminate, ...rest }, ref) => {
 
   return (
     <>
-      <input type="checkbox" ref={resolvedRef} {...rest} /> 
+      <input type="checkbox" ref={resolvedRef} {...rest} />
     </>
   );
 });

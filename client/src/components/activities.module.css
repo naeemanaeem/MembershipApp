@@ -10,12 +10,12 @@
   flex-flow: nowrap;
   justify-content: space-between;
   margin: "0 auto";
+  margin-top: 35px;
 }
 
 .title {
   padding: 2%;
   color: black;
-  font-family: "robo, Arial, Helvetica, sans-serif";
 }
 /* add activities btn */
 .btnPlus {
@@ -23,7 +23,7 @@
   cursor: pointer;
 }
 .btnPlus:hover {
-  opacity: 0.2;
+  opacity: 0.5;
 }
 /*Shows a message when no activities are ongoing or when no activities found on loading the page*/
 .emptyActivities {

@@ -76,6 +76,7 @@ const Activities = () => {
             })
             .catch((error) => {
               console.log("ERROR:", error.message);
+              throw new Error(error.message);
             });
         }
         // update your component state
@@ -86,6 +87,7 @@ const Activities = () => {
       })
       .catch((error) => {
         console.log(error);
+        setError(error.message);
       });
 
     setEventDetail((state) => !state);
@@ -141,7 +143,7 @@ const Activities = () => {
               xmlns="http://www.w3.org/2000/svg"
               width="42"
               height="42"
-              fill="green"
+              fill="black"
               className="bi bi-plus-square-fill"
               viewBox="0 0 16 16"
               onClick={() => {
