@@ -1,54 +1,39 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { useHistory } from "react-router-dom";
-import Volunteer from "./volunteer.jsx";
-import Activity from "./activity";
-import ActivityForm from "./createActivity";
-import EventDetail from "./eventDetail";
-import { Row, Col, Card } from "react-bootstrap";
+import React, { useState } from "react";
+import { Card } from "react-bootstrap";
 import axios from "axios";
-import PropTypes from "prop-types";
-import { Form, InputGroup, Button, Container } from "react-bootstrap";
+import { Form, Button } from "react-bootstrap";
 import Classes from "./applyVolunteer.module.css";
 
 function VolunteerSignup(props) {
-  const [validated, setValidated] = useState(false);
   const [showInvalid, setShowInvalid] = useState(false);
-  const [memberId] = useState(localStorage.googleId);
   const [fullName, setFullName] = useState(localStorage.user_displayName);
   const [email, setEmail] = useState(localStorage.user_email);
   const [event] = useState(props.event.title);
-
-  const [hoursAvailable, setHoursAvailable] = useState("");
   const [comments, setComments] = useState("");
-  const [volunteerPosts, setVolunteerPosts] = useState([]);
-
-  const [selectedStartInterval, setSelectedStartInterval] = useState([]);
-  const [selectedEndInterval, setSelectedEndInterval] = useState([]);
-  const [updatedMaxVolunteers, setUpdatedMaxVolunteers] = useState([]);
-  const [updatedVolunteerSlots, setUpdatedVolunteerSlots] = useState(
-    props.event.volunteerSlots
-  );
-
-  let checkedArrayLength = new Array(props.event.startInterval.length).fill(
+  const checkedArrayLength = new Array(props.event.startInterval.length).fill(
     false
   );
   const [checked, setChecked] = useState(checkedArrayLength);
 
   const validEmail = (val) =>
     /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/i.test(val);
-  const validURL = (str) => {
-    var pattern = new RegExp(
-      "^(https?:\\/\\/)?" + // protocol
-        "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
-        "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
-        "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
-        "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
-        "(\\#[-a-z\\d_]*)?$",
-      "i"
-    ); // fragment locator
-    return !!pattern.test(str);
-  };
 
+  const errors = {
+    fullName: "",
+    email: "",
+  };
+  const [formErrors, setErrors] = useState(errors);
+  const findFormErrors = () => {
+    const newErrors = {};
+    // fullName errors
+    if (!fullName || fullName === "")
+      newErrors.fullName = "Please enter your full name!";
+    // email errors
+    if (!email || email === "") newErrors.email = "Email cannot be blank!";
+    else if (validEmail(email) === false)
+      newErrors.email = "Invalid Email address!";
+    return newErrors;
+  };
   const formatDateTime = (datetime) => {
     let timeArray = new Date(datetime).toLocaleTimeString().split("");
     let dateArray = new Date(datetime).toLocaleDateString();
@@ -65,6 +50,7 @@ function VolunteerSignup(props) {
   };
 
   const handleChange = (e, i) => {
+    setShowInvalid(false); // changes border color of input boxes to grey
     let updatedChecked = [...checked];
     updatedChecked[i] = e.target.checked;
     setChecked(updatedChecked);
@@ -72,58 +58,75 @@ function VolunteerSignup(props) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-
-    const updatedStartInterval = [];
-    const updatedEndInterval = [];
-    let updatedMaxVolunteer = [...props.event.volunteerSlots];
-    checked.forEach((interval, i) => {
-      if (interval) {
-        updatedStartInterval.push(props.event.startInterval[i]);
-        updatedEndInterval.push(props.event.endInterval[i]);
-        updatedMaxVolunteer[i] = updatedMaxVolunteer[i] - 1;
-      }
-    });
-
-    const form = e.currentTarget;
-
-    let selectedDateTime = updatedStartInterval.map((interval, i) => {
-      return {
-        startInterval: interval,
-        endInterval: updatedEndInterval[i],
-      };
-    });
-    let data = {
-      memberId: localStorage.googleId,
-      fullName: fullName,
-      email: email,
-      event: event,
-      selectedDateTime: selectedDateTime,
-      comments: comments,
-    };
-
-    axios
-      .patch(`/activities/${props.event._id}`, {
-        volunteerSlots: updatedMaxVolunteer,
-      })
-      .then((res) => {
-        axios.post(`/volunteer`, data).catch((error) => {
-          console.log("ERROR:", error.message);
-        });
+    const newErrors = findFormErrors();
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      alert("Please correct errors in your form entries!");
+    } else {
+      const updatedStartInterval = [];
+      const updatedEndInterval = [];
+      let updatedMaxVolunteer = [...props.event.volunteerSlots];
+      checked.forEach((interval, i) => {
+        if (interval) {
+          updatedStartInterval.push(props.event.startInterval[i]);
+          updatedEndInterval.push(props.event.endInterval[i]);
+          updatedMaxVolunteer[i] = updatedMaxVolunteer[i] - 1;
+        }
       });
 
-    window.location.reload(true);
-    props.hideForm();
+      let selectedDateTime = updatedStartInterval.map((interval, i) => {
+        return {
+          startInterval: interval,
+          endInterval: updatedEndInterval[i],
+        };
+      });
+      if (selectedDateTime.length === 0) {
+        // if no volunteering interval selected, change input box border color to red and throw invalid input error.
+        setShowInvalid(true);
+      } else {
+        let data = {
+          memberId: localStorage.googleId,
+          fullName: fullName,
+          email: email,
+          event: event,
+          selectedDateTime: selectedDateTime,
+          comments: comments,
+        };
+
+        axios
+          .patch(`/activities/${props.event._id}`, {
+            volunteerSlots: updatedMaxVolunteer,
+          })
+          .then((res) => {
+            props.handleSelectedEvent(res.data);
+            axios
+              .post(`/volunteer`, data)
+              .then((response) => {
+                let volunteerHours = response.data.selectedDateTime.length;
+                alert(
+                  `Thank you for volunteering! 
+                  \n You have registered for the ${response.data.event} event. 
+                  \n Volunteer Hours: ${
+                    volunteerHours === 1 ? `1 hour` : `${volunteerHours} hours`
+                  }`
+                );
+              })
+              .catch((error) => {
+                console.log("ERROR:", error.message);
+              });
+          })
+          .catch((error) => {
+            console.log("ERROR:", error.message);
+          });
+        props.hideForm();
+      }
+    }
   };
 
   return (
     <Card className={Classes.card}>
       <h1 className="ml-5 mt-3"> Volunteer Form </h1>
-      <Form
-        className="form"
-        noValidate
-        validated={validated}
-        onSubmit={handleSubmit}
-      >
+      <Form className="form" onSubmit={handleSubmit}>
         <Form.Group md="4" controlId="validationCustom01">
           <Form.Label>Full Name</Form.Label>
           <Form.Control
@@ -131,11 +134,18 @@ function VolunteerSignup(props) {
             type="text"
             placeholder="Enter Full Name"
             value={fullName}
-            onChange={(e) => setFullName(e.target.value)}
+            onChange={(e) => {
+              setFullName(e.target.value);
+              if (!!formErrors.fullName)
+                setErrors({
+                  ...formErrors,
+                  fullName: null,
+                });
+            }}
+            isInvalid={!!formErrors.fullName}
           />
-          <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
           <Form.Control.Feedback type="invalid">
-            Please enter your full name.
+            {formErrors.fullName}
           </Form.Control.Feedback>
         </Form.Group>
 
@@ -146,11 +156,18 @@ function VolunteerSignup(props) {
             type="text"
             placeholder="Enter Email"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => {
+              setEmail(e.target.value);
+              if (!!formErrors.email)
+                setErrors({
+                  ...formErrors,
+                  email: null,
+                });
+            }}
+            isInvalid={!!formErrors.email}
           />
-          <Form.Control.Feedback>Looks good!</Form.Control.Feedback>
           <Form.Control.Feedback type="invalid">
-            Please enter a (legitimate) email
+            {formErrors.email}
           </Form.Control.Feedback>
         </Form.Group>
 
@@ -161,6 +178,8 @@ function VolunteerSignup(props) {
             type="text"
             placeholder="Enter Event"
             value={event}
+            readOnly
+            className={Classes.event_field}
           />
         </Form.Group>
 
@@ -184,6 +203,7 @@ function VolunteerSignup(props) {
                     border: inputStyle,
                     margin: "3px",
                   }}
+                  key={i}
                 >
                   <label>
                     <input
@@ -215,9 +235,10 @@ function VolunteerSignup(props) {
                     borderRadius: "4px",
                     margin: "3px",
                   }}
+                  key={i}
                 >
                   <label>
-                    <input type="checkbox" id={inputId} disabled={true} />{" "}
+                    <input type="checkbox" id={inputId} disabled={true} />
                     <span className={Classes.checkboxLabel}>
                       <strong>{startDateTime[0]}</strong> ({startDateTime[1]})
                     </span>

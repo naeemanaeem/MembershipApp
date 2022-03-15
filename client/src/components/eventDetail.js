@@ -48,7 +48,11 @@ const EventDetail = (props) => {
 
   if (showVolunteerForm) {
     return (
-      <VolunteerSignup event={props.data} hideForm={hideVolunteerSignup} />
+      <VolunteerSignup
+        event={props.data}
+        hideForm={hideVolunteerSignup}
+        handleSelectedEvent={props.handleSelectedEvent}
+      />
     );
   } else {
     return (

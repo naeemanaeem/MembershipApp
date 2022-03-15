@@ -9,3 +9,7 @@
 .checkboxLabel {
   margin: 20px;
 }
+
+.event_field {
+  background-color: white !important;
+}

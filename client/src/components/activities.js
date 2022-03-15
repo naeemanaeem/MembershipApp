@@ -181,6 +181,7 @@ const Activities = () => {
     return (
       <EventDetail
         data={selectedEvent}
+        handleSelectedEvent={setSelectedEvent}
         onDelete={deleteActivityHandler}
         onEdit={editActivityHandler}
         onCancel={hideEventDetailHandler}

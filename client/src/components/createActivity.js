@@ -716,6 +716,10 @@ const ActivityForm = (props) => {
                     Add Interval
                   </Button>
 
+                  <Form.Text className="text-muted">
+                    Create intervals of one hour duration.
+                  </Form.Text>
+
                   <hr></hr>
                   <div>
                     {intervals.map((item, i) => {
