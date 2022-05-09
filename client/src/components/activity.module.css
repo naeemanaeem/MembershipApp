@@ -3,7 +3,7 @@
   width: 22rem;
   padding: 2%;
   margin: 1%;
-  height: 30rem;
+  height: 35rem;
   font-family: "robo, Arial, Helvetica, sans-serif";
   cursor: pointer;
 }
@@ -23,12 +23,24 @@
   color: black;
   background-color: yellow;
   font-size: 0.5em;
-  font-family: "robo, Arial, Helvetica, sans-serif";
-  margin: "0 auto";
+  margin: 0 auto;
+  margin-left: 10px;
   width: 5rem;
   padding: 2%;
   border-radius: 5px;
 }
+
+/*Formats the "Recurring" tag*/
+.volunteerEventTag {
+  color: white;
+  background-color: red;
+  font-size: 0.5em;
+  margin: 0 auto;
+  width: 7rem;
+  padding: 2%;
+  border-radius: 5px;
+}
+
 /*Lays tags horizontally across each activity*/
 .cardTags {
   display: flex;
@@ -54,6 +66,6 @@
   background-color: green;
 }
 
-.redTag {
-  background-color: red;
+.purpleTag {
+  background-color: rgb(161, 1, 161);
 }

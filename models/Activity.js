@@ -89,6 +89,38 @@ const ActivitySchema = new mongoose.Schema(
       required: [true, "Event Details are required"],
       trim: true,
     },
+    isVolunteer: {
+      type: Boolean,
+      trim: true,
+    },
+    volunteersNeeded: {
+      type: Number,
+      trim: true,
+    },
+    //For Events Requiring Volunteers
+    startInterval: [
+      {
+        type: Date,
+        required: [true, "Start Date and Time cannot be empty"],
+        trim: true,
+        default: null,
+      },
+    ],
+    endInterval: [
+      {
+        type: Date,
+        required: [true, "End Date and Time cannot be empty"],
+        trim: true,
+        default: null,
+      },
+    ],
+    volunteerSlots: [
+      {
+        type: Number,
+        required: [true, "Please enter number of volunteers needed per slot"],
+        trim: true,
+      },
+    ],
   },
   { timestamps: true }
 );

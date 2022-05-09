@@ -23,6 +23,8 @@ const ActivityForm = (props) => {
   /* State and constants
    *************************** */
 
+  // const intervalRef = useRef();
+
   const eventToBeEdited = props.selectedEvent;
   const currentData =
     Object.keys(eventToBeEdited).length > 0 ? eventToBeEdited : {};
@@ -36,9 +38,122 @@ const ActivityForm = (props) => {
   };
   const [data, setData] = useState(currentData);
   const [isOnline, setIsOnline] = useState(false);
+  const [isVolunteer, setIsVolunteer] = useState(false);
   const [formErrors, setErrors] = useState(errors);
   const minDate = moment(new Date()).format("YYYY-MM-DDTHH:MM");
   const maxDate = data.startDateTime;
+  let startInt = data.startInterval ? data.startInterval : [];
+  let endInt = data.endInterval ? data.endInterval : [];
+  let volunteerSlots =
+    data.volunteerSlots?.length > 0 ? data.volunteerSlots : [];
+  const [startInterval, setStartInterval] = useState(startInt);
+  const [endInterval, setEndInterval] = useState(endInt);
+  const [volunteeringSlots, setVolunteeringSlots] = useState(volunteerSlots);
+  const RenderInterval = (i) => {
+    return (
+      <Form.Group className="mb-3" controlId="formGroupDateTime" id={i}>
+        <Row style={{ justifyContent: "center" }}>
+          <Col>
+            <Form.Label className="mt-3">Start Interval</Form.Label>
+
+            <Form.Control
+              className="rounded"
+              aria-label="start interval"
+              aria-describedby="start interval"
+              type="datetime-local"
+              min={minDate}
+              required
+              onChange={(e) => {
+                let updatedStartInterval = [...startInterval];
+                updatedStartInterval.splice(i, 1, e.target.value);
+                setStartInterval(updatedStartInterval);
+              }}
+            />
+          </Col>
+
+          <Col>
+            <Form.Label className="mt-3">End Interval</Form.Label>
+
+            <Form.Control
+              className="rounded"
+              aria-label="end interval"
+              aria-describedby="end interval"
+              type="datetime-local"
+              min={minDate}
+              required
+              onChange={(e) => {
+                let updatedEndInterval = [...endInterval];
+                updatedEndInterval.splice(i, 1, e.target.value);
+                setEndInterval(updatedEndInterval);
+              }}
+            />
+          </Col>
+
+          <Col>
+            <Form.Label className="mt-3">Slots</Form.Label>
+            <Form.Control
+              className="rounded"
+              aria-label="slots available"
+              aria-describedby="volunteering slots"
+              type="number"
+              min="1"
+              required
+              onChange={(e) => {
+                let updatedSlots = [...volunteeringSlots];
+                updatedSlots.splice(i, 1, Number(e.target.value));
+                setVolunteeringSlots(updatedSlots);
+              }}
+            />
+          </Col>
+
+          <Col>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              fill="red"
+              class="bi bi-x-square-fill"
+              viewBox="0 0 16 16"
+              onClick={() => removeInterval(i)}
+            >
+              <path d="M2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2zm3.354 4.646L8 7.293l2.646-2.647a.5.5 0 0 1 .708.708L8.707 8l2.647 2.646a.5.5 0 0 1-.708.708L8 8.707l-2.646 2.647a.5.5 0 0 1-.708-.708L7.293 8 4.646 5.354a.5.5 0 1 1 .708-.708z" />
+            </svg>
+          </Col>
+        </Row>
+        <hr></hr>
+      </Form.Group>
+    );
+  };
+
+  let renderedIntervals = data.startInterval?.map((item, i) => RenderInterval);
+  const [intervals, setIntervals] = useState(
+    renderedIntervals ? renderedIntervals : [RenderInterval]
+  );
+
+  const addInterval = () => {
+    setIntervals([...intervals, RenderInterval]);
+  };
+
+  const removeInterval = (id) => {
+    let renderIntervals = [...intervals];
+    renderIntervals.splice(id, 1);
+    setIntervals(renderIntervals);
+  };
+
+  const validEmail = (val) =>
+    /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$/i.test(val);
+  const validURL = (str) => {
+    var pattern = new RegExp(
+      "^(https?:\\/\\/)?" + // protocol
+        "((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|" + // domain name
+        "((\\d{1,3}\\.){3}\\d{1,3}))" + // OR ip (v4) address
+        "(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*" + // port and path
+        "(\\?[;&a-z\\d%_.~+=-]*)?" + // query string
+        "(\\#[-a-z\\d_]*)?$",
+      "i"
+    ); // fragment locator
+    return !!pattern.test(str);
+  };
   const findFormErrors = () => {
     const {
       title,
@@ -75,6 +190,7 @@ const ActivityForm = (props) => {
       newErrors.zipCode = "Invalid Zip Code!";
     return newErrors;
   };
+
   /************************************/
 
   return (
@@ -588,6 +704,54 @@ const ActivityForm = (props) => {
                 </div>
               </Form.Group>
               <hr></hr>
+
+              <Form.Group className="mb-3" controlId="formGroupVolunteer">
+                <div className="mb-3 form-check">
+                  <input
+                    className="form-check-input"
+                    type="checkbox"
+                    checked={isVolunteer}
+                    defaultValue={eventToBeEdited.isVolunteer}
+                    onChange={(e) => {
+                      setIsVolunteer((state) => !state);
+                      setData({ ...data, isVolunteer: true });
+                    }}
+                  />
+
+                  <label
+                    className={`form-check-label ${classes.formCheckLabel}`}
+                    htmlFor="volunteerEvent"
+                  >
+                    Need Volunteers?
+                  </label>
+                </div>
+              </Form.Group>
+
+              {isVolunteer && (
+                <React.Fragment>
+                  <Form.Label className="mt-3">
+                    Add Volunteer Intervals
+                  </Form.Label>
+
+                  <Button
+                    className={classes.addDateTime}
+                    onClick={() => addInterval()}
+                  >
+                    Add Interval
+                  </Button>
+
+                  <Form.Text className="text-muted">
+                    Create intervals of one hour duration.
+                  </Form.Text>
+
+                  <hr></hr>
+                  <div>
+                    {intervals.map((item, i) => {
+                      return item(i);
+                    })}
+                  </div>
+                </React.Fragment>
+              )}
             </Form>
           </Modal.Body>
           <Modal.Footer>
@@ -608,9 +772,16 @@ const ActivityForm = (props) => {
                   setErrors(newErrors);
                   alert("Please correct erros in your form entries!");
                 } else {
+                  let updatedData = {
+                    ...data,
+                    startInterval: startInterval,
+                    endInterval: endInterval,
+                    volunteerSlots: volunteeringSlots,
+                  };
+
                   if (Object.keys(eventToBeEdited).length > 0) {
                     axios
-                      .patch(`/activities/${eventToBeEdited._id}`, data)
+                      .patch(`/activities/${eventToBeEdited._id}`, updatedData)
                       .then((res) => {
                         alert(
                           `The Event "${eventToBeEdited.title}" has been updated!`
@@ -624,7 +795,7 @@ const ActivityForm = (props) => {
                       });
                   } else {
                     axios
-                      .post("/activities", data)
+                      .post("/activities", updatedData)
                       .then((res) => {
                         alert(
                           `The Event "${res.data.title}" has been created successively!`

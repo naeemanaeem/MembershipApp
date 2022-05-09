@@ -15,6 +15,8 @@ const Activities = () => {
   const [eventDetail, setEventDetail] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState({});
 
+  const [volunteerActivity, setVolunteerActivity] = useState([]);
+
   const memoizedfetchData = useCallback(async () => {
     try {
       const res = await axios.get("/activities/");
@@ -181,6 +183,7 @@ const Activities = () => {
     return (
       <EventDetail
         data={selectedEvent}
+        handleSelectedEvent={setSelectedEvent}
         onDelete={deleteActivityHandler}
         onEdit={editActivityHandler}
         onCancel={hideEventDetailHandler}

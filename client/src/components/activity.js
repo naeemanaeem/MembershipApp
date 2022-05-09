@@ -10,7 +10,7 @@ const Activity = (props) => {
     classes.orangeTag,
     classes.greenTag,
     classes.blueTag,
-    classes.redTag,
+    classes.purpleTag,
   ];
   return (
     <Card
@@ -28,9 +28,15 @@ const Activity = (props) => {
       />
 
       <Card.Title className={classes.cardTitle}>
-        {props.data.title}{" "}
+        {props.data.title}
         {props.data.isRecurring ? (
           <span className={classes.recurringEventTag}>Recurring</span>
+        ) : null}
+        <br></br>
+        {props.data.isVolunteer ? (
+          <span className={classes.volunteerEventTag}>
+            <strong>Volunteers Needed</strong>
+          </span>
         ) : null}
       </Card.Title>
 
