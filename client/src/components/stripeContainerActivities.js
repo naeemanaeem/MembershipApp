@@ -8,9 +8,9 @@ const StripeContainer = (props) => {
 
   useEffect(() => {
     (async () => {
-      const { publishableKey } = await fetch(
-        "http://localhost:3000/activity/config"
-      ).then((res) => res.json());
+      const { publishableKey } = await fetch("/activity/config").then((res) =>
+        res.json()
+      );
       const stripePromise = loadStripe(publishableKey);
       setStripeTestPromise(stripePromise);
     })();
