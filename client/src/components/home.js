@@ -92,7 +92,7 @@ const Home = ({ name, ...props }) => {
     // fetch all the activities the user has registered for.
     try {
       const activities = await axios.get(
-        `http://localhost:3000/activities/registration-info/by-google-id`
+        `/activities/registration-info/by-google-id`
       );
       if (activities && activities.data) {
         const registeredActivities = [];

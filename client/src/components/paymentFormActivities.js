@@ -48,13 +48,10 @@ const PaymentForm = (props) => {
       if (paymentMethod.error) {
         throw Error(paymentMethod.error.message);
       }
-      const customer = await axios.post(
-        "http://localhost:3000/activity/create-customer",
-        {
-          email: email,
-          payment_method: paymentMethod.paymentMethod.id,
-        }
-      );
+      const customer = await axios.post("activity/create-customer", {
+        email: email,
+        payment_method: paymentMethod.paymentMethod.id,
+      });
       if (!customer.data.success) {
         throw Error(customer.data.message);
       }
@@ -63,17 +60,14 @@ const PaymentForm = (props) => {
         try {
           const { id } = paymentMethod.paymentMethod;
 
-          const response = await axios.post(
-            "http://localhost:3000/activity/create-payment",
-            {
-              amount: Number(props.cost) * 100,
-              paymentMethodId: id,
-              description: "Registration for " + props.eventTitle,
-              email: email,
-              customer: customer.data.customerId,
-              idempotencyKey: uuidPayment,
-            }
-          );
+          const response = await axios.post("/activity/create-payment", {
+            amount: Number(props.cost) * 100,
+            paymentMethodId: id,
+            description: "Registration for " + props.eventTitle,
+            email: email,
+            customer: customer.data.customerId,
+            idempotencyKey: uuidPayment,
+          });
           if (response.data.success) {
             props.handlePostOfPaymentStatus(
               response.data.paymentId,
