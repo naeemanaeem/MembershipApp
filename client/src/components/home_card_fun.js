@@ -8,7 +8,7 @@ const HomeCard = (props) => {
       ? props.goToActivities
       : props.title === "Make Payment"
       ? props.goToPayment
-      : props.goToVolunteer;
+      : props.goToMyAccount;
   return (
     <Card className={Classes.card} key={props.key}>
       <Card.Img variant="top" src={props.image} width="100px" height="150px" />

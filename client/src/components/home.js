@@ -5,7 +5,7 @@ import HomeCard from "./home_card_fun";
 import { Container } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
 import axios from "axios";
-import vol from "./imgs/vol.jpeg";
+import acc from "./imgs/acc.png";
 import pay from "./imgs/pay.png";
 import act from "./imgs/images.jpeg";
 import Classes from "./home.module.css";
@@ -20,8 +20,8 @@ const Home = ({ name, ...props }) => {
   const [slide, setSlide] = useState("");
   const [currentSlide, setCurrentSlide] = useState({});
   const history = useHistory();
-  const goToVolunteer = (params) => {
-    let path = `Volunteer`;
+  const goToMyAccount = (params) => {
+    let path = `myaccount`;
     history.push(path);
   };
   const goToPayment = (params) => {
@@ -70,6 +70,12 @@ const Home = ({ name, ...props }) => {
   const displayName = localStorage.user_displayName;
   const data = [
     {
+      title: "My Account",
+      description:
+        "View and modify important information details about yourself and your dependents.",
+      image: acc,
+    },
+    {
       title: "Make Payment",
       description:
         "Make a payment for MHMA membership fees, zakat, masjid donation, or sadaqah.",
@@ -80,12 +86,6 @@ const Home = ({ name, ...props }) => {
       description:
         "Sign Up for MHMA Activities, such as Youth Soccer, Tafseer-E-Quran, or COVID Vaccination.",
       image: act,
-    },
-    {
-      title: "Volunteer",
-      description:
-        "Volunteer for MHMA events, such as Sunday School setup/cleanup or youth soccer referee.",
-      image: vol,
     },
   ];
   const fetchMemberActivites = async () => {
@@ -246,7 +246,7 @@ const Home = ({ name, ...props }) => {
               image={value.image}
               goToPayment={goToPayment}
               goToActivities={goToActivities}
-              goToVolunteer={goToVolunteer}
+              goToMyAccount={goToMyAccount}
             />
           ))}
         </div>
