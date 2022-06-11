@@ -3,30 +3,26 @@ import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
 
+import Navigation from "./components/navigation";
+import Home from "./components/home";
+import Volunteer from "./components/volunteer";
+import VolunteerSignup from "./components/volunteersignup";
+import VolunteerEdit from "./components/volunteeredit";
 
-import Navigation from './components/navigation';
-import Home from './components/home';
-import Volunteer from './components/volunteer';
-import VolunteerSignup from './components/volunteersignup';
-import VolunteerEdit from './components/volunteeredit';
-
-import Members from './components/members';
-import PrintOut from './components/printout';
-import Payment from './components/payment';
-import Login from './components/login';
-import ExportCSV from './components/exportcsv';
-import SearchTextProvider from './components/searchtextprovider';
-import MyAccount from './components/myaccount';
+import Members from "./components/members";
+import PrintOut from "./components/printout";
+import Payment from "./components/payment";
+import Login from "./components/login";
+import ExportCSV from "./components/exportcsv";
+import SearchTextProvider from "./components/searchtextprovider";
+import MyAccount from "./components/myaccount";
 import InternalActivities from "./components/activities";
 import ExternalActivities from "./components/externalActivities";
-import VolunteerTable from './components/volunteertable';
-
-
-
+import VolunteerTable from "./components/volunteertable";
 
 class App extends Component {
   constructor() {
-    super()
+    super();
   }
   render() {
     return (
@@ -52,13 +48,8 @@ class App extends Component {
               exact
               path="/activities/external"
               component={ExternalActivities}
-
             />
           </Switch>
-
-
-
-
         </SearchTextProvider>
       </Router>
     );

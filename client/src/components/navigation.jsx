@@ -22,29 +22,15 @@ class Navigation extends Component {
         <Navbar.Brand href="/">Masjid Membership</Navbar.Brand>
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
-
           <Nav className="mr-auto">
             <LinkContainer to="/">
               <Nav.Link>Home</Nav.Link>
             </LinkContainer>
-            <LinkContainer to="/login">
-              <Nav.Link href="/login">Login</Nav.Link>
+            <LinkContainer to="/myaccount">
+              <Nav.Link href="/myaccount">My Account</Nav.Link>
             </LinkContainer>
-            <LinkContainer to="/myaccount"><Nav.Link href="/myaccount">My Account</Nav.Link></LinkContainer>
-            <LinkContainer to="/members">
-              <Nav.Link href="/members">Members</Nav.Link>
-            </LinkContainer>
-
-            <LinkContainer to="/payment"><Nav.Link href="/payment">Payment</Nav.Link></LinkContainer>
-
-            <LinkContainer to="/printout">
-              <Nav.Link href="/printout">Membership Roll</Nav.Link>
-            </LinkContainer>
-            <LinkContainer to="/export">
-              <Nav.Link href="/export">Export</Nav.Link>
-            </LinkContainer>
-            <LinkContainer to="/volunteer">
-              <Nav.Link href="/volunteer">Volunteer</Nav.Link>
+            <LinkContainer to="/payment">
+              <Nav.Link href="/payment">Payment</Nav.Link>
             </LinkContainer>
             <NavDropdown title="Activities" id="activies">
               <NavDropdown.Item href="/activities">Internal</NavDropdown.Item>
@@ -52,11 +38,27 @@ class Navigation extends Component {
                 External
               </NavDropdown.Item>
             </NavDropdown>
-
-
+            <LinkContainer to="/members">
+              <Nav.Link href="/members">Members</Nav.Link>
+            </LinkContainer>
+            {/* <LinkContainer to="/printout">
+              <Nav.Link href="/printout">Membership Roll</Nav.Link>
+            </LinkContainer>
+            <LinkContainer to="/export">
+              <Nav.Link href="/export">Export</Nav.Link>
+            </LinkContainer>
+            <LinkContainer to="/volunteer">
+              <Nav.Link href="/volunteer">Volunteer</Nav.Link>
+            </LinkContainer> */}
           </Nav>
 
-          <SearchTextContext.Consumer>
+          <Nav>
+            <LinkContainer to="/login">
+              <Nav.Link href="/login">Log In</Nav.Link>
+            </LinkContainer>
+          </Nav>
+
+          {/* <SearchTextContext.Consumer>
             {(context) => (
               <Form inline>
                 <FormControl
@@ -83,12 +85,11 @@ class Navigation extends Component {
                 </Button>
               </Form>
             )}
-          </SearchTextContext.Consumer>
+          </SearchTextContext.Consumer> */}
         </Navbar.Collapse>
       </Navbar>
     );
   }
-
 }
 
 export default Navigation;
