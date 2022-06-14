@@ -44,7 +44,7 @@ const MembersTable = (props) => {
         width="16"
         height="16"
         fill="black"
-        class="bi bi-chevron-up"
+        className="bi bi-chevron-up"
         viewBox="1.5 0 16 16"
         onClick={() => {
           setShowFilters(false);
@@ -64,7 +64,7 @@ const MembersTable = (props) => {
         width="16"
         height="16"
         fill="black"
-        class="bi bi-chevron-down"
+        className="bi bi-chevron-down"
         viewBox="1.5 0 16 16"
         onClick={() => {
           setShowFilters(true);

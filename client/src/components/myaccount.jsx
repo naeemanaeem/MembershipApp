@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import Table from "react-bootstrap/Table";
 import Button from "react-bootstrap/Button";
 import axios from "axios";
-
 import Member from "./member";
 import Tab from "react-bootstrap/Tab";
 import Nav from "react-bootstrap/Nav";
@@ -32,19 +31,19 @@ class MyAccount extends Component {
   //LOADS DATA INTO MYACCOUNT
   async componentDidMount() {
     try {
-      const res = await axios.get("members/" + localStorage.idOfMember);
-      /*members/id syntax for id 614915b63d1e5066b0675a94*/
+      const email = localStorage.user_email;
 
+      // const res = await axios.get(`/members/${localStorage.idOfMember}`);
+      const res = await axios.get(`/members/memberByEmail/${email}`);
       this.setState({ myaccount: res.data, error: "" });
     } catch (e) {
       this.setState({ error: e.message });
       console.error(e);
     }
-
   }
 
   //REGISTER NEW MEMBER
-  async saveNewMember(m) {
+  saveNewMember = async (m) => {
     console.log("Save new member - ", m);
     if (
       m.Firstname &&
@@ -72,14 +71,12 @@ class MyAccount extends Component {
         }
       } else {
         this.setState({ myaccount: res.data });
-        console.log("res.data: ", res.data);
       }
     }
-  }
+  };
 
   //SAVES NEW DEPENDENTS
-  async saveNewDependent(m, account) {
-
+  saveNewDependent = async (m, account) => {
     if (
       m.Firstname &&
       m.Firstname.length > 0 &&
@@ -101,12 +98,11 @@ class MyAccount extends Component {
       myAccount.Dependents.push(res.data);
       this.handleEditSave(myAccount, true);
     }
-  }
+  };
 
   //SAVED UPDATED MEMBERS/DEPENDENTS
-  async saveUpdatedMember(m) {
+  saveUpdatedMember = async (m) => {
     try {
-
       await axios.put("members/" + m._id, m);
       const member = await axios.get("members/" + m._id);
       this.setState({ myaccount: member.data });
@@ -114,7 +110,7 @@ class MyAccount extends Component {
     } catch (error) {
       console.error(error);
     }
-  }
+  };
 
   //HANDLES SAVING EDITED MEMBERS/DEPENDENTS AND SAVING NEW DEPENDENTS
   handleEditSave = (m, isOwner) => {
@@ -123,7 +119,6 @@ class MyAccount extends Component {
       if (isOwner) {
         member = this.state.myaccount; //SET MEMBER TO MYACCOUNT
       } else {
-
         member = this.state.dependents.find((el) => el._id === m._id); //SET MEMBER TO DEPENDENT
       }
       if (member) {
@@ -148,6 +143,7 @@ class MyAccount extends Component {
         member.Relationship = m.Relationship;
         member.Guardians = m.Guardians;
         member.Dependents = m.Dependents;
+
         this.saveUpdatedMember(member);
         if (isOwner) {
           console.log("Update member - ", member);
@@ -169,7 +165,6 @@ class MyAccount extends Component {
         m.Guardians.push(this.state.myaccount._id);
         this.saveNewDependent(m);
       }
-
     } catch (error) {
       console.error(error);
     }
@@ -250,7 +245,6 @@ class MyAccount extends Component {
   editMemberOnCancel = (m) => {
     console.log(m);
     this.setState(
-
       { myaccount: m },
       this.editMember()
       // this.hideMemberEditDialog()
@@ -263,7 +257,6 @@ class MyAccount extends Component {
     console.log("Update member - ", m);
     this.saveUpdatedMember(m, true);
   };
-
 
   editMember = () => {
     // this.showMemberEditDialog();
@@ -346,12 +339,12 @@ class MyAccount extends Component {
       errorArr.push("Invalid Date of Birth! Use format mm/dd/yyyy");
     }
 
-    this.state.errors = errorArr;
+    // this.state.errors = errorArr;
     this.setState({ errors: errorArr });
   };
 
   //CALULATES AGE OF DEPENDENT
-  calulateAge(dob) {
+  calulateAge = (dob) => {
     let age, month, day, year;
     // dob = "09/16/2000";
     let date = new Date();
@@ -366,7 +359,6 @@ class MyAccount extends Component {
             age--;
           }
         } else {
-
           age--;
         }
       }
@@ -374,8 +366,7 @@ class MyAccount extends Component {
       age = "Need DOB";
     }
     return age;
-  }
-
+  };
 
   render() {
     let detailPage, dependentPage;
@@ -383,10 +374,6 @@ class MyAccount extends Component {
     let thisaccount = this.state.myaccount;
     var editaccount = { ...thisaccount };
     const dependent = this.state.myaccount.Dependents;
-
-    // console.log("LOCALstorage", localStorage);
-    // localStorage.id = null;
-
     if (
       editaccount.Firstname &&
       editaccount.Firstname === this.state.myaccount.Firstname
@@ -400,7 +387,7 @@ class MyAccount extends Component {
               Edit Member
             </Button>
           </h4>
-          <hr class="solid mr-2" />
+          <hr className="solid mr-2" />
 
           <Form id="target">
             <Row className="ml-4 mt-4">
@@ -489,7 +476,7 @@ class MyAccount extends Component {
 
             {/* Address Information Below */}
             <h4 className="ml-3">Address Information</h4>
-            <hr class="solid mr-2" />
+            <hr className="solid mr-2" />
             <Row className="ml-4 mt-4">
               <Col>
                 <Form.Group className="mb-4">
@@ -604,19 +591,19 @@ class MyAccount extends Component {
           {/* Member Info Below UNCOMMENT ONCE THE MEMBER TYPE AND STATUS ARE IMPLEMENTED*/}
 
           {/*<h4 className="ml-3">Member Information</h4>
-        <hr class="solid mr-2" />
-        <Row className="rowSpace">
-           <Form.Group className="detailSpace mb-4">
-                <Form.Label>Member Type</Form.Label>
-                <Form.Control value="Paying" className="detailSelWid"/>
+ <hr class="solid mr-2" />
+ <Row className="rowSpace">
+ <Form.Group className="detailSpace mb-4">
+ <Form.Label>Member Type</Form.Label>
+ <Form.Control value="Paying" className="detailSelWid"/>
 
-               </Form.Group>
+ </Form.Group>
 
-              <Form.Group className="mb-4">
-                <Form.Label>Member Status</Form.Label>
-                <Form.Control value="Active" className="detailSelWid"/>
-               </Form.Group>
-        </Row>*/}
+ <Form.Group className="mb-4">
+ <Form.Label>Member Status</Form.Label>
+ <Form.Control value="Active" className="detailSelWid"/>
+ </Form.Group>
+ </Row>*/}
 
           <div id="editing" style={{ display: "none" }}>
             <hr class="dsolid mr-2" />
@@ -662,7 +649,7 @@ class MyAccount extends Component {
               NO ACCOUNT FOUND
               {/* <Button id="regMemButton" variant="dark" onClick={this.editMember}>REGISTER AS MEMBER</Button> */}
             </h4>
-            <hr class="solid mr-2" />
+            <hr className="solid mr-2" />
             <Button
               id="regMemButton"
               variant="dark"
@@ -682,15 +669,14 @@ class MyAccount extends Component {
           <h4 className="ml-3">
             Dependents
             <Button
-              variant="success"
+              variant="secondary"
               className="mb-3"
               onClick={this.addNewDependent}
             >
               Add Dependent
             </Button>
-
           </h4>
-          <hr class="solid mr-2" />
+          <hr className="solid mr-2" />
           <Table className="mr-4 table">
             <thead>
               <tr>
@@ -703,9 +689,8 @@ class MyAccount extends Component {
             </thead>
             <tbody>
               {dependent.map((dep) => {
-
                 return (
-                  <tr>
+                  <tr key={dep._id}>
                     <td className="tablebody">{dep.Firstname}</td>
                     <td className="tablebody">{dep.Lastname}</td>
                     <td className="tablebody">
@@ -770,7 +755,7 @@ class MyAccount extends Component {
         />
 
         <div>
-          <h1 class="header">My Account</h1>
+          <h1 className="header">My Account</h1>
         </div>
         <div>
           <Tab.Container

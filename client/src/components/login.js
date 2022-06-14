@@ -7,7 +7,7 @@ import axios from "axios";
 const clientId =
   "243164022181-l55t6hhcgbup7p25q94c6pfqkpnkd179.apps.googleusercontent.com";
 
-function Login() {
+function Login(props) {
   const [loading, setLoading] = useState("Loading...");
   const [user, setUser] = useState(null);
   const handleLoginSuccess = async (response) => {
@@ -30,6 +30,7 @@ function Login() {
       localStorage.user_email = res.data.email;
       localStorage.googleId = res.data.googleId;
       localStorage.idOfMember = res.data._id;
+      props.handleLoginStr();
     } catch (error) {
       console.log(error);
     }
@@ -44,7 +45,9 @@ function Login() {
     try {
       setUser(null);
       localStorage.removeItem("user_displayName");
+      localStorage.removeItem("user_email");
       await axios.delete("/auth/logout");
+      props.handleLoginStr();
     } catch (error) {
       console.log(error);
     }
