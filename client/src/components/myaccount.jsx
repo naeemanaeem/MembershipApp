@@ -11,7 +11,7 @@ import DependentEdit from "./dependentedit";
 import MemberEdit from "./memberedit";
 import CountrySelector from "./helper/countryselector.jsx";
 import StateSelector from "./helper/stateselector.jsx";
-
+import MyActivities from "./myactivities";
 import "./css_stuff/myaccount.css";
 import { Container } from "react-bootstrap";
 class MyAccount extends Component {
@@ -772,12 +772,16 @@ class MyAccount extends Component {
                   <Nav.Item>
                     <Nav.Link eventKey="dependents">My Dependents</Nav.Link>
                   </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link eventKey="activities">My Activities</Nav.Link>
+                  </Nav.Item>
                 </Nav>
               </Col>
               <Col sm={9}>
                 <Tab.Content className="outline">
                   <Tab.Pane eventKey="details">{detailPage}</Tab.Pane>
                   <Tab.Pane eventKey="dependents">{dependentPage}</Tab.Pane>
+                  <Tab.Pane eventKey="activities">{<MyActivities />}</Tab.Pane>
                 </Tab.Content>
               </Col>
             </Row>
