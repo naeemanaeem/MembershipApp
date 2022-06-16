@@ -19,7 +19,7 @@ const Activities = () => {
 
   const memoizedfetchData = useCallback(async () => {
     try {
-      const res = await axios.get("/activities/");
+      const res = await axios.get("/activities");
       setActivities(res.data);
     } catch (e) {
       setError(e.message);

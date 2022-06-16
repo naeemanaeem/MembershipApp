@@ -35,7 +35,7 @@ class Members extends Component {
 
   async componentDidMount() {
     try {
-      const res = await axios.get("/members/");
+      const res = await axios.get("/members");
       this.setState({ members: res.data, error: "" });
     } catch (e) {
       this.setState({ error: e.message });
