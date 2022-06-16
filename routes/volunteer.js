@@ -44,9 +44,9 @@ router.get("/volunteerByEmail/:email", ensureAuth, async (req, res) => {
   try {
     let volunteer = await Volunteer.find({ email: req.params.email })
       //use this function call to get dependents
-      //   .populate("user")
+      .populate("eventId")
       .lean(); //try removing this and look at data
-    // console.log("volunteer:", volunteer);
+    console.log("volunteer:", volunteer);
     if (!volunteer) {
       return res.status(404).send("Not found.");
     }

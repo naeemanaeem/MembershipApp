@@ -89,6 +89,7 @@ function VolunteerSignup(props) {
           fullName: fullName,
           email: email,
           event: event,
+          eventId: props.event._id,
           selectedDateTime: selectedDateTime,
           comments: comments,
         };

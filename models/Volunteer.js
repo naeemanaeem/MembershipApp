@@ -32,6 +32,12 @@ const VolunteerSchema = new mongoose.Schema(
     //   trim: true,
     //   required: true,
     // },
+    eventId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Activity",
+      required: true,
+    },
+
     selectedDateTime: [
       {
         startInterval: {

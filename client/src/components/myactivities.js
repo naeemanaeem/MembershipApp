@@ -38,11 +38,16 @@ const MyActivities = () => {
 
       if (activities && activities.data) {
         const volunteerActivities = [];
+        const date = new Date().toISOString();
+
         activities.data.forEach((activity) => {
-          volunteerActivities.push({
-            name: activity.event,
-            volunteerHours: activity.selectedDateTime.length,
-          });
+          console.log(activity);
+          if (activity.eventId.endDateTime >= date) {
+            volunteerActivities.push({
+              name: activity.event,
+              volunteerHours: activity.selectedDateTime.length,
+            });
+          }
         });
 
         setUserVolunteering([...volunteerActivities]);
