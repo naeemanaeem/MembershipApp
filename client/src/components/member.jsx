@@ -14,7 +14,6 @@ class Member extends Component {
     this.props.handleMemberRemove(this.props.member);
   };
 
-
   render() {
     const renderTooltip = (props) => (
       <Tooltip id="button-tooltip" {...props}>
@@ -90,6 +89,5 @@ class Member extends Component {
     return component;
   }
 }
-
 
 export default Member;

@@ -1,0 +1,58 @@
+.label {
+  font-size: 18px;
+  position: relative; /* to contain absolute elements*/
+  padding-left: 30px; /* free space for custom checkbox */
+  cursor: pointer;
+  margin-bottom: 4px;
+}
+/* hide default checkbox  */
+/* label input[type="checkbox"] { */
+.label input[type="checkbox"] {
+  position: absolute; /* prevent taking any space */
+  /* cross-browser hiding */
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+/* custom checkbox */
+.label span {
+  position: absolute;
+  /* position to the free space in <label> */
+  top: 0;
+  left: 0;
+  width: 20px;
+  height: 20px;
+  background-color: #ddd;
+  transition: 0.3s background-color; /* slight transition */
+}
+/* the check icon */
+.label span:after {
+  font-size: 18px;
+  content: "";
+  position: absolute;
+  display: none;
+
+  /* check icon */
+  left: 7px;
+  top: 2px;
+  width: 6px;
+  height: 14px;
+  border: solid white;
+  border-width: 0 3px 3px 0;
+  transform: rotate(45deg);
+}
+.toggle_all:first-child input[type="checkbox"]:not(:checked) + span:before {
+  content: "➖";
+  margin-left: 1px;
+}
+
+.label:hover span {
+  background-color: #ccc;
+}
+/**** Here's the trick ***/
+.label input:checked ~ span {
+  background-color: #007bff;
+}
+.label input:checked ~ span:after {
+  display: block;
+}

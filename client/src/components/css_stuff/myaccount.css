@@ -77,7 +77,7 @@ hr.dsolid {
 }
 
 table {
-  border: 1px solid black;
+  border: 2px solid black;
   padding: 0%;
 }
 
@@ -86,6 +86,10 @@ table {
   height: 5px;
   width: 30%;
   /* margin-top: auto; */
+}
+
+.tablebutton {
+  border: none;
 }
 
 .depTableHead {

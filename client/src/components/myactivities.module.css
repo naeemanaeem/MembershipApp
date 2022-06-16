@@ -1,0 +1,69 @@
+.table {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  border: 2px solid grey;
+  border-bottom: none;
+  height: 80px;
+  background-color: silver;
+}
+
+.thead1 {
+  font-weight: bolder;
+}
+
+.thead2 {
+  padding-left: 50px;
+  font-weight: bolder;
+}
+
+.tbody {
+  position: relative;
+}
+
+.tbodyContent {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  border-top: 2px solid grey;
+  border-left: 2px solid grey;
+  border-right: 2px solid grey;
+}
+
+.trowActivities {
+  width: 50%;
+  background-color: lightcyan;
+}
+
+.tdataActivities {
+  height: 40px;
+  border-bottom: 2px solid grey;
+  border-right: 1px solid grey;
+  padding: 10px;
+  text-align: start;
+}
+
+.trowVolunteer {
+  width: 50%;
+  background-color: white;
+}
+
+.tdataVolunteer {
+  height: 80px;
+  border-bottom: 2px solid grey;
+  border-left: 2px solid grey;
+  padding: 10px;
+  text-align: start;
+}
+
+.tfoot {
+  width: 100%;
+  background-color: black;
+  height: 50px;
+  margin-top: -2px;
+  position: absolute;
+  z-index: 1;
+}

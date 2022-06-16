@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useRef } from "react";
-
+import classes from "./helper/table/Checkbox.module.css";
 import {
   useTable,
   useSortBy,
@@ -44,7 +44,7 @@ const MembersTable = (props) => {
         width="16"
         height="16"
         fill="black"
-        className="bi bi-chevron-up"
+        class="bi bi-chevron-up"
         viewBox="1.5 0 16 16"
         onClick={() => {
           setShowFilters(false);
@@ -64,7 +64,7 @@ const MembersTable = (props) => {
         width="16"
         height="16"
         fill="black"
-        className="bi bi-chevron-down"
+        class="bi bi-chevron-down"
         viewBox="1.5 0 16 16"
         onClick={() => {
           setShowFilters(true);
@@ -219,20 +219,22 @@ const MembersTable = (props) => {
           </div>
           <div className={Classes.checkbox_container} ref={filterRef}>
             <Checkbox
-              className="ml-4 mt-3 mr-1 mb-1"
+              className={`${classes.toggle_all} ml-4 mt-3 mr-1 mb-1`}
               {...getToggleHideAllColumnsProps()}
             />
-            ToggleAll
+            {/* ToggleAll */}
             {allColumns.map((column) =>
               column.checked ? (
                 <div key={column.id}>
-                  <Form.Check
-                    type="checkbox"
-                    label={column.Header}
-                    id={column.Header + "check"}
-                    className="ml-4 mr-5 mb-1"
-                    {...column.getToggleHiddenProps()}
-                  />
+                  <label className={`ml-4 mr-5 mb-1 ${classes.label}`}>
+                    <input
+                      id={column.Header + "check"}
+                      type="checkbox"
+                      {...column.getToggleHiddenProps()}
+                    />
+                    <span></span>
+                    {column.Header}
+                  </label>
                 </div>
               ) : null
             )}

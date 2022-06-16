@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import Classes from "./myactivities.module.css";
+
 const MyActivities = () => {
   const [userActivities, setUserActivities] = useState([]);
   const [userVolunteering, setUserVolunteering] = useState([]);
@@ -66,67 +68,22 @@ const MyActivities = () => {
   } else {
     return (
       <React.Fragment>
-        <div
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-around",
-            alignItems: "center",
-            border: "2px solid grey",
-            borderBottom: "2px solid grey",
+        <div className={Classes.table}>
+          <h4 className={Classes.thead1}>Upcoming Events</h4>
 
-            height: "80px",
-            backgroundColor: "silver",
-          }}
-        >
-          <h4 style={{ fontWeight: "bolder" }}>Upcoming Events</h4>
-
-          <h4 style={{ paddingLeft: "50px", fontWeight: "bolder" }}>
-            Upcoming Volunteer Events
-          </h4>
+          <h4 className={Classes.thead2}>Upcoming Volunteer Events</h4>
         </div>
 
-        <div style={{ position: "relative" }}>
-          <div
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "flex-start",
-              width: "100%",
-              borderTop: "2px solid grey",
-              borderLeft: "2px solid grey",
-              borderRight: "2px solid grey",
-            }}
-          >
-            <div style={{ width: "50%", backgroundColor: "lightcyan" }}>
+        <div className={Classes.tbody}>
+          <div className={Classes.tbodyContent}>
+            <div className={Classes.trowActivities}>
               {userActivities.map((activity) => (
-                <div
-                  style={{
-                    height: "40px",
-                    // border: "1px solid grey",
-                    borderBottom: "2px solid grey",
-                    borderRight: "1px solid grey",
-                    padding: "10px",
-                    textAlign: "start",
-                    // marginRight: "1px",
-                  }}
-                >
-                  {activity}
-                </div>
+                <div className={Classes.tdataActivities}>{activity}</div>
               ))}
             </div>
-            <div style={{ width: "50%", backgroundColor: "white" }}>
+            <div className={Classes.trowVolunteer}>
               {userVolunteering.map((volunteering) => (
-                <div
-                  style={{
-                    height: "80px",
-                    borderBottom: "2px solid grey",
-                    borderLeft: "2px solid grey",
-                    padding: "10px",
-                    textAlign: "start",
-                  }}
-                >
+                <div className={Classes.tdataVolunteer}>
                   <div>
                     <strong>Event:</strong>&nbsp;&nbsp; {volunteering.name}
                   </div>
@@ -138,16 +95,7 @@ const MyActivities = () => {
               ))}
             </div>
           </div>
-          <div
-            style={{
-              width: "100%",
-              backgroundColor: "black",
-              height: "50px",
-              marginTop: "-2px",
-              position: "absolute",
-              zIndex: "1",
-            }}
-          ></div>
+          <div className={Classes.tfoot}></div>
         </div>
       </React.Fragment>
     );

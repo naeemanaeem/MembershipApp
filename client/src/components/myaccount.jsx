@@ -699,13 +699,15 @@ class MyAccount extends Component {
                     <td className="tablebody">
                       {this.calulateAge(dep.DateOfBirth)}
                     </td>
-                    <Member
-                      isNewDep={false}
-                      isDep={true}
-                      handleMemberEdit={this.showDependentEditDialog}
-                      member={dep}
-                      className="tablebody"
-                    />
+                    <div className="tablebutton">
+                      <Member
+                        isNewDep={false}
+                        isDep={true}
+                        handleMemberEdit={this.showDependentEditDialog}
+                        member={dep}
+                        className="tablebody"
+                      />
+                    </div>
                   </tr>
                 );
               })}
