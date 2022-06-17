@@ -11,9 +11,11 @@ import DependentEdit from "./dependentedit";
 import MemberEdit from "./memberedit";
 import CountrySelector from "./helper/countryselector.jsx";
 import StateSelector from "./helper/stateselector.jsx";
-
+import MyActivities from "./myactivities";
 import "./css_stuff/myaccount.css";
 import { Container } from "react-bootstrap";
+import MyVolunteerHours from "./myvolunteerhours";
+
 class MyAccount extends Component {
   state = {
     modalShow: false,
@@ -699,13 +701,15 @@ class MyAccount extends Component {
                     <td className="tablebody">
                       {this.calulateAge(dep.DateOfBirth)}
                     </td>
-                    <Member
-                      isNewDep={false}
-                      isDep={true}
-                      handleMemberEdit={this.showDependentEditDialog}
-                      member={dep}
-                      className="tablebody"
-                    />
+                    <div className="tablebutton">
+                      <Member
+                        isNewDep={false}
+                        isDep={true}
+                        handleMemberEdit={this.showDependentEditDialog}
+                        member={dep}
+                        className="tablebody"
+                      />
+                    </div>
                   </tr>
                 );
               })}
@@ -772,12 +776,24 @@ class MyAccount extends Component {
                   <Nav.Item>
                     <Nav.Link eventKey="dependents">My Dependents</Nav.Link>
                   </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link eventKey="activities">My Activities</Nav.Link>
+                  </Nav.Item>
+                  <Nav.Item>
+                    <Nav.Link eventKey="VolunteerHours">
+                      My Volunteering
+                    </Nav.Link>
+                  </Nav.Item>
                 </Nav>
               </Col>
               <Col sm={9}>
                 <Tab.Content className="outline">
                   <Tab.Pane eventKey="details">{detailPage}</Tab.Pane>
                   <Tab.Pane eventKey="dependents">{dependentPage}</Tab.Pane>
+                  <Tab.Pane eventKey="activities">{<MyActivities />}</Tab.Pane>
+                  <Tab.Pane eventKey="VolunteerHours">
+                    {<MyVolunteerHours />}
+                  </Tab.Pane>
                 </Tab.Content>
               </Col>
             </Row>

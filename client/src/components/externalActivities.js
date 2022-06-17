@@ -14,7 +14,7 @@ const ExternalActivities = () => {
 
   const memoizedfetchData = useCallback(async () => {
     try {
-      const res = await axios.get("/activities/external/");
+      const res = await axios.get("/activities/external");
       setActivities(res.data);
     } catch (e) {
       setError(e.message);
